@@ -8,10 +8,9 @@
 >
 > **尚未真实验证：**MySQL 连接与写入、LangSmith Trace。这两项目前只有离线 Mock 测试；未配置时代码不会伪造结果。
 
-<!-- 界面截图占位（HTML 注释在 GitHub 上不可见，所以这里不会显示破图）。
-     截图存为 docs/images/demo.png 后，把下面这行的注释去掉即可，或者让维护者代做。
-![DataPilot AI 演示](docs/images/demo.png)
--->
+![DataPilot AI 演示：用自然语言提问后，Agent 调用受控工具并输出结构化结论](docs/images/demo.png)
+
+*演示：提问"为什么 8 月销售额下降？"后，Agent 只调用白名单工具（这里两次 `calculate_time_series`，分别算销售额与销量），并把每条结论标注为 **✅ 事实（工具已计算）** / **🔎 解释** / **⚠️ 假设（需进一步验证）**。标为"事实"的结论必须有真实运行过的工具作为证据，这是**代码强制**的，不是靠 Prompt 请求。*
 
 ## 业务流程
 
