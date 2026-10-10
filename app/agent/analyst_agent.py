@@ -222,6 +222,7 @@ class AnalystAgent:
                 steps.append(AgentStep(
                     action_type="tool_call", tool_name=name, tool_input=action.tool_input,
                     tool_output=cached, summary=f"检测到重复调用 {name}（参数相同），已复用之前的结果。",
+                    detail=self._argument_digest(action.tool_input),
                 ))
                 history.append({"tool": name, "result": cached,
                                 "note": "You already called this tool with these exact arguments. "
@@ -285,7 +286,8 @@ class AnalystAgent:
                 tool_error_counts[name] = tool_error_counts.get(name, 0) + 1
                 summary = f"工具 {name} 未能完成分析（{code}），已把错误反馈给模型修正参数。"
                 steps.append(AgentStep(action_type="error", tool_name=name,
-                                       tool_input=action.tool_input, tool_output=self._bounded(output), summary=summary))
+                                       tool_input=action.tool_input, tool_output=self._bounded(output),
+                                       summary=summary, detail=self._argument_digest(action.tool_input)))
                 if code in RECOVERABLE_TOOL_ERROR_CODES and tool_error_counts[name] <= MAX_TOOL_ERROR_REPEATS:
                     # A structured tool error is an observation, not a fatal outcome:
                     # feed it back so the model can correct a hallucinated column name
@@ -309,12 +311,44 @@ class AnalystAgent:
             bounded_output = self._bounded(output)
             seen_calls[call_signature] = bounded_output
             steps.append(AgentStep(action_type="tool_call", tool_name=name,
-                                   tool_input=action.tool_input, tool_output=bounded_output, summary=summary))
+                                   tool_input=action.tool_input, tool_output=bounded_output,
+                                   summary=summary, detail=self._argument_digest(action.tool_input)))
             history.append({"tool": name, "result": bounded_output})
             if len(history) > 4:
                 history = history[-4:]
 
         return self._failure("max_iterations_reached", f"已达到安全上限（{MAX_ITERATIONS} 次决策），请缩小问题范围后重试。", steps, tools_used, MAX_ITERATIONS)
+
+    @staticmethod
+    def _argument_digest(tool_input: dict[str, Any] | None) -> str | None:
+        """Compact argument summary for the UI, e.g. ``metric=sales, frequency=month``.
+
+        Why this is a separate field and not part of ``summary``: ``summary`` is what the
+        LangSmith trace records for each step, and the project promises the trace keeps
+        only structural argument information (value types and string lengths), never
+        column names. Showing the arguments to the user is useful -- two calls to the
+        same tool with different arguments otherwise look like an accidental repeat --
+        but it must stay inside the UI boundary.
+        """
+        if not tool_input:
+            return None
+        parts: list[str] = []
+        for key, value in tool_input.items():
+            if value is None:
+                continue
+            if isinstance(value, bool):
+                rendered = "true" if value else "false"
+            elif isinstance(value, (int, float)):
+                rendered = str(value)
+            elif isinstance(value, str):
+                text = value.strip()
+                if not text:
+                    continue
+                rendered = text if len(text) <= 40 else text[:40] + "…"
+            else:
+                continue
+            parts.append(f"{key}={rendered}")
+        return ", ".join(parts)[:300] if parts else None
 
     @staticmethod
     def _safe_tool_arguments(arguments: dict[str, Any]) -> dict[str, Any]:

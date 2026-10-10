@@ -430,6 +430,105 @@ def test_embedding_failure_maps_to_unavailable_retrieval_status():
     assert result.retrieval_status == "unavailable"
 
 
+def test_step_detail_shows_what_each_call_was_asked_to_compute(context):
+    """Two calls to the same tool with different arguments must be distinguishable.
+
+    The live demo showed two identical "调用白名单工具 calculate_time_series" lines, which
+    reads like an accidental repeat even though the arguments differed.
+    """
+    llm = MockLLM([
+        action_tool("calculate_group_statistics",
+                    {"group_by": "product", "metric": "sales", "aggregation": "sum"}),
+        action_tool("calculate_group_statistics",
+                    {"group_by": "product", "metric": "sales", "aggregation": "mean"}),
+        action_final("完成。"),
+    ])
+    result = AnalystAgent(llm).run(AgentRequest(user_query="按产品看销售额", dataset_context=context))
+    assert result.success
+    first, second = result.steps[0].detail, result.steps[1].detail
+    assert first == "group_by=product, metric=sales, aggregation=sum"
+    assert second == "group_by=product, metric=sales, aggregation=mean"
+    assert first != second
+    # The privacy-safe summary stays generic and does not carry the column names.
+    assert "sales" not in result.steps[0].summary
+
+
+def test_step_detail_is_absent_for_the_final_step(context):
+    result = AnalystAgent(MockLLM([action_final("完成。")])).run(
+        AgentRequest(user_query="分析", dataset_context=context)
+    )
+    assert result.steps[-1].detail is None
+
+
+def test_step_detail_is_bounded_and_ignores_unsupported_values(context):
+    from app.agent import analyst_agent
+
+    digest = analyst_agent.AnalystAgent._argument_digest({
+        "column": "x" * 200, "n": 3, "ascending": None, "nested": {"a": 1},
+    })
+    assert digest is not None and len(digest) <= 300
+    assert "n=3" in digest and "nested" not in digest and "ascending" not in digest
+    assert analyst_agent.AnalystAgent._argument_digest({}) is None
+    assert analyst_agent.AnalystAgent._argument_digest(None) is None
+
+
+def test_step_details_stay_inside_the_ui_and_never_reach_the_trace(context):
+    """The LangSmith boundary must keep recording structure, not column names.
+
+    ``AgentStep.detail`` exists precisely because the trace may not carry arguments, so
+    this locks the boundary: if a future change adds details to the traced step payload,
+    the promise "工具参数只记录结构类型和字符串长度" would be silently broken.
+    """
+
+    class RecordingSpan:
+        def __init__(self, log):
+            self._log = log
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *exc):
+            return False
+
+        def end(self, payload=None):
+            self._log.append(payload)
+
+    class RecordingTracer:
+        def __init__(self):
+            self.payloads = []
+
+        def span(self, name, run_type=None, inputs=None, metadata=None):
+            return RecordingSpan(self.payloads)
+
+    tracer = RecordingTracer()
+
+    class StubLLM:
+        is_configured = True
+
+        def __init__(self, responses):
+            self._responses = list(responses)
+            self.tracing = tracer
+
+        def generate(self, request):
+            return LLMResponse(content=self._responses.pop(0), model="stub", mode="llm")
+
+    agent = AnalystAgent(StubLLM([
+        action_tool("find_top_n", {"column": "sales", "n": 1}),
+        action_final("完成。"),
+    ]))
+    result = agent.run(AgentRequest(user_query="找最高", dataset_context=context))
+    assert result.success
+    # The UI-facing step carries the column name...
+    assert "sales" in (result.steps[0].detail or "")
+
+    root_payload = next(payload for payload in tracer.payloads if payload and "steps" in payload)
+    serialized = json.dumps(root_payload, ensure_ascii=False, default=str)
+    assert "detail" not in serialized
+    assert "sales" not in serialized
+    for step_payload in root_payload["steps"]:
+        assert set(step_payload) == {"action_type", "tool_name", "summary"}
+
+
 def test_prompt_budget_is_a_real_hard_limit_on_the_worst_case():
     """A wide schema plus a long question used to exceed the budget with no history.
 

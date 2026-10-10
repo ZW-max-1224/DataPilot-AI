@@ -214,7 +214,6 @@
   "claim_fact": "事实（工具已计算）",
   "claim_interpretation": "解释",
   "claim_hypothesis": "假设（需进一步验证）",
-  "claim_evidence_tool": "证据来源",
   "claim_downgraded_note": "有 {count} 条结论缺少工具证据，已自动降级为“假设”，不会被当作事实展示。",
   "structured_missing_note": "本次回答未提供结构化结论，以下为模型原始叙述，请对照“分析步骤”中的工具结果自行核对。",
   "agent_partial_title": "本次分析未完整结束",

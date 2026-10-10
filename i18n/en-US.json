@@ -214,7 +214,6 @@
   "claim_fact": "Fact (computed by a tool)",
   "claim_interpretation": "Interpretation",
   "claim_hypothesis": "Hypothesis (needs verification)",
-  "claim_evidence_tool": "Evidence tool",
   "claim_downgraded_note": "{count} finding(s) lacked tool evidence and were automatically downgraded to hypotheses, so they are not shown as facts.",
   "structured_missing_note": "This answer was not returned as a structured conclusion. The model's raw narrative is shown below; check it against the tool results in the analysis steps.",
   "agent_partial_title": "This analysis did not complete",

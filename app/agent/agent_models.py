@@ -190,6 +190,12 @@ class AgentStep(BaseModel):
     tool_input: dict[str, Any] | None = None
     tool_output: dict[str, Any] | None = None
     summary: str = Field(max_length=300)
+    # Compact, human-readable argument digest ("metric=sales, frequency=month") for
+    # the UI only. It deliberately does NOT travel to LangSmith: the trace keeps the
+    # structural argument summary, which records value types and string lengths rather
+    # than column names. Two calls to the same tool with different arguments otherwise
+    # read as an accidental repeat.
+    detail: str | None = Field(default=None, max_length=300)
 
 
 class AgentError(BaseModel):

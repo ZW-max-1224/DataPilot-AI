@@ -164,9 +164,11 @@ def _render_structured_answer(structured, translations: dict[str, str]) -> None:
         for index, finding in enumerate(structured.key_findings, start=1):
             badge = badges.get(finding.claim_type, "")
             label = labels.get(finding.claim_type, finding.claim_type)
-            st.markdown(f"{index}. {finding.statement} — {badge} {label}")
-            if finding.evidence_tool:
-                st.caption(f"{translations['claim_evidence_tool']}: {finding.evidence_tool}")
+            # The evidence tool sits on the finding itself instead of on a separate
+            # caption line: the badge and the tool it was verified with belong together,
+            # and a repeated caption added five extra lines for five findings.
+            evidence = f" · `{finding.evidence_tool}`" if finding.evidence_tool else ""
+            st.markdown(f"{index}. {finding.statement} — {badge} {label}{evidence}")
     if structured.recommendations:
         st.markdown(f"**{translations['result_recommendations']}**")
         for item in structured.recommendations:
@@ -906,6 +908,11 @@ else:
             st.markdown(f"**{t['agent_steps']}**")
             for index, step in enumerate(agent_response.steps, start=1):
                 st.write(f"{index}. {step.summary}")
+                if step.detail:
+                    # What the tool was actually asked to compute. Two calls to the same
+                    # tool with different arguments looked like an accidental repeat
+                    # while only the summary was shown.
+                    st.caption(step.detail)
                 if step.tool_name == "search_knowledge" and step.tool_output:
                     response_data = (step.tool_output.get("data") or {})
                     for result in response_data.get("results") or []:
