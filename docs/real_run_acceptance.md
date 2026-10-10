@@ -1,5 +1,20 @@
 # DataPilot AI 真实运行验收报告
 
+> ## ⚠️ 状态更新（后续修订，本报告的正文是当时的状态快照）
+>
+> 本报告记录的是**当时**的验收状态。以下结论随后已被更新的验证取代，正文保持原样以免篡改历史记录：
+>
+> | 本报告当时的结论 | 当前实际状态 |
+> |---|---|
+> | 测试 149 passed | **226 passed** |
+> | "项目没有 `.env`" | `.env` 已存在并配置了可用的真实 LLM Key（被 `.gitignore` 忽略，从未进入版本库） |
+> | "真实 LLM：blocked，Agent 返回 `demo_mode`" | **已真实验证**：6 个代表性中文提问全部成功，均返回结构化结论，图表链路可用。过程中还发现并修复了阻断级缺陷（详见 [code-review-and-next-steps.md](code-review-and-next-steps.md) 第八节） |
+> | "未提交 Git" | 已提交（`fix: repair the real Agent loop, structured answers and data-ingest correctness`） |
+> | 真实 Embedding → RAG：blocked | **仍然未验证**，需要配置 Embedding Provider；用 `scripts/check_embedding.py` 先行验证 |
+> | MySQL / LangSmith | **仍然未验证** |
+>
+> 本报告"没有为通过验收而伪造结果、没有用 Mock 代替真实服务"的做法值得保留：**只把真正跑过的东西写成通过**。
+
 **验收日期：**2026-10-10（Asia/Shanghai）
 
 **项目目录：**`C:\Users\35002\Documents\Codex\2026-10-04\DataPilot-AI`

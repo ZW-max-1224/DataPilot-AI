@@ -24,7 +24,6 @@ from __future__ import annotations
 import argparse
 import math
 import os
-import sys
 from pathlib import Path
 from typing import Any, Callable, Sequence
 
@@ -140,7 +139,7 @@ def main() -> int:
         print(f"      请把 EMBEDDING_DIMENSIONS 改为 {actual}，或换一个返回 {expected} 维的模型。")
         failures += 1
     else:
-        print(f"[2/5] 维度与配置一致 ............... 通过")
+        print("[2/5] 维度与配置一致 ............... 通过")
 
     # 检查 3：批量请求（项目按批索引知识文档，最多 128 条）
     try:

@@ -11,10 +11,16 @@ from typing import Any
 import pandas as pd
 
 from app.agent import AgentRequest, AnalystAgent
-from app.config.settings import EmbeddingSettings, LLMSettings, QdrantSettings
+from app.config.settings import EmbeddingSettings, LLMSettings
 from app.evaluation.metrics import aggregate_metrics, evaluate_case_metrics
 from app.evaluation.judge import OptionalLLMJudge
-from app.evaluation.models import EvaluationCase, EvaluationReport, EvaluationResult, EvaluationSummary
+from app.evaluation.models import (
+    EvaluationCase,
+    EvaluationReport,
+    EvaluationResult,
+    EvaluationSummary,
+    FailureKind,
+)
 from app.models.dataset_context import DatasetContext
 from app.services.profiler import profile_dataframe
 from app.services.tracing_service import TracingService
@@ -79,9 +85,11 @@ class EvaluationRunner:
         missing = [name for name in case.requires if not self.dependencies.get(name, False)]
         missing_optional_services = [name for name in missing if name in {"embedding", "qdrant"}]
         if missing_optional_services:
-            return self._not_run(case, "skipped", f"{', '.join(missing_optional_services)} service unavailable")
+            return self._not_run(case, "skipped", f"{', '.join(missing_optional_services)} service unavailable",
+                                 failure_kind="dependency")
         if missing:
-            return self._not_run(case, "unavailable", f"{', '.join(missing)} service unavailable")
+            return self._not_run(case, "unavailable", f"{', '.join(missing)} service unavailable",
+                                 failure_kind="dependency")
 
         query_fingerprint = hashlib.sha256(case.question.encode("utf-8")).hexdigest()
         try:
@@ -127,6 +135,8 @@ class EvaluationRunner:
                 result.metric_results["invalid_tool"] = result.invalid_tool
                 result.metric_results["duplicate_tool_call"] = result.duplicate_tool_call
                 result.status, result.failure_reason = _case_outcome(case, response, result)
+                if result.status == "failed":
+                    result.failure_kind = "expectation"
                 span.end({"status": result.status, "tools": result.actual_tools,
                           "retrieved_document_ids": result.retrieved_document_ids,
                           "retrieved_chunk_ids": result.retrieved_chunk_ids,
@@ -135,9 +145,13 @@ class EvaluationRunner:
                           "duration_ms": result.duration_ms})
                 return result
         except Exception as exc:
-            logger.warning("Evaluation case %s unavailable (%s)", case.case_id, type(exc).__name__)
-            return self._not_run(case, "unavailable", f"case execution unavailable ({type(exc).__name__})",
-                                 duration_ms=_duration(started))
+            # An unexpected exception is not a missing dependency: the case was attempted
+            # and crashed, so it must count as a failure instead of shrinking the denominator.
+            logger.warning("Evaluation case %s crashed (%s)", case.case_id, type(exc).__name__)
+            return self._not_run(
+                case, "failed", f"unexpected_{type(exc).__name__}: {exc}"[:500],
+                duration_ms=_duration(started), failure_kind="unexpected",
+            )
 
     @staticmethod
     def _collect_result(case: EvaluationCase, response: Any, started: float) -> EvaluationResult:
@@ -180,14 +194,17 @@ class EvaluationRunner:
             iterations=int(getattr(response, "iterations", len(response.steps))),
             agent_success=bool(response.success), duration_ms=_duration(started),
             invalid_tool=invalid_tool, duplicate_tool_call=duplicate,
+            metadata=dict(case.metadata),
         )
 
     @staticmethod
-    def _not_run(case: EvaluationCase, status: str, reason: str, duration_ms: int = 0) -> EvaluationResult:
+    def _not_run(case: EvaluationCase, status: str, reason: str, duration_ms: int = 0,
+                 failure_kind: FailureKind | None = None) -> EvaluationResult:
         return EvaluationResult(
             case_id=case.case_id, category=case.category, status=status, question=case.question,
             expected_tools=case.expectation.expected_tools, expected_sources=case.expectation.required_sources,
-            duration_ms=duration_ms, failure_reason=reason,
+            duration_ms=duration_ms, failure_reason=reason, failure_kind=failure_kind,
+            metadata=dict(case.metadata),
         )
 
 
@@ -222,9 +239,12 @@ def _case_outcome(case: EvaluationCase, response: Any, result: EvaluationResult)
 
 def _build_summary(results: list[EvaluationResult]) -> EvaluationSummary:
     passed = sum(result.status == "passed" for result in results)
-    failed = sum(result.status == "failed" for result in results)
-    skipped = sum(result.status == "skipped" for result in results)
-    unavailable = sum(result.status == "unavailable" for result in results)
+    # A case whose code raised unexpectedly is attempted and failed, never "not run";
+    # otherwise a crash would remove the case from `attempted` and inflate the pass rate.
+    failed = sum(result.status == "failed" or result.failure_kind == "unexpected" for result in results)
+    skipped = sum(result.status == "skipped" and result.failure_kind != "unexpected" for result in results)
+    unavailable = sum(result.status == "unavailable" and result.failure_kind != "unexpected"
+                      for result in results)
     attempted = passed + failed
     return EvaluationSummary(
         total_cases=len(results), passed_cases=passed, failed_cases=failed,

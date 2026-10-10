@@ -1044,7 +1044,7 @@ except APIError as exc:
 
 **下次继续的顺序**
 
-1. **先确认环境没坏**：跑一次 `pytest -q`，应为 226 passed。若数字变了，先查清原因再往下做。
+1. **先确认环境没坏**：跑一次 `pytest -q`，应为 238 passed；再跑 `ruff check .` 应为 All checks passed。若数字变了，先查清原因再往下做。
 2. **补 Embedding（你的第 2 个问题）**：
    ```powershell
    .\.venv\Scripts\python.exe scripts\check_embedding.py `
@@ -1052,8 +1052,87 @@ except APIError as exc:
      --model BAAI/bge-m3 --dimensions 1024
    ```
    5 项全过后把打印出的配置块写进 `.env`（`EMBEDDING_PROVIDER=openai_compatible`），重启 Streamlit，在"知识库"区点索引，再问一个文档里有的问题验证 Sources 是真实来源。
-3. **继续 P1 剩余项**（顺序建议）：P1-4 i18n 剩余部分 → P1-5 上传错误信息 → P1-11/P1-13 评估可信度 → P1-6 文档一致性 → P2 工具链（CI/pyproject/ruff/mypy/coverage/LICENSE）。
+3. **P1-4 / P1-5 / P1-6 / P1-11 / P1-13 与 P2 工具链已在第二批完成**（见第九节）。第三批建议：清 mypy 33 个错误 → 启用 ruff E501/I001，把 CI 门禁补完整。
 4. **写真实验收报告** `docs/real_run_acceptance_v2.md`：真实成功率、真实 RAG 检索、真实 MySQL、真实 LangSmith Trace，成功就写成功、没验证就写没验证（这一步最能体现"不伪造 AI"）。
 
 **下次开始时的第一句话建议这样说：**"继续 DataPilot AI 的 P1-4：把知识库区和 Evaluation 区的硬编码文案提取到 i18n，并加上 UI 字面量不得含中文的静态检查测试。"——这样我能直接接上，不用重新审查一遍。
+
+---
+
+# 九、第二批修复记录（P1-4 ～ P1-6、P1-11/P1-13、P2）
+
+**范围：**8.5 节列出的全部剩余 P1 项 + P2 工具链。
+**验证：**全量 `pytest`、`ruff check .`、`mypy`、i18n 静态检查。
+
+| 指标 | 第二批之前 | 第二批之后 |
+|---|---|---|
+| 全量测试 | 226 passed | **238 passed** |
+| ruff | 未配置 | **All checks passed**（`select = E4,E7,E9,F,W`，仅剩 1 个必要的 E402 ignore） |
+| mypy | 未配置 | **33 errors**（已配置、非阻断，作为明确基线） |
+| UI 硬编码中文 | 34 处 | **1 处**（语言选择器本身，已 allowlist） |
+| i18n 键 | 207 | **231**，中英键集合与顺序一致 |
+
+## 9.1 P1-4 i18n：知识库区与 Evaluation 区全部提取
+
+- 知识库区（标题、说明、隐私提示、collection 信息、可用状态、索引按钮与结果、上传表单、文档表格、空状态）与 Evaluation 区（标题、Case 数量说明、Judge 复选框、运行按钮、状态计数、指标表头、判官状态、结果表、下载按钮）**共 34 处硬编码文案全部移入** `i18n/zh-CN.json` 与 `i18n/en-US.json`。
+- **阶段徽章**由 `Phase 6 · Agent` 修正为 `Phase 10 · Evaluation 与 Agent`。
+- **Case 数量不再写死**：改为 `len(evaluation_cases)` 动态渲染（原来硬编码 14，实际 15）。
+- 指标表**改为遍历 runner 实际产出的指标**，不再依赖固定的 14 项列表。副产物：新增指标会自动出现（缺标签时回退显示原始键名）而不会被静默丢弃；指标为空时也不会再抛 `KeyError`。
+- 顺手修掉两个相关缺陷：`load_evaluation_cases()` 加了异常保护（数据集损坏时只显示错误，不再整页崩溃）；知识库"适用数据集"选择框改用**稳定哨兵值 + `format_func`**（原来把 64 位 sha256 明文当选项显示；而且若用翻译文案当 value，切换语言会让已选值失效）。
+
+**防回归测试（`tests/test_i18n.py`，4 项）：**两语言键集合与顺序一致；UI 引用的每个键在两种语言都存在；**UI 源码不允许出现未登记中文**（用 `ast` 解析字符串字面量，allowlist 仅含语言选择器的 `中文`）；翻译值非空。
+
+**该检查已双向验证：**真实文件 → 0 违规；合成的含两处未登记中文的源码 → 准确报出 2 处且不误报 allowlist。
+
+## 9.2 P1-5 上传错误信息与按钮防御
+
+- 上传失败**不再丢弃 `DatasetLoadError` 的具体原因**。现在显示 `"文件未能加载。<具体原因>"`，原因是 service 层提供的可执行信息（文件为空 / 超过 20 MiB / 请另存为 UTF-8 或 GB18030 / 存在重复列名请重命名）。
+- "缺失值分析"与"重复值分析"两个按钮**补上与相邻按钮一致的 `try/except`**（此前只有这两个没有，异常会变成页面 Traceback）。
+- Agent 运行块补 `except Exception` 兜底 + i18n 提示（原来只捕获 `ValidationError`）。
+
+## 9.3 P1-6 文档一致性
+
+- README：消除"Phase 9（当前）"与"Phase 10（当前）"并存；状态段更新并**明确列出三项尚未真实验证的服务**；补充加固后的 Agent 能力、`LLM_MAX_RETRIES`、i18n 静态检查、`scripts/check_embedding.py`、目录中的 `scripts/`；新增"真实验证状态"表。
+- `docs/real_run_acceptance.md`：顶部加入**状态更新块**逐条列出"当时结论 → 当前实际状态"，**正文保持原样不篡改历史**。
+- 新增 [real_run_acceptance_v2.md](real_run_acceptance_v2.md)：加固后的真实验收（6/6 成功率、结构化覆盖率、图表链路、加固前后对比）以及仍未验证的三项及其验证方法。
+
+## 9.4 P1-11 / P1-13 评估可信度
+
+| 修复 | 内容 |
+|---|---|
+| 崩溃不再缩小分母 | 新增 `failure_kind`（`dependency` / `expectation` / `unexpected`）。未预期异常保持 `status="failed"`（不改 Literal，避免破坏 UI 状态字符串）但**必然计入分母**；`skipped`/`unavailable` 仅在确为依赖缺失时使用。测试证明"Agent 崩溃会降低 pass rate" |
+| 空事实不再判真 | `expected_facts` 为空时 `grounded_answer` 返回 **`None`（不可测量）**，取代原来 `all([]) == True` 的恒真。只有 `required_sources` 的用例不再被误判为有据可依 |
+| 工具指标不再奖励乱调 | 新增 `tool_selection_precision`（\|expected ∩ actual\| / \|actual\|）与 `unnecessary_tool_calls`；保留原召回语义。测试断言"1 个正确 + 20 个无关工具"召回仍 1.0 而 precision 显著低于 1 |
+| 重名测试修复 | `tests/test_evaluation_runner.py` 从 8 个定义 / 7 个收集，变为 **10 个定义 / 10 个收集**；补上缺失的镜像场景"判官与**通过**的确定性结果不一致时不得推翻" |
+| chunking 测试修复 | 断言改为传入的字面量 60（原来断言模块默认值 700，属空断言）；新增真实重叠断言与"为不超过硬上限而放弃重叠"分支的测试 |
+| 真值来源透明化 | 每个含 `ground_truth` 的 Case 在 `metadata.ground_truth_source` 声明来源（如 `tool-derived (change detector, not an independent oracle)`），`EvaluationResult.metadata` 把它带进报告；测试强制"含 ground_truth 的 Case 必须声明来源"，防止将来静默遗漏 |
+
+## 9.5 P2 工具链
+
+| 新增 | 说明 |
+|---|---|
+| `pyproject.toml` | 项目元数据、pytest（`testpaths`；**刻意不设 `addopts`**）、ruff、mypy、coverage |
+| `requirements-dev.txt` | pytest / pytest-cov / ruff / mypy，与 `requirements.txt` 一致的上界风格 |
+| `.github/workflows/ci.yml` | push/PR，ubuntu + Python 3.11，pip 缓存；`pytest -q` 与 `ruff check .` **阻断**，mypy **非阻断**并注明原因 |
+| `LICENSE` | MIT（版权方为占位符 `DataPilot AI`，**需你替换为真实姓名**） |
+| `.gitignore` | 增加 `.mypy_cache/` |
+
+**一个我自己踩到并修掉的坑：**`pyproject.toml` 最初按惯例写了 `addopts = "-q"`，这会让文档里的 `pytest -q` 解析成 `-qq`，**静默吞掉 "N passed" 汇总行**——看起来像命令没输出。已移除该配置，`pytest -q` 恢复正常。
+
+**lint 配置的取舍是诚实的：**起始选择 `E,F,W,I` 并不通过（E501 52 处、I001 19 处、E402 19 处、F 5 处、E731 2 处）。最终选择 `E4,E7,E9,F,W`，并把原先靠 ignore 掩盖的 7 处真实违规**直接修掉**（删除未使用 import、去掉无占位符 f-string 前缀、重命名被遮蔽的重复测试、把 lambda 测试替身改为 `def`），因此现在只剩 1 个 per-file-ignore（`streamlit_app.py` 的 E402，那是 `sys.path` 引导必须先行的真实需要）。E501 与 I001 未启用并注明原因（前者需逐行重排，后者会打乱 `sys.path` 引导顺序）。
+
+**CI 的离线前提已核验：**测试不访问网络——所有 URL 都是仅作配置字符串的假主机（`*.example.test`），外部依赖全为进程内替身，Qdrant 用 `tmp_path` 本地模式，唯一 socket 形状的调用指向 `127.0.0.1:1`（故意不可达）。
+
+## 9.6 第二批之后仍未完成
+
+| 项 | 说明 |
+|---|---|
+| **mypy 33 errors** | 已配置并作为非阻断门禁；多为 `Literal` 收窄与 `X | None`（`arg-type` 22 处）。推动到 0 是明确的剩余工作 |
+| **ruff E501 / I001** | 52 处超长行 + 19 个 import 块；前者需逐行重排，后者会危及 `sys.path` 引导顺序，均需单独一次专门清理 |
+| **Embedding → RAG 真实验证** | 等你配置 Provider；先用 `scripts/check_embedding.py` 验证 5 项 |
+| **MySQL / LangSmith 真实验证** | 未验证，文档已如实标注 |
+| **LICENSE 版权方** | 占位符需替换为你的真实姓名 |
+
+**第三批的入口建议：**把 mypy 33 个错误按文件清到 0（从 `app/tools/analysis_tools.py` 的 5 个开始），然后启用 E501 与 I001——这会让 CI 的门禁真正完整。注意 I001 必须先确认 `app/ui/streamlit_app.py` 的 `sys.path` 引导不会被重排。
+
 

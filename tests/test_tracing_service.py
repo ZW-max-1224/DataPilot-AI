@@ -3,7 +3,6 @@ from types import SimpleNamespace
 
 import pandas as pd
 import pytest
-from pydantic import SecretStr
 
 from app.agent import AnalystAgent, AgentRequest
 from app.config.settings import LLMSettings, LangSmithSettings
@@ -108,9 +107,10 @@ def test_disabled_llm_service_remains_functional_without_langsmith_key():
         choices=[SimpleNamespace(message=SimpleNamespace(content="mock answer"), finish_reason="stop")],
         model="mock-model", usage=None,
     )
-    client = lambda **_: SimpleNamespace(chat=SimpleNamespace(
-        completions=SimpleNamespace(create=lambda **__: completion)
-    ))
+    def client(**_):
+        return SimpleNamespace(chat=SimpleNamespace(
+            completions=SimpleNamespace(create=lambda **__: completion)
+        ))
     llm = LLMService(
         LLMSettings.from_env({"LLM_API_KEY": "llm-key", "LLM_BASE_URL": "https://llm.example.test/v1", "LLM_MODEL": "mock-model"}),
         client_factory=client,
@@ -129,9 +129,10 @@ def test_enabled_mock_tracing_only_receives_sanitized_llm_metadata():
         choices=[SimpleNamespace(message=SimpleNamespace(content="private output"), finish_reason="stop")],
         model="mock-model", usage=SimpleNamespace(prompt_tokens=12, completion_tokens=2, total_tokens=14),
     )
-    client = lambda **_: SimpleNamespace(chat=SimpleNamespace(
-        completions=SimpleNamespace(create=lambda **__: completion)
-    ))
+    def client(**_):
+        return SimpleNamespace(chat=SimpleNamespace(
+            completions=SimpleNamespace(create=lambda **__: completion)
+        ))
     llm = LLMService(
         LLMSettings.from_env({"LLM_API_KEY": "llm-key", "LLM_BASE_URL": "https://llm.example.test/v1", "LLM_MODEL": "mock-model"}),
         client_factory=client,

@@ -4,7 +4,9 @@
 
 **先理解数据，再用受控工具分析数据。** DataPilot AI 当前是一个可运行的 Pandas 数据分析工作台：上传 CSV/Excel 或载入合成销售数据，查看数据画像，并通过确定性工具完成分组统计、时间序列、质量检查与图表分析。
 
-> 当前状态：Phase 9 为 Agent 增加按需知识检索。CSV/Excel 仍由 Pandas 工具确定性分析；RAG 只检索数据分析方法和业务口径。MySQL 保存文档元数据，Qdrant 保存检索切片与向量。当前 UI 为 Streamlit，未实现 FastAPI。
+> 当前状态：Phase 1–10 已实现。**Phase 6 的 Agent Loop 已用真实 LLM 做端到端验证**（见下文"真实验证状态"）。CSV/Excel 仍由 Pandas 工具确定性分析；RAG 只检索数据分析方法和业务口径。MySQL 保存文档元数据，Qdrant 保存检索切片与向量。当前 UI 为 Streamlit，未实现 FastAPI。
+>
+> **尚未真实验证：**Embedding Provider → RAG 端到端检索、MySQL 连接与写入、LangSmith Trace。这三项目前只有离线 Mock 测试；未配置时代码不会伪造结果。
 
 ## 业务流程
 
@@ -46,6 +48,9 @@ flowchart LR
 - 无 API Key 时进入明确标识的 Demo Mode：只显示固定说明，不发起模型调用，也不伪造 AI 结果。
 - LLM Playground 可观察真实模式或 Demo 模式及 Token 使用量；页面只显示 Key 的配置状态，永不显示 Key 内容。
 - Phase 6 AI Analyst：LLM 以严格 JSON/Pydantic 契约选择已有工具，Agent 最多执行 8 次决策；工具结果序列化并限制大小后才进入后续模型上下文。
+- Agent 可靠性（Phase 6 加固，已真实运行验证）：容忍 Markdown 围栏的 JSON；解析失败时把校验错误回灌并重试；工具错误作为观察值反馈给模型自我纠正；参数完全相同的重复调用复用上次结果；最后一次决策强制收敛；SDK 传输重试（`LLM_MAX_RETRIES`）。**任何终止路径都会返回已经计算出的证据，而不是只返回一句错误。**
+- 结构化结论：最终回答包含 Executive Summary / Key Findings / Recommendations，每条结论标注 `fact` / `interpretation` / `hypothesis`。**标为 fact 的结论必须有真实运行过的工具作为证据，否则自动降级为 hypothesis**，UI 用不同徽章区分。
+- Agent 图表：模型只选择图表参数，Matplotlib 在服务端绘图，图表随 Agent 结果返回并在 UI 渲染（渲染后释放 figure）。
 - Agent UI 仅在 LLM 配置完整时开放；无数据集可进行知识检索，有数据分析需求时 Pandas Tool 会要求先加载数据集；Demo Mode 不伪造工具调用。
 - Phase 7 LangSmith：可选 Trace 覆盖 Agent、LLM 调用和工具调用，使用脱敏后的运行摘要；默认关闭。
 - Phase 8 MySQL：SQLAlchemy 持久化数据集元数据、非原始字段画像和 Agent 运行摘要；数据库未配置/不可用不阻断分析。
@@ -213,6 +218,8 @@ LLM_BASE_URL=
 LLM_MODEL=
 LLM_TIMEOUT=30
 LLM_MAX_TOKENS=1024
+# 传输层重试交给 OpenAI SDK（覆盖超时、429、5xx，带指数退避）。默认 2；设为 0 可关闭。
+LLM_MAX_RETRIES=2
 ```
 
 `LLM_BASE_URL` 使用提供商给出的 OpenAI-compatible API 根地址，例如以 `/v1` 结尾的地址。不要把 Key 提交到 GitHub。没有 Key 时应用仍可启动并显示 Demo Mode；配置 Key 后若 Base URL/Model 不完整，页面会提示修正配置，不会伪装为 Demo AI 答案。
@@ -252,6 +259,37 @@ Linux/Ubuntu：创建虚拟环境后使用 `.venv/bin/python -m pip install -r r
 
 单元测试不调用网络、真实 LLM 或远程数据库；Qdrant 测试使用真实本地持久化客户端和临时目录。`tests/test_streamlit_ui.py` 使用 Streamlit AppTest 覆盖 Demo 分析、柱状/折线图、语言切换，以及 Demo → 两份上传 CSV → Demo 的会话状态切换。演示数据为 `data/sample_sales.csv`。
 
+`tests/test_i18n.py` 额外做三项静态检查：中英两语言文件的键集合与顺序必须一致、UI 引用的每个 i18n 键必须在两种语言中都存在、**UI 源码里不允许出现硬编码中文**（语言选择器本身除外）。这样新增页面时不可能再漏做翻译。
+
+## 配置验证工具
+
+`scripts/check_embedding.py` 在把 Embedding 服务商写进 `.env` 之前先验证它，检查 5 项：端点可达与向量维度、维度与配置一致、批量请求与顺序稳定、同一文本结果确定、**语义有效性（近义句相似度必须高于无关句）**。最后一项用来防止把返回随机/占位向量的端点写进知识库——那种情况下前四项都会"通过"，但检索毫无意义。
+
+```powershell
+# 不联网自检脚本自身逻辑
+.\.venv\Scripts\python.exe scripts\check_embedding.py --self-test
+
+# 在写入 .env 之前试一个候选服务商
+.\.venv\Scripts\python.exe scripts\check_embedding.py `
+  --base-url https://api.siliconflow.cn/v1 --api-key sk-xxxx `
+  --model BAAI/bge-m3 --dimensions 1024
+```
+
+全部通过时脚本会直接打印可粘贴进 `.env` 的配置块；脚本从不打印 API Key。
+
+## 真实验证状态
+
+| 项目 | 状态 | 证据 |
+|---|---|---|
+| 离线测试 | 通过 | `pytest -q`，全部通过 |
+| 真实 LLM 单次调用 | 通过 | 配置真实 Key 后由 `LLMService` 实际调用 |
+| **真实 Agent 端到端** | **通过** | 6 个代表性中文提问（趋势、归因、Top N、异常、分组、图表）全部成功，均返回结构化结论；图表随结果返回 |
+| Embedding → RAG 端到端 | **未验证** | 需要配置 Embedding Provider；用 `scripts/check_embedding.py` 验证后再索引文档 |
+| MySQL 读写 | **未验证** | `MYSQL_USER` 为空时持久化整体关闭 |
+| LangSmith Trace | **未验证** | 默认关闭；未产生真实 Trace |
+
+真实的验收记录与命令输出见 [docs/real_run_acceptance_v2.md](docs/real_run_acceptance_v2.md)（加固后的当前状态）与 [docs/real_run_acceptance.md](docs/real_run_acceptance.md)（加固前的历史快照）；审查与修复过程见 [docs/code-review-and-next-steps.md](docs/code-review-and-next-steps.md)。LLM endpoint 存在间歇性连接失败；失败时 Agent 返回已经计算出的证据并把未完成的部分标注出来，不会伪造结论。
+
 ## 技术栈（当前已使用）
 
 - Python 3.11+
@@ -279,8 +317,9 @@ app/
 ├── tools/        # Pandas、可视化、知识检索白名单工具
 └── ui/           # Streamlit 应用
  data/            # 合成 Demo CSV、内置知识和本地忽略目录
- docs/            # 算法、数据画像与工具说明
+ docs/            # 算法、数据画像、工具说明、审查报告与真实运行验收记录
  i18n/            # 中英文 UI 文案
+ scripts/         # 配置自检工具（Embedding provider 检查）
  tests/           # 离线单元测试
 ```
 
@@ -294,7 +333,8 @@ app/
 - **Phase 6**：受控 Agent Loop、JSON Tool Selection、注册表白名单、Pydantic 参数校验、结果长度限制和 Demo Mode UI。
 - **Phase 7**：可选 LangSmith Trace、自定义运行层级、敏感数据摘要、状态展示和离线 Mock 验证。
 - **Phase 8**：可选 MySQL 元数据和 Agent 运行持久化；Pandas 内存分析保持独立。
-- **Phase 9（当前）**：分析知识 RAG MVP、Qdrant、本地 Markdown/TXT、`search_knowledge` Agent Tool、MySQL 文档元数据与检索 Trace。
+- **Phase 9**：分析知识 RAG MVP、Qdrant、本地 Markdown/TXT、`search_knowledge` Agent Tool、MySQL 文档元数据与检索 Trace。
 - **Phase 10（当前）**：固定 Dataset、可解释 RAG/Agent/Pandas Metrics、确定性 Ground Truth、可选 Judge 与 Streamlit Evaluation 页面。
+- **Phase 10 后加固**：Agent 可靠性（JSON 修复重试、错误观察回灌、重复调用复用、强制收敛、传输重试、部分结果降级）、结构化结论与事实/推测强制分离、Agent 图表链路、数据入口正确性（分隔符嗅探、标识列文本化、数值日期列拒绝、前置行数限制）、知识库重索引一致性、评估指标完整性。详见 [docs/code-review-and-next-steps.md](docs/code-review-and-next-steps.md) 第八节。
 
 详细算法、输入限制、边界条件见 [docs/analysis-tools.md](docs/analysis-tools.md) 和 [docs/dataset-profiler.md](docs/dataset-profiler.md)。

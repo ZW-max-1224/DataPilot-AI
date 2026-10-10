@@ -1,0 +1,10 @@
+# Development tooling only: tests, coverage and static quality gates.
+# Application runtime dependencies live in requirements.txt and are NOT duplicated here.
+
+# Tests
+pytest>=8.0,<10.0
+pytest-cov>=5.0,<8.0
+
+# Static quality gates
+ruff>=0.6,<1.0
+mypy>=1.11,<2.0

@@ -46,6 +46,10 @@ from app.tools.visualization_tools import ChartArtifact, create_chart
 
 logger = logging.getLogger(__name__)
 DEFAULT_KNOWLEDGE_BASE_ID = "datapilot-default"
+# Stable widget value for "not scoped to a dataset". The translated label is only a
+# display concern: using the translated text as the value would leave the stored
+# selection invalid the moment the user switches language.
+GENERAL_SCOPE_SENTINEL = "__general_knowledge__"
 
 
 def _qdrant_store_for_session(path: str, collection_name: str, dimensions: int) -> QdrantVectorStore:
@@ -309,15 +313,15 @@ with st.sidebar:
         st.info(t["database_disabled"])
 
     st.divider()
-    st.subheader("Knowledge Base / 知识库")
+    st.subheader(t["kb_title"])
     if knowledge_runtime_error:
-        st.warning("Knowledge Base unavailable / 知识库不可用")
+        st.warning(t["kb_unavailable"])
     elif not embedding_settings.is_configured:
-        st.info("Embedding unavailable / Embedding 未配置")
+        st.info(t["kb_embedding_unavailable"])
     else:
-        st.success("Qdrant local ready · Embedding configured / 本地向量库与 Embedding 已配置")
+        st.success(t["kb_ready"])
     if persistence_service.knowledge_repository is None:
-        st.caption("MySQL metadata persistence unavailable / 知识文档元数据不会跨重启持久化")
+        st.caption(t["kb_no_metadata_store"])
 
     st.divider()
     st.subheader(t["langsmith_status"])
@@ -360,11 +364,14 @@ else:
             try:
                 uploaded_df = load_dataset(uploaded_file.name, content)
                 set_dataset(uploaded_df, uploaded_file.name, "upload", digest, persistence_service)
-            except DatasetLoadError:
+            except DatasetLoadError as exc:
                 for key in ("dataset_df", "dataset_profile", "dataset_context", "dataset_digest"):
                     st.session_state.pop(key, None)
                 _clear_analysis_state()
-                st.error(t["error"])
+                # DatasetLoadError messages are author-controlled and actionable (empty
+                # file, size limit, undecodable CSV, duplicate headers). Replacing them
+                # with a generic notice left the user with no next step.
+                st.error(f"{t['error']} {exc}")
             except ValueError:
                 for key in ("dataset_df", "dataset_profile", "dataset_context", "dataset_digest"):
                     st.session_state.pop(key, None)
@@ -533,12 +540,24 @@ else:
         quality_cols = st.columns(2)
         with quality_cols[0]:
             if st.button(t["analyze_missing"], key="run_missing"):
-                st.session_state["analysis_results"]["missing"] = analyze_missing_values(df)
-                st.session_state["analysis_errors"].pop("missing", None)
+                try:
+                    st.session_state["analysis_results"]["missing"] = analyze_missing_values(df)
+                    st.session_state["analysis_errors"].pop("missing", None)
+                except AnalysisToolError as exc:
+                    st.session_state["analysis_errors"]["missing"] = str(exc)
+                except Exception:
+                    logger.exception("Unexpected error in missing-value analysis")
+                    st.session_state["analysis_errors"]["missing"] = t["unexpected_tool_error"]
             _show_result("missing", t["results"], t)
             if st.button(t["analyze_duplicates"], key="run_duplicates"):
-                st.session_state["analysis_results"]["duplicates"] = analyze_duplicates(df)
-                st.session_state["analysis_errors"].pop("duplicates", None)
+                try:
+                    st.session_state["analysis_results"]["duplicates"] = analyze_duplicates(df)
+                    st.session_state["analysis_errors"].pop("duplicates", None)
+                except AnalysisToolError as exc:
+                    st.session_state["analysis_errors"]["duplicates"] = str(exc)
+                except Exception:
+                    logger.exception("Unexpected error in duplicate analysis")
+                    st.session_state["analysis_errors"]["duplicates"] = t["unexpected_tool_error"]
             _show_result("duplicates", t["results"], t)
         with quality_cols[1]:
             if numeric_columns:
@@ -594,18 +613,12 @@ else:
         _show_result("chart", t["results"], t)
 
 st.divider()
-st.header("Knowledge Base / 知识库")
-st.caption(
-    "为 DataPilot 提供分析方法和业务口径。只支持 Markdown/TXT；不会索引 CSV、DataFrame 或 Dataset Profile。"
-    if locale == "zh-CN" else
-    "Provide analysis methods and business definitions. Markdown/TXT only; CSV, DataFrames, and profiles are not indexed."
-)
-st.caption(
-    "上传原文会保存在本机 data/knowledge/uploads/，文档文本会发送给你配置的 Embedding 服务用于索引。请勿上传密钥、个人信息或未授权资料。"
-    if locale == "zh-CN" else
-    "Uploaded source files are stored locally in data/knowledge/uploads/. Document text is sent to the configured Embedding provider. Do not upload secrets, personal data, or unauthorized content."
-)
-st.caption(f"Knowledge base: {DEFAULT_KNOWLEDGE_BASE_ID} · collection: {qdrant_settings.collection}")
+st.header(t["kb_title"])
+st.caption(t["kb_scope_caption"])
+st.caption(t["kb_privacy_caption"])
+st.caption(t["kb_collection_info"].format(
+    knowledge_base=DEFAULT_KNOWLEDGE_BASE_ID, collection=qdrant_settings.collection,
+))
 
 if knowledge_runtime_error:
     if knowledge_runtime_error == "embedding_dimension_mismatch":
@@ -621,18 +634,12 @@ if knowledge_runtime_error:
                 logger.exception("Knowledge base rebuild failed")
                 st.error(t["kb_rebuild_failed"])
     else:
-        st.error("Knowledge Base unavailable / 知识库不可用；请检查 Qdrant 本地存储配置。")
+        st.error(t["kb_unavailable"])
 elif not embedding_settings.is_configured:
     issue = embedding_settings.configuration_problem
-    st.warning(
-        "Embedding unavailable / Embedding 未配置。设置独立的 EMBEDDING_* 参数后才能索引或检索。"
-        + (f" ({issue})" if issue else "")
-    )
+    st.warning(t["kb_embedding_unavailable"] + (f" ({issue})" if issue else ""))
 else:
-    builtin_button = st.button(
-        "Index built-in analysis knowledge / 索引内置分析知识",
-        key="index_builtin_knowledge",
-    )
+    builtin_button = st.button(t["kb_index_builtin"], key="index_builtin_knowledge")
     if builtin_button:
         builtins = PROJECT_ROOT / "data" / "knowledge"
         for source_path in sorted([*builtins.glob("*.md"), *builtins.glob("*.txt")]):
@@ -651,34 +658,38 @@ else:
                     "chunk_count": indexed.chunk_count, "indexing_error": indexed.error_code,
                 }
                 if indexed.status == "indexed":
-                    st.success(f"Indexed: {document.source} ({indexed.chunk_count} chunks)")
+                    st.success(t["kb_indexed_source"].format(
+                        source=document.source, chunks=indexed.chunk_count))
                 else:
-                    st.error(f"Failed: {document.source} ({indexed.error_code})")
+                    st.error(t["kb_index_failed_code"].format(
+                        source=document.source, code=indexed.error_code))
             except Exception as exc:
                 logger.warning("Built-in knowledge indexing failed (%s)", type(exc).__name__)
-                st.error(f"Failed: {source_path.name}")
+                st.error(t["kb_index_failed_name"].format(name=source_path.name))
 
     active_context: DatasetContext | None = st.session_state.get("dataset_context")
     current_dataset_id = active_context.dataset_id if active_context else None
-    scope_options = ["General knowledge"]
+    general_scope = GENERAL_SCOPE_SENTINEL
+    scope_options = [general_scope]
     if current_dataset_id:
         scope_options.append(current_dataset_id)
     with st.form("form_knowledge_upload", clear_on_submit=True):
         knowledge_file = st.file_uploader(
-            "Upload Markdown/TXT / 上传 Markdown/TXT", type=["md", "txt"], key="knowledge_uploader",
+            t["kb_upload_label"], type=["md", "txt"], key="knowledge_uploader",
         )
         selected_scope = st.selectbox(
-            "Dataset scope / 适用数据集", scope_options,
+            t["kb_scope_label"], scope_options,
+            format_func=lambda value: t["kb_scope_general"] if value == general_scope else f"{value[:12]}…",
             key=f"knowledge_scope_{current_dataset_id or 'none'}",
         )
         index_upload = st.form_submit_button(
-            "Index document / 索引文档", type="primary", disabled=knowledge_service is None,
+            t["kb_index_document"], type="primary", disabled=knowledge_service is None,
         )
     if index_upload:
         if knowledge_file is None:
-            st.error("Please choose a Markdown or TXT document / 请先选择 Markdown 或 TXT 文档。")
+            st.error(t["kb_choose_document"])
         elif knowledge_service is None:
-            st.error("Knowledge Base unavailable / 知识库不可用。")
+            st.error(t["kb_unavailable_short"])
         else:
             document_id = uuid.uuid4().hex
             filename = _safe_source_name(knowledge_file.name)
@@ -688,7 +699,7 @@ else:
                     filename, file_bytes,
                     document_id=document_id,
                     knowledge_base_id=DEFAULT_KNOWLEDGE_BASE_ID,
-                    dataset_id=None if selected_scope == "General knowledge" else selected_scope,
+                    dataset_id=None if selected_scope == general_scope else selected_scope,
                     source_type="upload",
                 )
                 source_path = PROJECT_ROOT / "data" / "knowledge" / "uploads" / f"{document_id}{Path(filename).suffix.lower()}"
@@ -701,14 +712,15 @@ else:
                     "chunk_count": indexed.chunk_count, "indexing_error": indexed.error_code,
                 }
                 if indexed.status == "indexed":
-                    st.success(f"Indexed: {document.title} ({indexed.chunk_count} chunks)")
+                    st.success(t["kb_indexed_title"].format(
+                        title=document.title, chunks=indexed.chunk_count))
                 else:
-                    st.error(f"Index failed: {indexed.error_code}")
+                    st.error(t["kb_index_failed_reason"].format(code=indexed.error_code))
             except KnowledgeLoadError as exc:
                 st.error(str(exc))
             except Exception as exc:
                 logger.warning("Knowledge document indexing failed (%s)", type(exc).__name__)
-                st.error("Document indexing failed / 文档索引失败。")
+                st.error(t["kb_document_index_failed"])
 
 try:
     if persistence_service.knowledge_repository is not None:
@@ -720,107 +732,101 @@ except Exception as exc:
     knowledge_documents = list(st.session_state.get("knowledge_documents_local", {}).values())
 if knowledge_documents:
     st.dataframe(pd.DataFrame([
-        {"Document / 文档": item["title"], "Source / 来源": item["source"],
-         "Status / 状态": item["status"], "Chunks / 切片数": item["chunk_count"]}
+        {t["kb_table_document"]: item["title"], t["kb_table_source"]: item["source"],
+         t["kb_table_status"]: item["status"], t["kb_table_chunks"]: item["chunk_count"]}
         for item in knowledge_documents
     ]), width="stretch", hide_index=True)
 else:
-    st.caption("No indexed knowledge documents / 暂无已索引知识文档")
+    st.caption(t["kb_no_documents"])
 
 st.divider()
-st.header("Evaluation / 评估")
-st.caption(
-    "使用固定的 14 个版本化 Case 检查工具选择、Pandas Ground Truth、RAG 命中、引用和 Agent 执行边界。"
-    if locale == "zh-CN" else
-    "Run 14 versioned cases for tool choice, Pandas ground truth, retrieval, citations, and Agent limits."
-)
-evaluation_cases = load_evaluation_cases()
-judge_requested = st.checkbox(
-    "启用可选 LLM Judge（额外模型调用；结果不是 Ground Truth） / Enable optional LLM Judge",
-    value=False, key="evaluation_llm_judge",
-)
-if st.button("运行 Evaluation / Run Evaluation", key="run_evaluation", type="primary"):
-    try:
-        evaluation_runner = EvaluationRunner(
-            evaluation_cases,
-            lambda _: AnalystAgent(LLMService(llm_settings, tracing_service=tracing_service), knowledge_service),
-            dependency_status={
-                "llm": llm_settings.is_configured,
-                "embedding": embedding_settings.is_configured,
-                "qdrant": knowledge_service is not None and knowledge_runtime_error is None,
-                "mysql": persistence_service.status == "connected",
-            },
-            tracing_service=tracing_service,
-            llm_judge=OptionalLLMJudge(LLMService(llm_settings, tracing_service=tracing_service)),
-        )
-        st.session_state["evaluation_report"] = evaluation_runner.run(
-            enable_llm_judge=judge_requested
-        )
-    except Exception as exc:
-        logger.warning("Evaluation UI could not start (%s)", type(exc).__name__)
-        st.error("Evaluation 未能启动，请检查本地数据集与配置。")
-
-evaluation_report = st.session_state.get("evaluation_report")
-if evaluation_report is None:
-    if not llm_settings.is_configured:
-        st.info("当前 LLM 未配置。运行 Evaluation 会将依赖 LLM 的 Case 标记为 unavailable；RAG Case 会在 Embedding/Qdrant 缺失时标记为 skipped。")
-    else:
-        st.info("Evaluation 尚未运行。点击上方按钮后才会调用 Agent。")
+st.header(t["eval_title"])
+try:
+    evaluation_cases = load_evaluation_cases()
+    evaluation_load_error = False
+except (OSError, ValueError, ValidationError):
+    logger.exception("Evaluation dataset could not be loaded")
+    evaluation_cases = []
+    evaluation_load_error = True
+if evaluation_load_error:
+    st.error(t["eval_start_failed"])
 else:
-    summary = evaluation_report.summary
-    count_columns = st.columns(5)
-    for column, label, value in zip(
-        count_columns, ("Total", "Passed", "Failed", "Skipped", "Unavailable"),
-        (summary.total_cases, summary.passed_cases, summary.failed_cases,
-         summary.skipped_cases, summary.unavailable_cases), strict=True,
-    ):
-        column.metric(label, value)
-    pass_text = "N/A" if summary.pass_rate is None else f"{summary.pass_rate:.1%}"
-    st.metric("Pass Rate (attempted cases only)", pass_text)
+    st.caption(t["eval_caption"].format(count=len(evaluation_cases)))
+    judge_requested = st.checkbox(t["eval_judge_checkbox"], value=False, key="evaluation_llm_judge")
+    if st.button(t["eval_run"], key="run_evaluation", type="primary"):
+        try:
+            evaluation_runner = EvaluationRunner(
+                evaluation_cases,
+                lambda _: AnalystAgent(LLMService(llm_settings, tracing_service=tracing_service), knowledge_service),
+                dependency_status={
+                    "llm": llm_settings.is_configured,
+                    "embedding": embedding_settings.is_configured,
+                    "qdrant": knowledge_service is not None and knowledge_runtime_error is None,
+                    "mysql": persistence_service.status == "connected",
+                },
+                tracing_service=tracing_service,
+                llm_judge=OptionalLLMJudge(LLMService(llm_settings, tracing_service=tracing_service)),
+            )
+            st.session_state["evaluation_report"] = evaluation_runner.run(
+                enable_llm_judge=judge_requested
+            )
+        except Exception as exc:
+            logger.warning("Evaluation UI could not start (%s)", type(exc).__name__)
+            st.error(t["eval_start_failed"])
 
-    metric_labels = {
-        "tool_selection_accuracy": "Tool Selection",
-        "retrieval_hit_at_1": "Retrieval Hit@1",
-        "retrieval_hit_at_3": "Retrieval Hit@3",
-        "retrieval_hit_at_5": "Retrieval Hit@5",
-        "retrieval_miss_rate": "Expected Retrieval Miss",
-        "citation_precision": "Citation Precision",
-        "citation_recall": "Citation Recall",
-        "grounded_answer_rate": "Grounded Answer",
-        "agent_success_rate": "Agent Success",
-        "max_iteration_violation_rate": "Iteration Violation",
-        "invalid_tool_rate": "Invalid Tool",
-        "duplicate_tool_rate": "Duplicate Tool",
-        "exact_match_rate": "Exact Match",
-        "numeric_accuracy": "Numeric Accuracy",
-    }
-    metric_rows = []
-    for key, label in metric_labels.items():
-        metric = summary.metrics[key]
-        display = "N/A" if metric.value is None else f"{metric.value:.1%}"
-        metric_rows.append({"Metric": label, "Value": display,
-                            "Numerator": metric.numerator, "Denominator": metric.denominator})
-    st.dataframe(pd.DataFrame(metric_rows), width="stretch", hide_index=True)
-    judge_status_text = {
-        "enabled": "LLM Judge：已启用（仅辅助判断，不改变确定性指标）",
-        "unavailable": "LLM Judge：请求启用但服务不可用",
-        "disabled": "LLM Judge：未启用",
-    }
-    st.caption(judge_status_text[evaluation_report.llm_judge_status])
-    case_rows = [{
-        "Case ID": item.case_id, "Category": item.category, "Status": item.status,
-        "Question": item.question, "Expected Tools": ", ".join(item.expected_tools),
-        "Actual Tools": ", ".join(item.actual_tools), "Sources": ", ".join(item.actual_sources),
-        "Retrieved IDs": ", ".join(item.retrieved_document_ids), "Iterations": item.iterations,
-        "Failure Reason": item.failure_reason or "",
-    } for item in evaluation_report.results]
-    st.dataframe(pd.DataFrame(case_rows), width="stretch", hide_index=True)
-    st.download_button(
-        "下载结构化 Evaluation 报告 / Download report",
-        data=evaluation_report.model_dump_json(indent=2),
-        file_name="datapilot-evaluation-report.json", mime="application/json",
-        key="download_evaluation_report",
-    )
+    evaluation_report = st.session_state.get("evaluation_report")
+    if evaluation_report is None:
+        if not llm_settings.is_configured:
+            st.info(t["eval_not_run_missing_llm"])
+        else:
+            st.info(t["eval_not_run"])
+    else:
+        summary = evaluation_report.summary
+        count_columns = st.columns(5)
+        for column, label_key, value in zip(
+            count_columns, ("eval_total", "eval_passed", "eval_failed", "eval_skipped", "eval_unavailable"),
+            (summary.total_cases, summary.passed_cases, summary.failed_cases,
+             summary.skipped_cases, summary.unavailable_cases), strict=True,
+        ):
+            column.metric(t[label_key], value)
+        pass_text = "N/A" if summary.pass_rate is None else f"{summary.pass_rate:.1%}"
+        st.metric(t["eval_pass_rate"], pass_text)
+
+        # Iterate the metrics the runner actually produced instead of a fixed list, so a
+        # newly added metric is visible rather than silently dropped from the table.
+        metric_rows = []
+        for key, metric in summary.metrics.items():
+            display = "N/A" if metric.value is None else f"{metric.value:.1%}"
+            metric_rows.append({
+                t["eval_metric_name"]: t.get(f"eval_metric_{key}", key),
+                t["eval_metric_value"]: display,
+                t["eval_metric_numerator"]: metric.numerator,
+                t["eval_metric_denominator"]: metric.denominator,
+            })
+        st.dataframe(pd.DataFrame(metric_rows), width="stretch", hide_index=True)
+        judge_status_text = {
+            "enabled": t["eval_judge_enabled"],
+            "unavailable": t["eval_judge_unavailable"],
+            "disabled": t["eval_judge_disabled"],
+        }
+        st.caption(judge_status_text.get(evaluation_report.llm_judge_status, evaluation_report.llm_judge_status))
+        case_rows = [{
+            t["eval_case_id"]: item.case_id, t["eval_case_category"]: item.category,
+            t["eval_case_status"]: item.status, t["eval_case_question"]: item.question,
+            t["eval_case_expected_tools"]: ", ".join(item.expected_tools),
+            t["eval_case_actual_tools"]: ", ".join(item.actual_tools),
+            t["eval_case_sources"]: ", ".join(item.actual_sources),
+            t["eval_case_retrieved"]: ", ".join(item.retrieved_document_ids),
+            t["eval_case_iterations"]: item.iterations,
+            t["eval_case_failure"]: item.failure_reason or "",
+        } for item in evaluation_report.results]
+        st.dataframe(pd.DataFrame(case_rows), width="stretch", hide_index=True)
+        st.download_button(
+            t["eval_download"],
+            data=evaluation_report.model_dump_json(indent=2),
+            file_name="datapilot-evaluation-report.json", mime="application/json",
+            key="download_evaluation_report",
+        )
 
 st.divider()
 st.header(t["agent_title"])
@@ -832,9 +838,7 @@ if not llm_settings.is_configured:
         st.warning(t["agent_config_unavailable"])
 else:
     if st.session_state.get("dataset_context") is None:
-        st.info("No dataset loaded: you can ask documented knowledge questions; Pandas analysis requires a dataset."
-                if locale == "en-US" else
-                "当前未加载数据集：可以提问知识库中的定义和方法；Pandas 数据分析需要先加载数据集。")
+        st.info(t["agent_dataset_required"])
     with st.form("form_agent"):
         agent_query = st.text_area(t["agent_query"], max_chars=4_000, key="agent_query_input")
         run_agent = st.form_submit_button(t["agent_run"], type="primary")
@@ -847,25 +851,29 @@ else:
                 knowledge_base_id=DEFAULT_KNOWLEDGE_BASE_ID,
             )
             started_at = time.perf_counter()
-            agent_response = AnalystAgent(
+            run_result = AnalystAgent(
                 LLMService(llm_settings, tracing_service=tracing_service), knowledge_service,
             ).run(agent_request)
             duration_ms = round((time.perf_counter() - started_at) * 1_000)
-            st.session_state["agent_response"] = agent_response
+            st.session_state["agent_response"] = run_result
             if agent_request.dataset_context is not None:
                 persistence_service.record_analysis_run(
                     dataset_id=agent_request.dataset_context.dataset_id,
                     question=agent_request.user_query,
                     mode="agent",
-                    status="success" if agent_response.success else "failed",
-                    iterations=agent_response.iterations,
-                    tools_used=agent_response.tools_used,
+                    status="success" if run_result.success else "failed",
+                    iterations=run_result.iterations,
+                    tools_used=run_result.tools_used,
                     duration_ms=duration_ms,
                 )
             if persistence_service.status == "unavailable":
                 st.warning(t["database_fallback_note"])
         except ValidationError:
             st.error(t["agent_query_required"])
+        except Exception:
+            # The agent loop guards itself, but the UI must never show a traceback.
+            logger.exception("Agent run failed unexpectedly in the UI")
+            st.error(t["agent_unexpected_error"])
     agent_response: AgentResponse | None = st.session_state.get("agent_response")
     if agent_response is not None:
         if agent_response.structured is not None:
@@ -896,7 +904,7 @@ else:
                     response_data = (step.tool_output.get("data") or {})
                     for result in response_data.get("results") or []:
                         st.caption(
-                            f"Source / 来源: {result.get('title')} · {result.get('source')} · "
+                            f"{t['agent_source_label']}: {result.get('title')} · {result.get('source')} · "
                             f"score={result.get('score', 0):.3f}"
                         )
         for error in agent_response.errors:

@@ -15,6 +15,28 @@ def tool_selection_score(expected: Iterable[str], actual: Iterable[str]) -> floa
     return len(required.intersection(actual)) / len(required)
 
 
+def tool_selection_precision(expected: Iterable[str], actual: Iterable[str]) -> float | None:
+    """Precision-side signal: share of the called tools that the case expected.
+
+    Recall (`tool_selection_score`) ignores irrelevant extra tools; this metric does not,
+    so calling the expected tool plus twenty unrelated tools no longer looks clean.
+    Returns None when the actual tool list is empty, or when nothing was expected.
+    """
+    required = set(expected)
+    actual_tools = list(actual)
+    if not required or not actual_tools:
+        return None
+    return len(required.intersection(actual_tools)) / len(actual_tools)
+
+
+def unnecessary_tool_calls(expected: Iterable[str], actual: Iterable[str]) -> int | None:
+    """Count of called tools that the case did not expect; None when nothing was expected."""
+    required = set(expected)
+    if not required:
+        return None
+    return sum(1 for tool in actual if tool not in required)
+
+
 def retrieval_hit_at_k(expected_documents: Iterable[str], expected_chunks: Iterable[str],
                        actual_documents: list[str], actual_chunks: list[str], k: int) -> bool | None:
     expected = set(expected_documents) | set(expected_chunks)
@@ -46,6 +68,8 @@ def evaluate_case_metrics(case: EvaluationCase, result: EvaluationResult,
     metrics: dict[str, bool | float | int | None] = {
         "tool_selection_score": tool_score,
         "tool_selection_pass": None if tool_score is None else tool_score == 1.0,
+        "tool_selection_precision": tool_selection_precision(expected_tools, result.actual_tools),
+        "unnecessary_tool_calls": unnecessary_tool_calls(expected_tools, result.actual_tools),
         "retrieval_hit_at_1": retrieval_hit_at_k(case.expectation.expected_document_ids,
             case.expectation.expected_chunk_ids, result.retrieved_document_ids, result.retrieved_chunk_ids, 1),
         "retrieval_hit_at_3": retrieval_hit_at_k(case.expectation.expected_document_ids,
@@ -78,20 +102,33 @@ def evaluate_case_metrics(case: EvaluationCase, result: EvaluationResult,
         metrics["ground_truth_parameters_match"] = parameters_match
         metrics["exact_match"] = matched if ground_truth.comparator == "exact_match" else None
         metrics["numeric_accuracy"] = matched if ground_truth.comparator == "numeric_tolerance" else None
-    if expectation.expected_facts or expectation.required_sources:
+    if expectation.expected_facts:
         # Deterministic evidence proxy: facts must be present verbatim, and required
         # citations must point to retrieved sources. It does not claim semantic truth.
         facts_present = all(_norm(fact) in _norm(answer_text) for fact in expectation.expected_facts)
         metrics["grounded_answer"] = bool(facts_present and citations_valid is not False)
+    elif expectation.required_sources:
+        # `required_sources` alone cannot measure grounding: `all([])` is True, so an
+        # unrelated answer ("I do not know.") used to score as grounded. Citation
+        # validity is already reported by `citations_valid`; grounding is not measurable.
+        metrics["grounded_answer"] = None
     elif expectation.ground_truth is not None:
         metrics["grounded_answer"] = bool(metrics.get("ground_truth_match") and
                                            expectation.ground_truth.tool in result.actual_tools)
     return metrics
 
 
+def _is_attempted(result: EvaluationResult) -> bool:
+    """Skipped/unavailable cases leave the denominator; an unexpected crash never does."""
+    if result.failure_kind == "unexpected":
+        return True
+    return result.status not in {"skipped", "unavailable"}
+
+
 def aggregate_metrics(results: list[EvaluationResult]) -> dict[str, MetricValue]:
     names = {
         "tool_selection_accuracy": "tool_selection_pass",
+        "tool_selection_precision": "tool_selection_precision",
         "retrieval_hit_at_1": "retrieval_hit_at_1",
         "retrieval_hit_at_3": "retrieval_hit_at_3",
         "retrieval_hit_at_5": "retrieval_hit_at_5",
@@ -110,7 +147,7 @@ def aggregate_metrics(results: list[EvaluationResult]) -> dict[str, MetricValue]
     for public_name, name in names.items():
         values: list[float] = []
         for result in results:
-            if result.status in {"skipped", "unavailable"}:
+            if not _is_attempted(result):
                 continue
             value = result.metric_results.get(name)
             if isinstance(value, bool):
@@ -121,12 +158,25 @@ def aggregate_metrics(results: list[EvaluationResult]) -> dict[str, MetricValue]
             numerator=sum(values), denominator=len(values),
             value=sum(values) / len(values) if values else None,
         )
+    # Unnecessary tool calls are counts, so the aggregate reports the share of observed
+    # tool calls that were unnecessary; the numerator keeps the raw count over 0..1.
+    unnecessary_calls: list[tuple[int, int]] = []
+    for result in results:
+        count = result.metric_results.get("unnecessary_tool_calls")
+        if _is_attempted(result) and isinstance(count, int) and not isinstance(count, bool):
+            unnecessary_calls.append((count, len(result.actual_tools)))
+    total_unnecessary = sum(count for count, _ in unnecessary_calls)
+    total_calls = sum(calls for _, calls in unnecessary_calls)
+    output["unnecessary_tool_calls"] = MetricValue(
+        numerator=float(total_unnecessary), denominator=total_calls,
+        value=total_unnecessary / total_calls if total_calls else None,
+    )
     # Rates count violations as 1, including when none were observed.
     for public_name, name in (("max_iteration_violation_rate", "max_iteration_violation"),
                               ("invalid_tool_rate", "invalid_tool"),
                               ("duplicate_tool_rate", "duplicate_tool_call")):
         values = [float(bool(result.metric_results[name])) for result in results
-                  if result.status not in {"skipped", "unavailable"} and name in result.metric_results]
+                  if _is_attempted(result) and name in result.metric_results]
         output[public_name] = MetricValue(numerator=sum(values), denominator=len(values),
                                           value=sum(values) / len(values) if values else None)
     return output

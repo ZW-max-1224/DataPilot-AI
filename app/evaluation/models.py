@@ -10,6 +10,11 @@ CaseCategory = Literal[
     "citation", "agent_execution", "combined",
 ]
 CaseStatus = Literal["passed", "failed", "skipped", "unavailable"]
+# Why a case did not pass, without changing the `status` strings the UI renders:
+# "expectation" = the agent ran but missed a deterministic expectation,
+# "dependency"  = a required optional service was missing (excluded from pass rate),
+# "unexpected"  = the code raised an unhandled exception (counts as a real failure).
+FailureKind = Literal["expectation", "dependency", "unexpected"]
 Comparator = Literal["exact_match", "numeric_tolerance", "set_match"]
 
 
@@ -59,6 +64,8 @@ class EvaluationResult(BaseModel):
     case_id: str
     category: CaseCategory
     status: CaseStatus
+    # Optional and backward compatible: old reports simply deserialize to None.
+    failure_kind: FailureKind | None = None
     question: str
     expected_tools: list[str] = Field(default_factory=list)
     actual_tools: list[str] = Field(default_factory=list)
@@ -77,6 +84,8 @@ class EvaluationResult(BaseModel):
     judge_output: dict[str, Any] | None = None
     metric_results: dict[str, bool | float | int | None] = Field(default_factory=dict)
     failure_reason: str | None = None
+    # Copied from the case so reports surface provenance without the UI reading the dataset.
+    metadata: dict[str, str | int | float | bool] = Field(default_factory=dict)
 
 
 class EvaluationSummary(BaseModel):

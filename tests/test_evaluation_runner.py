@@ -30,6 +30,13 @@ def _runner(case, actions, dependencies=None):
     )
 
 
+class _CrashingAgent:
+    """Agent double whose unhandled exception must not be mistaken for a missing service."""
+
+    def run(self, request):
+        raise RuntimeError("pandas backend exploded")
+
+
 def test_runner_executes_public_agent_api_and_checks_structured_ground_truth():
     case = next(item for item in load_evaluation_cases() if item.case_id == "pandas_top_product")
     report = _runner(case, [
@@ -56,6 +63,7 @@ def test_runner_reports_failure_for_wrong_numeric_ground_truth():
         _final("Laptop Pro"),
     ]).run()
     assert report.results[0].status == "failed"
+    assert report.results[0].failure_kind == "expectation"
     assert "ground truth" in report.results[0].failure_reason.casefold()
 
 
@@ -63,9 +71,11 @@ def test_runner_distinguishes_skipped_and_unavailable_dependencies():
     rag_case = next(item for item in load_evaluation_cases() if item.case_id == "rag_metric_definition")
     skipped = _runner(rag_case, [], {"llm": True, "embedding": False, "qdrant": True}).run()
     assert skipped.results[0].status == "skipped"
+    assert skipped.results[0].failure_kind == "dependency"
     assert "embedding" in skipped.results[0].failure_reason
     unavailable = _runner(rag_case, [], {"llm": False, "embedding": True, "qdrant": True}).run()
     assert unavailable.results[0].status == "unavailable"
+    assert unavailable.results[0].failure_kind == "dependency"
     assert unavailable.summary.pass_rate is None
 
 
@@ -157,32 +167,80 @@ def test_optional_judge_is_opt_in_and_never_overrides_deterministic_failure():
     assert judged_report.results[0].status == "failed"
 
 
-def test_optional_judge_is_opt_in_and_never_overrides_deterministic_failure():
+def test_optional_judge_disagreement_never_overrides_a_deterministic_pass():
     from app.evaluation.judge import JudgeOutput
 
     case = next(item for item in load_evaluation_cases() if item.case_id == "pandas_top_product")
 
-    class _Judge:
+    class _DissentingJudge:
         is_available = True
         called = False
 
         def evaluate(self, **kwargs):
             self.called = True
-            return JudgeOutput(grounded=True, score=1, reason="model opinion")
+            return JudgeOutput(grounded=False, score=0, reason="model opinion disagrees")
 
-    judge = _Judge()
+    judge = _DissentingJudge()
     actions = [_tool("find_top_n", column="sales", n=1, group_by="product"), _final("Laptop Pro")]
     runner = EvaluationRunner([case], lambda _: AnalystAgent(_MockLLM(actions.copy())),
                               dependency_status={"llm": True}, llm_judge=judge)
-    default_report = runner.run()
-    assert not judge.called and not default_report.llm_judge_enabled
+    unjudged = runner.run()
+    assert not judge.called and not unjudged.llm_judge_enabled
+    assert unjudged.results[0].judge_status == "disabled"
 
-    wrong = case.model_copy(update={"expectation": case.expectation.model_copy(update={
-        "ground_truth": case.expectation.ground_truth.model_copy(update={"expected": "Incorrect"})
-    })})
-    runner = EvaluationRunner([wrong], lambda _: AnalystAgent(_MockLLM(actions.copy())),
-                              dependency_status={"llm": True}, llm_judge=judge)
     judged_report = runner.run(enable_llm_judge=True)
+    judged = judged_report.results[0]
     assert judged_report.llm_judge_enabled
-    assert judged_report.results[0].judge_status == "completed"
-    assert judged_report.results[0].status == "failed"
+    assert judge.called
+    assert judged.judge_status == "completed"
+    assert judged.metric_results["llm_judge_grounded"] is False
+    # The judge is advisory: the deterministic pass still wins.
+    assert judged.status == "passed"
+    assert judged.failure_kind is None
+
+
+def test_unexpected_agent_crash_counts_as_a_failed_attempt_and_lowers_the_pass_rate():
+    passing = next(item for item in load_evaluation_cases() if item.case_id == "pandas_top_product")
+    crashing = EvaluationCase(case_id="crash", category="pandas", question="哪个产品销售额最高？",
+                              dataset="sample_sales")
+
+    def factory(case):
+        if case.case_id == "crash":
+            return _CrashingAgent()
+        return AnalystAgent(_MockLLM([
+            _tool("find_top_n", column="sales", n=1, group_by="product"), _final("Laptop Pro"),
+        ]))
+
+    report = EvaluationRunner(
+        [passing, crashing], factory,
+        dependency_status={"llm": True, "embedding": True, "qdrant": True},
+    ).run()
+    crashed = report.results[1]
+    assert crashed.status == "failed"
+    assert crashed.failure_kind == "unexpected"
+    assert "unexpected_RuntimeError" in crashed.failure_reason
+    assert "pandas backend exploded" in crashed.failure_reason
+    assert report.summary.total_cases == 2
+    assert report.summary.failed_cases == 1
+    assert report.summary.skipped_cases == 0
+    assert report.summary.unavailable_cases == 0
+    # A crash must never remove the case from the denominator and inflate the pass rate.
+    assert report.summary.pass_rate == 0.5
+    assert report.summary.metrics["tool_selection_accuracy"].denominator == 1
+
+
+def test_report_copies_case_metadata_so_provenance_is_visible():
+    provenance = {"ground_truth_source": "tool-derived (change detector, not an independent oracle)"}
+    case = EvaluationCase(case_id="provenance", category="agent_execution", question="q",
+                          dataset="sample_sales", requires=["llm"], metadata=provenance)
+
+    measured = _runner(case, [_final("你好，我可以帮助分析数据。")]).run().results[0]
+    assert measured.metadata == provenance
+    assert measured.failure_kind is None
+
+    not_run = EvaluationRunner(
+        [case], lambda _: AnalystAgent(_MockLLM([])), dependency_status={"llm": False},
+    ).run().results[0]
+    assert not_run.status == "unavailable"
+    assert not_run.metadata == provenance
+    assert not_run.failure_kind == "dependency"
