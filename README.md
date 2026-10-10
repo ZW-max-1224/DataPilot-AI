@@ -325,7 +325,7 @@ app/
 ├── tools/        # Pandas、可视化、知识检索白名单工具
 └── ui/           # Streamlit 应用
  data/            # 合成 Demo CSV、内置知识和本地忽略目录
- docs/            # 算法、数据画像、工具说明、审查报告与真实运行验收记录
+ docs/            # 算法、数据画像、工具说明、审查报告、真实运行验收记录与面试演示稿
  i18n/            # 中英文 UI 文案
  scripts/         # 配置自检工具（Embedding provider 检查）
  tests/           # 离线单元测试
