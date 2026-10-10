@@ -1116,6 +1116,7 @@ except APIError as exc:
 | `.github/workflows/ci.yml` | push/PR，ubuntu + Python 3.11，pip 缓存；`pytest -q` 与 `ruff check .` **阻断**，mypy **非阻断**并注明原因 |
 | `LICENSE` | MIT（版权方为占位符 `DataPilot AI`，**需你替换为真实姓名**） |
 | `.gitignore` | 增加 `.mypy_cache/` |
+| 清理 | 删除未使用的空包 `app/core/` 与 `app/utils/`（原始计划 `app/core/config.py` 的残留；实际配置在 `app/config/`。已确认全仓库无任何引用后再删除） |
 
 **一个我自己踩到并修掉的坑：**`pyproject.toml` 最初按惯例写了 `addopts = "-q"`，这会让文档里的 `pytest -q` 解析成 `-qq`，**静默吞掉 "N passed" 汇总行**——看起来像命令没输出。已移除该配置，`pytest -q` 恢复正常。
 
