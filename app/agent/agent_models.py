@@ -16,6 +16,12 @@ MAX_ITERATIONS = 8
 # prompt: a "fact" without a real tool call is downgraded to "hypothesis".
 ClaimType = Literal["fact", "interpretation", "hypothesis"]
 
+# Whether a knowledge lookup actually produced usable evidence. An answer written
+# from the model's own parametric knowledge must never be presented as
+# knowledge-base evidence, so the outcome is tracked on the response and shown in
+# the UI instead of being implied by "search_knowledge" appearing in tools_used.
+RetrievalStatus = Literal["not_attempted", "ok", "no_results", "unavailable"]
+
 
 class Finding(BaseModel):
     """One conclusion, explicitly labelled by how well it is supported."""
@@ -204,6 +210,9 @@ class AgentResponse(BaseModel):
     # How many findings claimed to be facts were downgraded to hypotheses because no
     # matching tool call had run. Surfaced so the UI can state it explicitly.
     downgraded_findings: int = Field(default=0, ge=0)
+    # Outcome of the knowledge lookup. "unavailable"/"no_results" means the answer is
+    # NOT grounded in the project knowledge base, and the UI must say so.
+    retrieval_status: RetrievalStatus = "not_attempted"
 
     # Matplotlib artifacts are binary resources, not data: they are carried outside
     # the serialization boundary so the model context stays JSON-only while the UI can

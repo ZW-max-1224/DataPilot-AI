@@ -282,6 +282,8 @@
   "eval_download": "下载结构化 Evaluation 报告",
   "agent_source_label": "来源",
   "agent_unexpected_error": "分析过程出现意外错误，已安全终止。请查看服务器日志了解详情。",
+  "retrieval_unavailable_note": "⚠️ 知识检索未能执行（知识库未配置或不可用）。以上内容来自模型自身知识，**不属于本项目知识库的证据**，请勿当作已核实的资料引用。",
+  "retrieval_no_results_note": "⚠️ 知识库中没有检索到相关内容。以上内容来自模型自身知识，**不属于本项目知识库的证据**。",
   "eval_metric_tool_selection": "工具选择",
   "eval_metric_retrieval_hit_1": "检索命中@1",
   "eval_metric_retrieval_hit_3": "检索命中@3",

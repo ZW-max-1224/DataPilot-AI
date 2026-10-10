@@ -1136,4 +1136,74 @@ except APIError as exc:
 
 **第三批的入口建议：**把 mypy 33 个错误按文件清到 0（从 `app/tools/analysis_tools.py` 的 5 个开始），然后启用 E501 与 I001——这会让 CI 的门禁真正完整。注意 I001 必须先确认 `app/ui/streamlit_app.py` 的 `sys.path` 引导不会被重排。
 
+---
+
+# 十、RAG 真实验证与由此发现的三个问题
+
+**背景：**配置好硅基流动 Embedding Provider（`BAAI/bge-m3`，1024 维）后，用新增的 `scripts/check_rag.py` 与真实 LLM 做了端到端验证。验证本身暴露了三个真实缺陷，全部已修。
+
+## 10.1 RAG 已验证通过
+
+**第一层（检索本身）** `scripts/check_rag.py`：
+
+| 检查 | 结果 |
+|---|---|
+| 索引内置知识 | 11 个切片（analysis_methods 4 + chart_selection 4 + metrics_glossary 3） |
+| 命中（相关问题） | 3/3 **排名第 1**：利润率→metrics_glossary（0.7728）、图表选择→chart_selection（0.6709）、相关性与因果→analysis_methods（0.7333） |
+| 排序区分度 | 相关问题最高分 **0.7728** vs 无关问题最高分 **0.3109** |
+
+**第二层（Agent 级闭环，真实 LLM）：**
+
+| 场景 | 结果 |
+|---|---|
+| 纯知识问答 | 成功，调用 `search_knowledge`，Sources 为真实文档，**编造来源 0 条** |
+| 知识 + Pandas 组合 | 成功，调用 `search_knowledge` + `calculate_group_statistics`，并把利润率明确标注为"按本数据集 profit/sales 直接相除的估算值，不是官方口径" |
+| 知识库无关问题 | 成功，且**如实说明知识库不含退货政策**并索要政策文档，**编造来源 0 条** |
+
+**关于"不设相似度阈值"的诚实说明：**项目刻意不设未经校准的阈值，所以无关问题仍会返回低分切片（0.31），`status` 是 `ok` 而不是 `no_results`。因此 `check_rag.py` 不把"无关问题必须返回 no_results"当通过条件——那样只会逼着代码去编造阈值。`no_results` 只在索引为空或过滤后无候选时出现。
+
+## 10.2 发现并修复：检索不可用时，答案被伪装成"知识库证据"（原报告 M3）
+
+**验证中的实测证据：**当 `knowledge_service=None`（知识库不可用）时：
+
+```
+success: True | tools: ['search_knowledge'] | errors: []
+answer: 毛利率（Gross Margin）是衡量企业核心盈利能力的基本指标，公式为……
+```
+
+`search_knowledge` 实际返回 `knowledge_base_unavailable`、结果数为 0，但：运行被标记为 `success=True`、`tools_used` 含 `search_knowledge`、步骤摘要是"调用白名单工具 search_knowledge 获取结构化分析结果"、持久化也会记录这次"成功"。**用户会以为这是知识库给出的定义，实际是模型自己的通用知识。** 这直接违反项目"不要伪造 AI"的原则。
+
+**修复：**
+
+| 位置 | 修复 |
+|---|---|
+| `AgentResponse.retrieval_status` | 新增 `not_attempted` / `ok` / `no_results` / `unavailable`，由实际检索结果决定 |
+| 步骤摘要 | 改为状态感知：命中 N 条 / "未找到相关内容，不得声称有知识库依据" / "检索不可用，不得声称有知识库依据" |
+| System Prompt | 明确要求：检索不可用或无结果时必须说明，并标为"通用知识"而非知识库证据，且不得编造来源名 |
+| UI | 显示警告条："以上内容来自模型自身知识，**不属于本项目知识库的证据**，请勿当作已核实的资料引用" |
+
+**修复后的真实复测（同一场景，真实 LLM）：**
+
+> "关于「毛利率」，需先说明：本次知识库检索不可用（search_knowledge 返回 knowledge_base_unavailable，结果数为 0），因此以下内容不来自项目知识库，而是通用财务知识，请勿当作知识库证据引用。……"
+
+## 10.3 发现并修复：UI 测试不隔离，依赖开发者的 `.env`
+
+**症状：**配置 Embedding 后，`tests/test_streamlit_ui.py::test_dataset_switches_...` 在本地失败（`KeyError: 'dataset_context'`），但 CI 里是绿的。
+
+**根因**（用逐步复现定位，而不是猜）：UI 测试读取开发者真实的 `.env`。Embedding 一旦配置，知识库区才开始渲染上传框，于是 `app.file_uploader` 从 1 个变成 2 个 → `file_uploader[0]` 指向了**知识库上传框**而不是数据集上传框 → 数据集从未加载。CI 没有 `.env`，所以永远发现不了。
+
+**修复：**
+1. 给 `tests/test_streamlit_ui.py` 加 `autouse` fixture，用 `monkeypatch` 把 LLM / Embedding / MySQL / LangSmith 的环境变量置空——因为 `from_env()` 中 `os.environ` 优先级高于 `.env`，所以这能保证测试只观察一种确定状态。
+2. 所有组件**按 key 定位**（`file_uploader(key="dataset_uploader")`），不再依赖渲染顺序。
+3. 新增一条测试**显式证明隔离成立**（断言在该 fixture 下 `LLMSettings`/`EmbeddingSettings` 都未配置），而不是只保证"恰好通过"。
+
+**这一条是很有价值的教训：**测试如果依赖开发者的本地配置，就会"CI 绿、本地红"，而这恰恰是最容易被忽略的失败模式。
+
+## 10.4 新增工具与最终状态
+
+- 新增 `scripts/check_rag.py`：可复用的 RAG 端到端自检（索引 → 命中排名 → 排序区分度），并如实说明"不设阈值"的设计含义。
+- 最终：**244 passed**、`ruff check .` 全绿、mypy 33 errors（非阻断基线）、工作区 clean。
+- 至此，README 的"真实验证状态"表中，**离线测试 / 真实 LLM / 真实 Agent / Embedding → RAG** 四项均为"已验证"；仅 **MySQL 与 LangSmith** 仍未验证。
+
+
 

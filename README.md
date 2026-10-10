@@ -4,9 +4,9 @@
 
 **先理解数据，再用受控工具分析数据。** DataPilot AI 当前是一个可运行的 Pandas 数据分析工作台：上传 CSV/Excel 或载入合成销售数据，查看数据画像，并通过确定性工具完成分组统计、时间序列、质量检查与图表分析。
 
-> 当前状态：Phase 1–10 已实现。**Phase 6 的 Agent Loop 已用真实 LLM 做端到端验证**（见下文"真实验证状态"）。CSV/Excel 仍由 Pandas 工具确定性分析；RAG 只检索数据分析方法和业务口径。MySQL 保存文档元数据，Qdrant 保存检索切片与向量。当前 UI 为 Streamlit，未实现 FastAPI。
+> 当前状态：Phase 1–10 已实现。**Phase 6 的 Agent Loop 与 Embedding → RAG 检索都已用真实服务端到端验证**（见下文"真实验证状态"）。CSV/Excel 仍由 Pandas 工具确定性分析；RAG 只检索数据分析方法和业务口径。MySQL 保存文档元数据，Qdrant 保存检索切片与向量。当前 UI 为 Streamlit，未实现 FastAPI。
 >
-> **尚未真实验证：**Embedding Provider → RAG 端到端检索、MySQL 连接与写入、LangSmith Trace。这三项目前只有离线 Mock 测试；未配置时代码不会伪造结果。
+> **尚未真实验证：**MySQL 连接与写入、LangSmith Trace。这两项目前只有离线 Mock 测试；未配置时代码不会伪造结果。
 
 ## 业务流程
 
@@ -277,6 +277,12 @@ Linux/Ubuntu：创建虚拟环境后使用 `.venv/bin/python -m pip install -r r
 
 全部通过时脚本会直接打印可粘贴进 `.env` 的配置块；脚本从不打印 API Key。
 
+`scripts/check_rag.py` 在配置好 `.env` 之后验证检索本身真的可用：索引内置知识文档 → 用相关问题检查期望文档是否命中（并给出排名与分数）→ 用无关问题比较最高分。它**不把"无关问题必须返回 no_results"当通过条件**，因为项目刻意不设未经校准的相似度阈值；无关问题仍会返回低分切片，这一点在脚本输出里明确说明。
+
+```powershell
+.\.venv\Scripts\python.exe scripts\check_rag.py
+```
+
 ## 真实验证状态
 
 | 项目 | 状态 | 证据 |
@@ -284,9 +290,11 @@ Linux/Ubuntu：创建虚拟环境后使用 `.venv/bin/python -m pip install -r r
 | 离线测试 | 通过 | `pytest -q`，全部通过 |
 | 真实 LLM 单次调用 | 通过 | 配置真实 Key 后由 `LLMService` 实际调用 |
 | **真实 Agent 端到端** | **通过** | 6 个代表性中文提问（趋势、归因、Top N、异常、分组、图表）全部成功，均返回结构化结论；图表随结果返回 |
-| Embedding → RAG 端到端 | **未验证** | 需要配置 Embedding Provider；用 `scripts/check_embedding.py` 验证后再索引文档 |
+| **Embedding → RAG 端到端** | **通过** | `scripts/check_rag.py`：11 个切片；3 个相关问题全部**排名第 1** 命中；相关最高分 0.7728 vs 无关 0.3109。Agent 级：纯知识问答、知识+Pandas 组合、知识库无关问题三种场景 3/3 成功，**编造来源 0 条** |
 | MySQL 读写 | **未验证** | `MYSQL_USER` 为空时持久化整体关闭 |
 | LangSmith Trace | **未验证** | 默认关闭；未产生真实 Trace |
+
+**检索不可用时的诚实行为（已验证）：**当知识库不可用或没有检索到内容时，`AgentResponse.retrieval_status` 为 `unavailable`/`no_results`，步骤摘要与 UI 都会明确说明"以下内容来自模型自身知识，不属于本项目知识库的证据"，模型也被要求主动声明。修复前的行为是：运行标记为成功、工具记为已调用、步骤说"获取结构化分析结果"，用户会把模型自己的知识当成知识库证据。
 
 真实的验收记录与命令输出见 [docs/real_run_acceptance_v2.md](docs/real_run_acceptance_v2.md)（加固后的当前状态）与 [docs/real_run_acceptance.md](docs/real_run_acceptance.md)（加固前的历史快照）；审查与修复过程见 [docs/code-review-and-next-steps.md](docs/code-review-and-next-steps.md)。LLM endpoint 存在间歇性连接失败；失败时 Agent 返回已经计算出的证据并把未完成的部分标注出来，不会伪造结论。
 

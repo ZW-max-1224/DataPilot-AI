@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import pytest
 from streamlit.testing.v1 import AppTest
 
 
@@ -11,10 +12,44 @@ SAMPLE_ONE = (
 SAMPLE_TWO = b"category,amount\nA,5\nB,7\n"
 
 
+@pytest.fixture(autouse=True)
+def _hermetic_environment(monkeypatch):
+    """Keep these tests independent of the developer's real .env.
+
+    The app reads .env at import time, so without this a locally configured LLM or
+    Embedding provider changes what the UI renders: the knowledge-base uploader only
+    appears once embeddings are configured, which silently shifted positional widget
+    lookups (file_uploader[0]) and made the suite pass in CI but fail locally. These
+    tests must observe one known state: Demo Mode, no external services.
+    """
+    for name in ("LLM_API_KEY", "LLM_BASE_URL", "LLM_MODEL",
+                 "EMBEDDING_API_KEY", "EMBEDDING_BASE_URL", "EMBEDDING_MODEL",
+                 "MYSQL_USER", "MYSQL_PASSWORD",
+                 "LANGSMITH_API_KEY", "LANGSMITH_TRACING",
+                 "LANGCHAIN_API_KEY", "LANGCHAIN_TRACING_V2"):
+        monkeypatch.setenv(name, "")
+    monkeypatch.setenv("EMBEDDING_PROVIDER", "disabled")
+    yield
+
+
 def _submit_form(app: AppTest, form_name: str) -> None:
     button = next(button for button in app.button if button.key.startswith(f"FormSubmitter:{form_name}-"))
     button.click().run()
     assert not app.exception, [error.message for error in app.exception]
+
+
+def test_the_hermetic_fixture_hides_the_developers_real_configuration():
+    """Prove the isolation guarantee, not just that the tests happen to pass.
+
+    Without this, configuring a real provider in .env could change what the UI renders
+    (and therefore which widgets these tests find) while CI, which has no .env, stays
+    green.
+    """
+    from app.config.settings import EmbeddingSettings, LLMSettings
+
+    assert not LLMSettings.from_env().is_configured
+    assert not LLMSettings.from_env().has_api_key
+    assert not EmbeddingSettings.from_env().is_configured
 
 
 def test_demo_analysis_tools_chart_types_and_language_switch():
@@ -59,13 +94,15 @@ def test_dataset_switches_clear_analysis_and_stale_column_selections():
 
     app.radio(key="dataset_source_choice").set_value("upload").run()
     assert app.session_state.get("dataset_context") is None
-    app.file_uploader[0].set_value(("first.csv", SAMPLE_ONE, "text/csv")).run()
+    # Address the dataset uploader by key: the knowledge-base uploader also exists and
+    # positional indexing would silently target the wrong widget.
+    app.file_uploader(key="dataset_uploader").set_value(("first.csv", SAMPLE_ONE, "text/csv")).run()
     assert app.session_state["dataset_context"].filename == "first.csv"
     assert app.session_state["analysis_results"] == {}
     _submit_form(app, "form_top_n")
     assert "top_n" in app.session_state["analysis_results"]
 
-    app.file_uploader[0].set_value(("second.csv", SAMPLE_TWO, "text/csv")).run()
+    app.file_uploader(key="dataset_uploader").set_value(("second.csv", SAMPLE_TWO, "text/csv")).run()
     assert not app.exception, [error.message for error in app.exception]
     context = app.session_state["dataset_context"]
     assert context.filename == "second.csv"

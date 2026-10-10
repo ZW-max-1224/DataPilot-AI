@@ -373,6 +373,63 @@ def test_agent_response_serialization_excludes_chart_objects(context):
         chart.release()
 
 
+def test_retrieval_status_defaults_to_not_attempted(context):
+    result = AnalystAgent(MockLLM([action_final("完成。")])).run(
+        AgentRequest(user_query="分析", dataset_context=context)
+    )
+    assert result.retrieval_status == "not_attempted"
+
+
+def test_knowledge_hit_reports_ok_and_cites_real_sources():
+    result = AnalystAgent(
+        MockLLM([action_tool("search_knowledge", {"query": "相关性"}), action_final("相关性不代表因果。")]),
+        MockKnowledgeService(),
+    ).run(AgentRequest(user_query="相关性是什么？"))
+    assert result.success and result.retrieval_status == "ok"
+    assert "analysis_methods.md" in result.final_answer
+    summaries = " ".join(step.summary for step in result.steps)
+    assert "命中" in summaries
+
+
+def test_unavailable_knowledge_is_reported_and_not_dressed_up_as_evidence():
+    """Without a knowledge base the model may still answer -- but not as evidence.
+
+    Verified against the real LLM: with knowledge_service=None the tool reported
+    knowledge_base_unavailable, yet the run was marked successful and the step said
+    the tool had returned "structured analysis results", so a definition answered from
+    the model's own knowledge looked knowledge-base grounded.
+    """
+    result = AnalystAgent(
+        MockLLM([action_tool("search_knowledge", {"query": "什么是毛利率"}), action_final("毛利率是……")]),
+        None,
+    ).run(AgentRequest(user_query="什么是毛利率？"))
+    assert result.success
+    assert result.retrieval_status == "unavailable"
+    summary = next(step.summary for step in result.steps if step.tool_name == "search_knowledge")
+    assert "不可用" in summary
+    assert "已附在最终答复中" not in summary
+
+
+def test_knowledge_no_results_is_reported_as_no_results():
+    empty = KnowledgeSearchResponse(status="no_results")
+    result = AnalystAgent(
+        MockLLM([action_tool("search_knowledge", {"query": "退货政策"}), action_final("知识库没有相关内容。")]),
+        MockKnowledgeService(empty),
+    ).run(AgentRequest(user_query="退货政策是什么？"))
+    assert result.success and result.retrieval_status == "no_results"
+    summary = next(step.summary for step in result.steps if step.tool_name == "search_knowledge")
+    assert "未找到" in summary
+
+
+def test_embedding_failure_maps_to_unavailable_retrieval_status():
+    failure = KnowledgeSearchResponse(status="embedding_failed", error_code="embedding_failed")
+    result = AnalystAgent(
+        MockLLM([action_tool("search_knowledge", {"query": "方法"}), action_final("说明。")]),
+        MockKnowledgeService(failure),
+    ).run(AgentRequest(user_query="分析方法有哪些？"))
+    assert result.retrieval_status == "unavailable"
+
+
 def test_prompt_budget_is_a_real_hard_limit_on_the_worst_case():
     """A wide schema plus a long question used to exceed the budget with no history.
 

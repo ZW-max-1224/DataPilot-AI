@@ -886,6 +886,12 @@ else:
             st.warning(t["agent_partial_title"])
             st.caption(t["agent_partial_note"])
         (st.markdown if agent_response.success else st.warning)(agent_response.final_answer)
+        # Never let an answer written from the model's own knowledge look like
+        # knowledge-base evidence.
+        if agent_response.retrieval_status == "unavailable":
+            st.warning(t["retrieval_unavailable_note"])
+        elif agent_response.retrieval_status == "no_results":
+            st.warning(t["retrieval_no_results_note"])
         if agent_response.charts:
             st.markdown(f"**{t['result_visualization']}**")
             for chart in agent_response.charts:

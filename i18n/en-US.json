@@ -282,6 +282,8 @@
   "eval_download": "Download structured report",
   "agent_source_label": "Source",
   "agent_unexpected_error": "The analysis stopped after an unexpected error. Check the server logs for details.",
+  "retrieval_unavailable_note": "⚠️ Knowledge retrieval did not run (the knowledge base is not configured or is unavailable). The text above comes from the model's own knowledge and is **not evidence from this project's knowledge base**; do not cite it as verified material.",
+  "retrieval_no_results_note": "⚠️ Nothing relevant was found in the knowledge base. The text above comes from the model's own knowledge and is **not evidence from this project's knowledge base**.",
   "eval_metric_tool_selection": "Tool Selection",
   "eval_metric_retrieval_hit_1": "Retrieval Hit@1",
   "eval_metric_retrieval_hit_3": "Retrieval Hit@3",

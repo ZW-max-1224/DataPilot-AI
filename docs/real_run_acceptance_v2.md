@@ -15,10 +15,10 @@
 | 真实 LLM 单次调用 | **通过** | 配置真实 Key 后由 `LLMService` 实际调用并返回 |
 | **真实 Agent 端到端** | **通过** | 6 个代表性中文提问全部成功，全部返回结构化结论 |
 | Agent 图表链路 | **通过** | 模型选择图表参数，服务端 Matplotlib 绘图，图表随结果返回 |
-| Embedding → RAG 端到端 | **未验证** | 需要配置 Embedding Provider；已提供 `scripts/check_embedding.py` 先行验证 |
+| **Embedding → RAG 端到端** | **通过** | 配置 SiliconFlow `BAAI/bge-m3`（1024 维）后，`scripts/check_rag.py` 与 Agent 级验证全部通过，详见第五节 |
 | MySQL 读写 | **未验证** | `MYSQL_USER` 为空时持久化整体关闭 |
 | LangSmith Trace | **未验证** | 默认关闭，未产生真实 Trace |
-| 代码修改 | 有 | 本次加固修改见 [code-review-and-next-steps.md](code-review-and-next-steps.md) 第八节 |
+| 代码修改 | 有 | 本次加固修改见 [code-review-and-next-steps.md](code-review-and-next-steps.md) 第八、九、十节 |
 
 **没有使用 Mock 冒充真实服务。** 未验证的项目在上表中如实标注为"未验证"，UI 与文档都不会把它们显示成已通过。
 
@@ -75,27 +75,30 @@
 
 ## 四、仍未验证的项目与验证方法
 
-### 4.1 Embedding → RAG（阻塞项）
+### 4.1 Embedding → RAG（**已验证通过**，方法留档）
 
-当前 `EMBEDDING_PROVIDER=disabled`，本地 Qdrant 库为空（`{"collections": {}}`），因此知识库从未真正索引过任何文档。
-
-**验证步骤：**
+配置 SiliconFlow `BAAI/bge-m3`（1024 维）后完成验证。**验证方法（可复现）：**
 
 ```powershell
 cd "C:\Users\35002\Documents\Codex\2026-10-04\DataPilot-AI"
 
 # 1) 先用自检脚本确认服务商真的可用（5 项：端点/维度/批量/确定性/语义有效性）
-.\.venv\Scripts\python.exe scripts\check_embedding.py `
-  --base-url https://api.siliconflow.cn/v1 --api-key sk-你的Key `
-  --model BAAI/bge-m3 --dimensions 1024
+.\.venv\Scripts\python.exe scripts\check_embedding.py
+#    实测：5/5 通过，近义 0.9515 vs 无关 0.4198
 
-# 2) 五项全过后把脚本打印的配置块写进 .env（含 EMBEDDING_PROVIDER=openai_compatible）
-# 3) 重启 Streamlit，在"知识库"区点击"索引内置分析知识"
-# 4) 问一个文档里有的问题（如"什么是毛利率？"），确认 Sources 指向真实索引文档
-# 5) 问一个文档里没有的问题，确认返回 no_results 而不是硬编答案
+# 2) 再验证检索本身（索引 → 命中排名 → 排序区分度）
+.\.venv\Scripts\python.exe scripts\check_rag.py
 ```
 
+**实测结果（`check_rag.py`）：**索引 11 个切片（analysis_methods 4 + chart_selection 4 + metrics_glossary 3）；3 个相关问题全部**排名第 1** 命中（利润率→metrics_glossary 0.7728、图表选择→chart_selection 0.6709、相关性与因果→analysis_methods 0.7333）；相关问题最高分 **0.7728** vs 无关问题 **0.3109**。
+
+**Agent 级实测（真实 LLM）：**纯知识问答 1/1 成功、知识+Pandas 组合 1/1 成功、知识库无关问题 1/1 成功，**编造来源 0 条**。
+
 **为什么第 5 项（语义有效性）最重要：**如果端点返回随机或占位向量，前 4 项检查都会"通过"，但检索结果毫无意义。这条检查用来防止把"看起来配好了的假向量"写进知识库。
+
+**关于"无相似度阈值"：**项目刻意不设未经校准的阈值，因此无关问题仍会返回低分切片（0.3109），`status` 是 `ok` 而非 `no_results`。`check_rag.py` 因此不把"无关问题必须返回 no_results"当通过条件——那只会逼着代码去编造阈值。判断答案是否可信要看 Sources 与切片内容。
+
+**这次验证顺带发现并修复了一个真实缺陷：**知识库不可用时（`knowledge_service=None`），运行曾被标记为成功、`search_knowledge` 被记为已调用、步骤摘要称"获取结构化分析结果"，而模型其实是用自己的通用知识回答的——用户会误以为那是知识库证据。现在新增 `AgentResponse.retrieval_status`（`not_attempted`/`ok`/`no_results`/`unavailable`）、状态感知的步骤摘要、Prompt 明确要求、以及 UI 警告条。修复后真实复测，模型会主动声明"本次知识库检索不可用……以下内容不来自项目知识库，请勿当作知识库证据引用"。详见 [code-review-and-next-steps.md](code-review-and-next-steps.md) 第十节。
 
 ### 4.2 MySQL
 
@@ -118,8 +121,16 @@ cd "C:\Users\35002\Documents\Codex\2026-10-04\DataPilot-AI"
 ```powershell
 cd "C:\Users\35002\Documents\Codex\2026-10-04\DataPilot-AI"
 
-# 全量离线测试（不联网、不需要 API Key）
+# 全量离线测试（不联网、不需要 API Key）—— 当前为 244 passed
 .\.venv\Scripts\python.exe -m pytest -q
+
+# 静态检查
+.\.venv\Scripts\python.exe -m ruff check .      # All checks passed
+.\.venv\Scripts\python.exe -m mypy              # 33 errors（非阻断基线）
+
+# 服务自检
+.\.venv\Scripts\python.exe scripts\check_embedding.py
+.\.venv\Scripts\python.exe scripts\check_rag.py
 
 # 真实 Agent 验收（使用 .env 中真实配置，对 data/sample_sales.csv 提 6 个问题）
 # 探针脚本位于项目之外，验收后已删除；等价做法是在页面 Agent 区域逐个提问。
@@ -133,3 +144,5 @@ cd "C:\Users\35002\Documents\Codex\2026-10-04\DataPilot-AI"
 ```
 
 另外，本项目的本地 Qdrant 客户端在解释器退出时会打印一条无害的 `QdrantClient.__del__` 警告（`sys.meta_path is None`），退出码仍是 0，也不影响任何测试结果。
+
+**另一个已修掉的测试坑：**`tests/test_streamlit_ui.py` 原先读取开发者真实的 `.env`。配置 Embedding 后，知识库区才开始渲染上传框，于是 `app.file_uploader[0]` 从"数据集上传框"变成了"知识库上传框"，导致该测试**本地失败、CI 通过**。现在加了 `autouse` fixture 把 LLM/Embedding/MySQL/LangSmith 的环境变量置空（`os.environ` 优先级高于 `.env`），并改为按 key 定位组件；另有一条测试**显式断言隔离成立**，而不是只保证恰好通过。

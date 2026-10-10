@@ -66,6 +66,11 @@ Distinguish computed evidence from interpretation and hypothesis. Never reveal h
 When a tool call fails, read the error observation and correct your arguments instead of
 repeating the same invalid call. Return only the JSON object: no Markdown code fences,
 no prose, no explanation before or after it.
+If a search_knowledge result reports that retrieval is unavailable, failed, or returned
+no results, you MUST say so plainly in your answer and you MUST NOT present your answer
+as coming from the project knowledge base. You may still answer from general knowledge,
+but label it as general knowledge rather than knowledge-base evidence, and never invent
+a source title or file name.
 For action=final, put the user-facing narrative in final_answer AND fill the "analysis"
 object: executive_summary (one sentence), key_findings and recommendations. Every finding
 must set claim_type:
@@ -106,14 +111,18 @@ class AnalystAgent:
             } if isinstance(context, DatasetContext) else None,
         }
         with self._tracing.span("DataPilot AnalystAgent", run_type="chain", inputs=safe_inputs) as root:
-            charts: list[Any] = []
+            # Mutable run state shared with _run: chart artifacts and the real outcome
+            # of any knowledge lookup, so the response never implies grounding it did
+            # not get.
+            state: dict[str, Any] = {"charts": [], "retrieval_status": "not_attempted"}
             try:
-                result = self._run(request, charts)
+                result = self._run(request, state)
             except Exception as exc:
                 # The agent loop must never surface a traceback to the user.
                 logger.exception("Agent loop failed unexpectedly (%s)", type(exc).__name__)
                 result = self._failure("agent_internal_error", "分析过程出现内部错误，已安全终止。")
-            result.attach_charts(charts)
+            result.attach_charts(state["charts"])
+            result.retrieval_status = state["retrieval_status"]
             root.end({
                 "success": result.success,
                 "tools_used": result.tools_used,
@@ -126,7 +135,9 @@ class AnalystAgent:
             })
             return result
 
-    def _run(self, request: AgentRequest, charts: list[Any] | None = None) -> AgentResponse:
+    def _run(self, request: AgentRequest, state: dict[str, Any] | None = None) -> AgentResponse:
+        state = state if state is not None else {"charts": [], "retrieval_status": "not_attempted"}
+        charts: list[Any] = state["charts"]
         context = request.dataset_context
         if context is not None and (not isinstance(context, DatasetContext) or getattr(context, "dataframe", None) is None):
             return self._failure("dataset_invalid", "当前数据集不可用，请重新加载后再试。")
@@ -248,15 +259,25 @@ class AnalystAgent:
             if name not in tools_used:
                 tools_used.append(name)
             output = execution.model_dump(mode="json")
+            retrieval_hits = 0
             if name == "search_knowledge" and execution.success:
                 data = execution.data or {}
-                if data.get("status") == "ok":
+                status = data.get("status")
+                if status == "ok" and data.get("results"):
+                    state["retrieval_status"] = "ok"
+                    retrieval_hits = len(data["results"])
                     for item in data.get("results", []):
                         title = str(item.get("title", "")).strip()
                         source = str(item.get("source", "")).strip()
                         label = f"{title} ({source})" if title and source else title or source
                         if label and label not in knowledge_sources:
                             knowledge_sources.append(label[:600])
+                elif status == "no_results":
+                    state["retrieval_status"] = "no_results"
+                else:
+                    # Unavailable, embedding failure, or an empty/odd payload: the
+                    # answer must not be presented as knowledge-base evidence.
+                    state["retrieval_status"] = "unavailable"
             if not execution.success:
                 error = execution.error
                 code = error.code if error else "tool_execution_error"
@@ -275,7 +296,16 @@ class AnalystAgent:
                     continue
                 return self._failure(code, message, steps, tools_used, decision_count)
             tool_error_counts.pop(name, None)
-            summary = f"调用白名单工具 {name} 获取结构化分析结果。"
+            if name == "search_knowledge":
+                # Status-aware summary: "search_knowledge" appearing in tools_used must
+                # not read as "the knowledge base confirmed this".
+                summary = {
+                    "ok": f"知识检索命中 {retrieval_hits} 条切片，来源已附在最终答复中。",
+                    "no_results": "知识检索未找到相关内容；最终答复不得声称有知识库依据。",
+                    "unavailable": "知识检索不可用（未配置或失败）；最终答复不得声称有知识库依据。",
+                }.get(state["retrieval_status"], "知识检索已执行。")
+            else:
+                summary = f"调用白名单工具 {name} 获取结构化分析结果。"
             bounded_output = self._bounded(output)
             seen_calls[call_signature] = bounded_output
             steps.append(AgentStep(action_type="tool_call", tool_name=name,
