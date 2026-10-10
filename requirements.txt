@@ -1,0 +1,18 @@
+# UI and data analysis
+streamlit>=1.49,<2.0
+pandas>=2.2,<4.0
+matplotlib>=3.8,<4.0
+openpyxl>=3.1,<4.0
+xlrd>=2.0,<3.0
+
+# Validation and configuration
+pydantic>=2.7,<3.0
+python-dotenv>=1.0,<2.0
+openai>=1.99,<3.0
+langsmith>=0.3,<1.0
+qdrant-client>=1.14,<2.0
+SQLAlchemy>=2.0,<3.0
+PyMySQL>=1.1,<2.0
+
+# Tests
+pytest>=8.0,<10.0

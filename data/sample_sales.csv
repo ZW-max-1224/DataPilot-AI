@@ -1,0 +1,1209 @@
+date,product,category,region,sales,quantity,profit,customer
+2025-03-31,Laptop Pro,Electronics,East,832.27,1,206.9,CUST-0172
+2025-03-06,Smartphone,Electronics,North,1207.09,2,189.82,CUST-0046
+2025-05-17,Wireless Headphones,Electronics,East,278.6,2,46.95,CUST-0110
+2025-04-23,Wireless Headphones,Electronics,East,136.03,1,28.13,CUST-0095
+2025-05-11,Office Chair,Furniture,North,272.58,1,61.47,CUST-0158
+2025-06-20,Smartphone,Electronics,East,1332.01,2,229.6,CUST-0056
+2025-03-09,Wireless Headphones,Electronics,South,135.03,1,26.38,CUST-0096
+2025-12-31,Laptop Pro,Electronics,East,2076.8,2,497.64,CUST-0082
+2025-09-28,Budget Tablet,Electronics,West,239.88,1,3.46,CUST-0139
+2025-09-27,Wireless Headphones,Electronics,North,392.99,3,79.81,CUST-0109
+2025-01-27,Smartphone,Electronics,South,1442.94,2,250.79,CUST-0078
+2025-10-11,Laptop Pro,Electronics,East,1729.17,2,414.85,CUST-0132
+2025-06-04,Wireless Headphones,Electronics,West,273.14,2,54.88,
+2025-06-04,Budget Tablet,Electronics,West,401.14,2,5.41,CUST-0161
+2025-08-02,Laptop Pro,Electronics,East,996.82,4,244.05,CUST-0163
+2025-05-20,Laptop Pro,Electronics,East,818.69,1,179.5,CUST-0164
+2025-07-15,Smartphone,Electronics,South,665.4,1,131.27,CUST-0087
+2025-01-13,Wireless Headphones,Electronics,South,264.86,2,49.17,CUST-0158
+2025-04-01,Laptop Pro,Electronics,East,3781.13,4,928.5,CUST-0178
+2025-05-18,Desk Lamp,Home,South,104.25,2,19.02,CUST-0099
+2025-10-01,Wireless Headphones,Electronics,South,279.64,2,50.28,CUST-0085
+2025-07-28,Laptop Pro,Electronics,West,3974.08,5,960.57,CUST-0164
+2025-06-29,Laptop Pro,Electronics,North,1690.51,2,385.76,CUST-0017
+2025-06-21,Office Chair,Furniture,South,242.86,1,46.74,CUST-0044
+2025-01-19,Office Chair,Furniture,East,794.14,3,155.63,CUST-0011
+2025-10-13,Smartphone,Electronics,South,3394.5,5,644.56,CUST-0126
+2025-02-19,Smartphone,Electronics,North,2623.11,4,490.83,CUST-0076
+2025-12-26,Smartphone,Electronics,East,752.51,1,117.81,CUST-0110
+2025-05-01,Office Chair,Furniture,West,748.16,3,164.38,CUST-0006
+2025-11-21,Wireless Headphones,Electronics,West,264.71,2,50.86,CUST-0045
+2025-05-08,Laptop Pro,Electronics,South,1643.87,2,347.8,CUST-0156
+2025-01-15,Laptop Pro,Electronics,East,1842.08,2,391.73,CUST-0131
+2025-12-09,Wireless Headphones,Electronics,East,387.92,3,64.96,CUST-0068
+2025-03-20,Desk Lamp,Home,East,53.18,1,11.04,CUST-0132
+2025-06-25,Smartphone,Electronics,South,2071.21,3,327.43,CUST-0135
+2025-06-19,Smartphone,Electronics,South,663.82,1,114.04,CUST-0149
+2025-07-21,Smartphone,Electronics,East,1229.02,2,190.74,CUST-0079
+2025-12-21,Smartphone,Electronics,North,8141.64,1,680.46,CUST-0168
+2025-05-09,Smartphone,Electronics,North,1448.6,2,245.76,CUST-0034
+2025-11-30,Budget Tablet,Electronics,East,218.48,1,3.56,CUST-0001
+2025-09-12,Wireless Headphones,Electronics,South,142.62,1,29.44,CUST-0072
+2025-05-14,Budget Tablet,Electronics,West,444.92,2,6.04,CUST-0124
+2025-04-23,Office Chair,Furniture,West,440.37,2,98.76,CUST-0076
+2025-05-01,Budget Tablet,Electronics,North,225.26,1,3.54,CUST-0041
+2025-01-14,Wireless Headphones,Electronics,North,461.12,4,77.25,CUST-0132
+2025-12-30,Desk Lamp,Home,East,157.48,3,29.88,CUST-0119
+2025-05-14,Smartphone,Electronics,South,2844.51,4,543.38,CUST-0086
+2025-02-16,Smartphone,Electronics,East,1323.57,2,248.73,CUST-0138
+2025-11-02,Smartphone,Electronics,North,1406.21,2,268.73,CUST-0043
+2025-10-30,Smartphone,Electronics,South,2698.11,4,499.51,CUST-0036
+2025-02-08,Laptop Pro,Electronics,East,2691.11,3,652.97,CUST-0084
+2025-07-23,Laptop Pro,Electronics,South,942.59,1,209.44,CUST-0109
+2025-02-10,Office Chair,Furniture,North,469.85,2,84.99,CUST-0042
+2025-10-04,Smartphone,Electronics,North,2146.24,3,413.71,CUST-0063
+2025-10-03,Smartphone,Electronics,East,655.19,1,113.82,CUST-0068
+2025-04-25,Wireless Headphones,Electronics,West,231.01,2,47.46,CUST-0161
+2025-04-05,Laptop Pro,Electronics,West,2842.19,3,729.68,CUST-0151
+2025-03-19,Office Chair,Furniture,South,713.11,3,155.07,CUST-0148
+2025-05-15,Wireless Headphones,Electronics,East,131.71,1,21.97,CUST-0135
+2025-04-08,Smartphone,Electronics,West,638.69,1,103.51,CUST-0171
+2025-10-24,Wireless Headphones,Electronics,North,123.94,1,24.92,CUST-0159
+2025-11-21,Smartphone,Electronics,North,718.3,1,121.65,CUST-0165
+2025-05-22,Desk Lamp,Home,East,51.05,1,10.31,CUST-0053
+2025-10-06,Wireless Headphones,Electronics,North,262.6,2,43.28,CUST-0107
+2025-12-31,Office Chair,Furniture,West,1243.57,5,250.16,CUST-0108
+2025-12-16,Laptop Pro,Electronics,West,990.57,1,223.73,CUST-0125
+2025-11-24,Laptop Pro,Electronics,North,4268.76,4,1007.79,CUST-0019
+2025-07-28,Laptop Pro,Electronics,South,805.66,1,170.15,CUST-0155
+2025-08-08,Wireless Headphones,Electronics,East,87.97,2,17.52,CUST-0050
+2025-12-13,Smartphone,Electronics,West,705.44,1,127.2,CUST-0112
+2025-03-23,Smartphone,Electronics,North,2106.98,3,359.37,CUST-0068
+2025-11-02,Office Chair,Furniture,North,278.1,1,49.85,CUST-0051
+2025-12-23,Wireless Headphones,Electronics,North,129.43,1,26.11,CUST-0150
+2025-08-23,Budget Tablet,Electronics,West,366.54,3,5.25,CUST-0088
+2025-12-05,Office Chair,Furniture,West,273.28,1,60.09,CUST-0109
+2025-05-04,Wireless Headphones,Electronics,North,252.03,2,49.14,CUST-0121
+2025-06-18,Laptop Pro,Electronics,East,1626.55,2,416.98,CUST-0115
+2025-11-19,Desk Lamp,Home,West,52.36,1,10.3,CUST-0092
+2025-01-27,Desk Lamp,Home,East,44.5,1,9.17,CUST-0038
+2025-07-24,Wireless Headphones,Electronics,North,375.4,3,77.88,CUST-0135
+2025-08-21,Laptop Pro,Electronics,East,1359.25,5,326.79,CUST-0176
+2025-08-01,Wireless Headphones,Electronics,East,83.26,2,16.97,CUST-0096
+2025-08-14,Budget Tablet,Electronics,West,108.47,1,1.48,CUST-0088
+2025-01-17,Budget Tablet,Electronics,South,639.99,3,9.99,CUST-0169
+2025-09-18,Smartphone,Electronics,West,1716.95,3,269.25,CUST-0041
+2025-08-12,Office Chair,Furniture,North,166.16,1,36.37,CUST-0170
+2025-03-11,Office Chair,Furniture,South,507.51,2,99.11,CUST-0057
+2025-03-12,Desk Lamp,Home,West,44.39,1,7.85,CUST-0026
+2025-03-12,Smartphone,Electronics,West,1286.52,2,202.9,CUST-0112
+2025-10-01,Laptop Pro,Electronics,West,807.95,1,192.22,CUST-0080
+2025-05-26,Wireless Headphones,Electronics,North,455.66,4,89.19,CUST-0098
+2025-04-01,Laptop Pro,Electronics,East,850.38,1,214.72,CUST-0085
+2025-06-25,Smartphone,Electronics,West,584.79,1,,CUST-0024
+2025-10-03,Smartphone,Electronics,West,1789.59,3,348.5,CUST-0140
+2025-04-27,Office Chair,Furniture,South,1107.41,5,228.51,CUST-0079
+2025-03-19,Smartphone,Electronics,East,2489.51,4,438.4,CUST-0118
+2025-09-29,Desk Lamp,Home,East,87.73,2,18.09,CUST-0084
+2025-05-13,Wireless Headphones,Electronics,South,505.29,4,95.46,CUST-0020
+2025-06-16,Wireless Headphones,Electronics,East,510.75,4,106.56,CUST-0080
+2025-03-02,Laptop Pro,Electronics,North,1003.73,1,243.87,CUST-0062
+2025-10-06,Wireless Headphones,Electronics,East,121.99,1,22.48,CUST-0011
+2025-03-28,Laptop Pro,Electronics,North,901.07,1,212.03,CUST-0173
+2025-08-29,Wireless Headphones,Electronics,East,162.12,4,32.01,CUST-0173
+2025-07-29,Wireless Headphones,Electronics,West,369.23,3,62.56,CUST-0017
+2025-12-25,Office Chair,Furniture,North,835.52,3,166.08,CUST-0131
+2025-01-02,Office Chair,Furniture,South,244.21,1,48.99,CUST-0018
+2025-10-03,Laptop Pro,Electronics,East,1931.05,2,498.18,CUST-0067
+2025-06-12,Budget Tablet,Electronics,West,630.85,3,8.26,CUST-0115
+2025-11-18,Smartphone,Electronics,West,2819.08,4,456.51,CUST-0081
+2025-11-11,Wireless Headphones,Electronics,East,153.23,1,30.17,
+2025-02-10,Smartphone,Electronics,South,699.25,1,119.5,CUST-0124
+2025-01-19,Wireless Headphones,Electronics,South,399.77,3,76.76,CUST-0146
+2025-11-11,Smartphone,Electronics,South,768.41,1,142.39,CUST-0036
+2025-11-01,Wireless Headphones,Electronics,South,400.41,3,76.57,CUST-0075
+2025-10-11,Wireless Headphones,Electronics,East,114.15,1,18.6,CUST-0099
+2025-10-24,Wireless Headphones,Electronics,North,113.63,1,22.57,CUST-0021
+2025-10-30,Laptop Pro,Electronics,North,892.17,1,225.39,CUST-0019
+2025-01-02,Smartphone,Electronics,East,701.3,1,119.51,CUST-0026
+2025-06-09,Wireless Headphones,Electronics,North,410.87,3,71.88,CUST-0173
+2025-03-11,Office Chair,Furniture,East,1110.03,4,225.77,CUST-0167
+2025-10-04,Laptop Pro,Electronics,North,925.76,1,240.97,CUST-0091
+2025-07-18,Office Chair,Furniture,East,520.86,2,99.37,CUST-0163
+2025-02-19,Laptop Pro,Electronics,South,4302.41,5,906.52,CUST-0179
+2025-06-22,Smartphone,Electronics,East,632.84,1,108.15,CUST-0117
+2025-04-03,Desk Lamp,Home,South,97.96,2,20.04,CUST-0044
+2025-01-02,Budget Tablet,Electronics,West,619.18,3,9.88,CUST-0087
+2025-09-26,Smartphone,Electronics,West,2014.94,3,396.68,CUST-0108
+2025-11-29,Smartphone,Electronics,South,1527.62,2,235.35,CUST-0083
+2025-11-14,Laptop Pro,Electronics,West,3035.96,3,692.49,CUST-0142
+2025-10-29,Office Chair,Furniture,West,488.13,2,100.54,CUST-0023
+2025-08-31,Wireless Headphones,Electronics,East,43.33,1,8.53,CUST-0078
+2025-07-28,Desk Lamp,Home,West,137.47,3,27.63,CUST-0067
+2025-07-08,Laptop Pro,Electronics,West,2373.54,3,570.12,CUST-0031
+2025-05-06,Wireless Headphones,Electronics,East,120.52,1,19.59,CUST-0065
+2025-07-04,Smartphone,Electronics,East,1239.52,2,196.1,CUST-0104
+2025-01-30,Laptop Pro,Electronics,South,1646.64,2,360.35,CUST-0003
+2025-06-06,Wireless Headphones,Electronics,West,144.27,1,26.19,CUST-0168
+2025-03-18,Budget Tablet,Electronics,West,481.64,2,7.66,CUST-0059
+2025-04-17,Laptop Pro,Electronics,South,1005.44,1,243.62,CUST-0161
+2025-08-11,Desk Lamp,Home,North,37.09,1,6.55,CUST-0074
+2025-06-21,Office Chair,Furniture,West,738.73,3,168.17,CUST-0054
+2025-01-17,Wireless Headphones,Electronics,West,667.68,5,135.46,CUST-0079
+2025-03-20,Desk Lamp,Home,West,97.54,2,16.71,CUST-0142
+2025-02-11,Wireless Headphones,Electronics,East,240.29,2,48.34,CUST-0148
+2025-09-10,Smartphone,Electronics,North,605.34,1,107.0,CUST-0079
+2025-03-28,Wireless Headphones,Electronics,East,472.78,4,90.21,CUST-0063
+2025-10-31,Budget Tablet,Electronics,West,425.4,2,6.88,CUST-0113
+2025-11-19,Laptop Pro,Electronics,East,1054.87,1,236.12,CUST-0072
+2025-08-23,Laptop Pro,Electronics,South,820.79,2,171.36,CUST-0118
+2025-07-31,Desk Lamp,Home,East,261.06,5,56.91,CUST-0096
+2025-10-12,Office Chair,Furniture,East,885.11,4,200.11,CUST-0114
+2025-06-28,Office Chair,Furniture,North,510.37,2,110.49,CUST-0177
+2025-10-24,Wireless Headphones,Electronics,West,237.84,2,42.37,CUST-0036
+2025-08-09,Laptop Pro,Electronics,West,984.09,2,253.71,CUST-0103
+2025-10-07,Laptop Pro,Electronics,East,3892.72,4,926.2,CUST-0124
+2025-06-10,Smartphone,Electronics,South,1306.97,2,218.6,CUST-0166
+2025-05-02,Smartphone,Electronics,North,1862.39,3,324.39,CUST-0113
+2025-04-24,Wireless Headphones,Electronics,East,138.72,1,26.73,CUST-0108
+2025-07-16,Office Chair,Furniture,North,223.29,1,43.93,CUST-0176
+2025-03-30,Laptop Pro,Electronics,East,1721.8,2,415.55,CUST-0149
+2025-02-10,Office Chair,Furniture,North,958.86,4,206.21,CUST-0170
+2025-02-09,Budget Tablet,Electronics,West,420.0,2,6.54,CUST-0158
+2025-03-23,Desk Lamp,Home,South,151.83,3,32.3,CUST-0016
+2025-04-09,Desk Lamp,Home,West,90.95,2,15.5,CUST-0003
+2025-02-12,Office Chair,Furniture,West,441.51,2,101.25,CUST-0103
+2025-11-04,Desk Lamp,Home,West,93.68,2,16.64,CUST-0128
+2025-12-31,Desk Lamp,Home,North,95.54,2,17.39,CUST-0050
+2025-12-14,Smartphone,Electronics,East,1243.68,2,219.45,CUST-0040
+2025-12-17,Office Chair,Furniture,East,833.11,3,154.19,CUST-0035
+2025-09-16,Desk Lamp,Home,East,45.73,1,9.17,CUST-0127
+2025-01-28,Laptop Pro,Electronics,West,857.97,1,183.76,CUST-0024
+2025-12-26,Office Chair,Furniture,East,289.91,1,52.8,CUST-0161
+2025-04-03,Wireless Headphones,Electronics,South,123.75,1,24.79,CUST-0168
+2025-11-01,Budget Tablet,Electronics,South,261.48,1,4.25,CUST-0008
+2025-06-27,Wireless Headphones,Electronics,South,275.42,2,51.8,CUST-0129
+2025-10-15,Laptop Pro,Electronics,North,867.7,1,196.09,CUST-0098
+2025-12-06,Budget Tablet,Electronics,East,1003.7,4,16.23,CUST-0152
+2025-04-21,Smartphone,Electronics,South,579.09,1,96.35,CUST-0119
+2025-05-27,Laptop Pro,Electronics,East,1622.19,2,370.76,CUST-0070
+2025-09-18,Laptop Pro,Electronics,North,1757.09,2,449.5,CUST-0116
+2025-08-15,Smartphone,Electronics,East,673.51,3,125.0,CUST-0086
+2025-09-29,Office Chair,Furniture,West,253.68,1,53.92,CUST-0020
+2025-09-30,Desk Lamp,Home,West,137.5,3,27.83,CUST-0163
+2025-09-21,Smartphone,Electronics,North,1734.21,3,289.39,CUST-0061
+2025-12-02,Smartphone,Electronics,East,3077.93,4,547.54,CUST-0064
+2025-03-27,Wireless Headphones,Electronics,West,274.97,2,54.78,CUST-0116
+2025-01-01,Laptop Pro,Electronics,East,832.82,1,207.57,CUST-0059
+2025-08-02,Office Chair,Furniture,North,811.19,5,171.47,CUST-0121
+2025-10-28,Desk Lamp,Home,West,49.48,1,9.87,CUST-0116
+2025-07-06,Smartphone,Electronics,East,666.73,1,122.78,CUST-0119
+2025-09-10,Smartphone,Electronics,East,654.61,1,127.47,CUST-0029
+2025-11-01,Wireless Headphones,Electronics,East,142.51,1,27.26,CUST-0079
+2025-11-14,Laptop Pro,Electronics,East,2058.17,2,485.79,CUST-0050
+2025-11-30,Office Chair,Furniture,South,253.02,1,49.09,CUST-0058
+2025-08-15,Laptop Pro,Electronics,South,931.34,2,241.28,CUST-0105
+2025-02-28,Laptop Pro,Electronics,West,915.21,1,188.32,CUST-0063
+2025-03-26,Laptop Pro,Electronics,North,899.27,1,184.23,CUST-0115
+2025-08-13,Desk Lamp,Home,South,138.29,4,28.23,CUST-0076
+2025-07-11,Laptop Pro,Electronics,East,998.41,1,244.15,CUST-0042
+2025-11-06,Smartphone,Electronics,East,1272.87,2,210.93,CUST-0169
+2025-07-04,Wireless Headphones,Electronics,North,122.27,1,23.2,CUST-0052
+2025-02-01,Desk Lamp,Home,East,99.38,2,21.69,CUST-0169
+2025-11-05,Office Chair,Furniture,East,760.16,3,172.74,CUST-0168
+2025-12-26,Laptop Pro,Electronics,North,1060.89,1,272.29,CUST-0112
+2025-06-19,Laptop Pro,Electronics,East,3272.31,4,780.74,CUST-0103
+2025-09-17,Wireless Headphones,Electronics,South,258.0,2,51.06,CUST-0037
+2025-11-03,Desk Lamp,Home,East,187.89,4,37.91,CUST-0108
+2025-07-09,Budget Tablet,Electronics,West,236.16,1,3.39,CUST-0092
+2025-03-27,Smartphone,Electronics,West,629.77,1,105.05,CUST-0086
+2025-02-19,Desk Lamp,Home,East,97.79,2,18.66,CUST-0036
+2025-08-31,Wireless Headphones,Electronics,South,136.24,2,27.12,CUST-0031
+2025-05-04,Wireless Headphones,Electronics,West,118.29,1,20.95,CUST-0072
+2025-08-16,Wireless Headphones,Electronics,East,43.38,1,8.17,CUST-0155
+2025-01-15,Wireless Headphones,Electronics,East,267.76,,43.53,CUST-0139
+2025-01-25,Desk Lamp,Home,West,91.41,2,18.84,CUST-0079
+2025-09-21,Smartphone,Electronics,West,1782.31,3,349.61,CUST-0076
+2025-06-24,Wireless Headphones,Electronics,North,531.42,4,108.93,CUST-0033
+2025-01-29,Budget Tablet,Electronics,West,453.24,2,6.89,CUST-0004
+2025-05-18,Office Chair,Furniture,East,276.25,1,58.4,CUST-0129
+2025-01-15,Desk Lamp,Home,South,51.07,1,10.05,CUST-0119
+2025-08-30,Office Chair,Furniture,North,504.4,3,95.08,CUST-0180
+2025-01-19,Laptop Pro,Electronics,East,4016.4,4,1044.58,CUST-0121
+2025-10-07,Laptop Pro,Electronics,West,846.96,1,213.12,CUST-0040
+2025-08-17,Budget Tablet,Electronics,West,98.95,1,1.5,CUST-0006
+2025-07-16,Desk Lamp,Home,East,146.37,3,30.19,CUST-0081
+2025-12-07,Office Chair,Furniture,West,577.3,2,121.35,CUST-0038
+2025-12-07,Desk Lamp,Home,West,158.91,3,33.65,CUST-0173
+2025-04-27,Budget Tablet,Electronics,East,579.2,3,7.8,CUST-0050
+2025-01-20,Laptop Pro,Electronics,East,855.7,1,190.39,CUST-0078
+2025-08-20,Wireless Headphones,Electronics,North,57.43,1,10.92,CUST-0134
+2025-04-08,Wireless Headphones,Electronics,South,532.64,4,89.62,CUST-0087
+2025-05-01,Smartphone,Electronics,South,1210.27,2,189.83,CUST-0025
+2025-12-20,Wireless Headphones,Electronics,East,125.68,1,21.39,CUST-0125
+2025-12-17,Smartphone,Electronics,North,687.01,1,113.4,CUST-0108
+2025-11-05,Budget Tablet,Electronics,East,255.07,1,3.32,CUST-0083
+2025-07-11,Laptop Pro,Electronics,East,905.58,1,202.63,CUST-0154
+2025-07-28,Laptop Pro,Electronics,West,1811.41,2,387.42,CUST-0050
+2025-09-09,Office Chair,Furniture,East,260.39,1,51.29,CUST-0017
+2025-03-07,Wireless Headphones,Electronics,East,395.28,3,75.3,CUST-0061
+2025-11-09,Budget Tablet,Electronics,South,431.19,2,5.6,CUST-0031
+2025-04-30,Wireless Headphones,Electronics,West,386.02,3,69.29,CUST-0121
+2025-05-07,Desk Lamp,Home,North,98.96,2,17.15,CUST-0087
+2025-08-13,Office Chair,Furniture,South,182.12,1,40.41,CUST-0047
+2025-07-11,Laptop Pro,Electronics,South,1700.32,2,396.56,CUST-0006
+2025-05-29,Laptop Pro,Electronics,West,831.87,1,209.38,CUST-0148
+2025-02-23,Smartphone,Electronics,West,636.15,1,113.65,CUST-0151
+2025-10-18,Wireless Headphones,Electronics,South,116.57,1,19.74,CUST-0142
+2025-03-02,Desk Lamp,Home,East,90.17,2,19.22,CUST-0132
+2025-07-15,Budget Tablet,Electronics,West,481.46,2,7.66,CUST-0020
+2025-08-13,Desk Lamp,Home,East,19.3,1,3.96,CUST-0056
+2025-05-15,Desk Lamp,Home,East,270.12,5,55.35,CUST-0068
+2025-12-08,Laptop Pro,Electronics,North,1036.51,1,225.52,CUST-0175
+2025-03-28,Laptop Pro,Electronics,East,1614.73,2,387.6,CUST-0086
+2025-04-01,Office Chair,Furniture,East,512.85,2,101.96,CUST-0145
+2025-06-07,Wireless Headphones,Electronics,South,362.36,3,63.47,CUST-0144
+2025-01-26,Wireless Headphones,Electronics,East,237.19,2,38.63,CUST-0067
+2025-07-26,Laptop Pro,Electronics,East,2708.47,3,633.64,CUST-0007
+2025-07-01,Office Chair,Furniture,South,980.47,4,190.39,CUST-0144
+2025-02-02,Office Chair,Furniture,West,264.48,1,57.41,CUST-0120
+2025-04-02,Laptop Pro,Electronics,West,2674.93,3,586.07,CUST-0140
+2025-08-24,Desk Lamp,Home,North,189.93,5,36.55,CUST-0001
+2025-06-12,Desk Lamp,Home,North,51.77,1,10.73,CUST-0044
+2025-10-12,Wireless Headphones,Electronics,West,400.12,3,76.98,CUST-0135
+2025-12-31,Laptop Pro,Electronics,South,2030.14,2,503.7,CUST-0160
+2025-07-13,Wireless Headphones,Electronics,South,341.93,3,62.9,CUST-0070
+2025-11-17,Smartphone,Electronics,West,2613.71,4,435.21,CUST-0079
+2025-06-15,Wireless Headphones,Electronics,South,125.58,1,22.26,CUST-0137
+2025-07-10,Smartphone,Electronics,North,2717.79,4,531.38,CUST-0076
+2025-07-22,Budget Tablet,Electronics,West,974.97,4,14.08,CUST-0132
+2025-09-03,Desk Lamp,Home,East,150.83,3,30.91,CUST-0020
+2025-09-10,Laptop Pro,Electronics,North,1848.22,2,378.26,CUST-0099
+2025-01-15,Laptop Pro,Electronics,East,3486.68,4,819.23,CUST-0123
+2025-12-18,Laptop Pro,Electronics,South,2113.0,2,497.28,CUST-0085
+2025-03-05,Office Chair,Furniture,West,254.68,1,51.23,CUST-0168
+2025-07-24,Wireless Headphones,Electronics,East,370.7,3,71.62,CUST-0090
+2025-11-30,Laptop Pro,Electronics,West,935.0,1,211.96,CUST-0060
+2025-08-13,Smartphone,Electronics,East,1000.68,5,187.11,CUST-0089
+2025-07-16,Wireless Headphones,Electronics,West,237.95,2,49.39,CUST-0050
+2025-07-20,Budget Tablet,Electronics,East,611.09,3,9.09,CUST-0002
+2025-12-23,Laptop Pro,Electronics,East,974.11,1,216.47,CUST-0125
+2025-01-20,Laptop Pro,Electronics,East,1610.39,2,398.54,CUST-0027
+2025-03-29,Smartphone,Electronics,North,575.62,1,98.42,CUST-0094
+2025-07-05,Budget Tablet,Electronics,North,213.57,1,3.44,CUST-0089
+2025-05-12,Office Chair,Furniture,East,269.68,1,58.53,CUST-0049
+2025-09-24,Smartphone,Electronics,South,708.33,1,128.78,CUST-0114
+2025-12-22,Laptop Pro,Electronics,West,1761.09,2,363.87,CUST-0146
+2025-01-05,Office Chair,Furniture,East,442.93,2,93.84,CUST-0152
+2025-10-10,Wireless Headphones,Electronics,West,114.75,1,18.68,CUST-0104
+2025-10-03,Laptop Pro,Electronics,East,3008.35,3,748.9,CUST-0172
+2025-07-04,Laptop Pro,Electronics,East,3360.9,4,757.55,CUST-0044
+2025-10-06,Laptop Pro,Electronics,East,1669.02,2,363.34,CUST-0003
+2025-10-05,Laptop Pro,Electronics,South,1941.56,2,420.74,CUST-0152
+2025-11-05,Office Chair,Furniture,East,275.9,1,54.37,CUST-0056
+2025-06-17,Wireless Headphones,Electronics,North,136.97,1,25.02,CUST-0086
+2025-01-30,Office Chair,Furniture,South,224.93,1,49.54,CUST-0096
+2025-12-08,Wireless Headphones,Electronics,East,144.07,1,29.26,CUST-0119
+2025-09-26,Laptop Pro,Electronics,North,880.15,1,214.87,CUST-0126
+2025-09-14,Wireless Headphones,Electronics,South,354.18,3,73.82,CUST-0025
+2025-01-27,Office Chair,Furniture,East,548.25,2,122.17,CUST-0137
+2025-05-02,Office Chair,Furniture,North,533.13,2,106.37,CUST-0145
+2025-01-29,Office Chair,Furniture,East,251.08,1,48.8,CUST-0164
+2025-05-01,Budget Tablet,Electronics,East,987.24,5,13.65,CUST-0055
+2025-08-18,Smartphone,Electronics,North,709.67,2,120.23,CUST-0064
+2025-03-08,Desk Lamp,Home,East,47.16,1,9.75,CUST-0119
+2025-10-12,Budget Tablet,Electronics,South,468.04,2,7.68,CUST-0115
+2025-01-29,Desk Lamp,Home,East,104.84,2,22.81,CUST-0017
+2025-12-09,Wireless Headphones,Electronics,South,143.97,1,28.95,CUST-0149
+2025-09-17,Budget Tablet,Electronics,East,211.34,1,3.19,CUST-0004
+2025-04-20,Wireless Headphones,Electronics,East,138.65,1,27.19,CUST-0011
+2025-08-03,Budget Tablet,Electronics,West,117.77,1,1.64,CUST-0134
+2025-11-09,Office Chair,Furniture,West,250.5,1,57.12,CUST-0105
+2025-08-28,Laptop Pro,Electronics,North,1459.4,3,327.39,
+2025-08-11,Budget Tablet,Electronics,East,72.42,1,1.07,CUST-0078
+2025-02-14,Wireless Headphones,Electronics,East,119.33,1,24.25,CUST-0037
+2025-07-24,Budget Tablet,Electronics,West,212.49,1,3.19,CUST-0145
+2025-04-05,Budget Tablet,Electronics,West,389.96,2,5.89,CUST-0023
+2025-02-20,Laptop Pro,Electronics,North,795.69,1,171.78,CUST-0096
+2025-11-24,Smartphone,Electronics,South,1413.0,2,228.08,CUST-0108
+2025-06-30,Wireless Headphones,Electronics,West,574.72,4,97.18,CUST-0149
+2025-07-29,Wireless Headphones,Electronics,North,247.57,2,44.98,CUST-0173
+2025-01-04,Desk Lamp,Home,East,87.92,2,18.81,CUST-0150
+2025-01-11,Laptop Pro,Electronics,West,1929.43,2,496.57,CUST-0044
+2025-07-03,Laptop Pro,Electronics,South,2567.61,3,659.05,CUST-0066
+2025-08-10,Laptop Pro,Electronics,South,911.61,2,201.37,CUST-0043
+2025-12-13,Laptop Pro,Electronics,South,2123.98,2,435.19,CUST-0065
+2025-03-01,Smartphone,Electronics,North,2601.62,4,448.02,CUST-0120
+2025-05-16,Desk Lamp,Home,East,159.21,3,30.84,CUST-0003
+2025-12-15,Office Chair,Furniture,East,598.13,2,107.12,CUST-0148
+2025-10-04,Wireless Headphones,Electronics,West,708.83,5,143.22,CUST-0164
+2025-09-19,Laptop Pro,Electronics,East,4322.1,5,1045.69,CUST-0046
+2025-01-23,Smartphone,Electronics,East,652.41,1,106.33,CUST-0029
+2025-05-28,Wireless Headphones,Electronics,West,527.95,4,108.23,CUST-0148
+2025-11-25,Laptop Pro,Electronics,East,5366.2,5,1309.76,CUST-0075
+2025-04-27,Desk Lamp,Home,North,258.75,5,44.65,CUST-0062
+2025-07-11,Wireless Headphones,Electronics,East,357.85,3,67.57,CUST-0127
+2025-01-15,Wireless Headphones,Electronics,West,250.07,2,44.07,CUST-0050
+2025-02-28,Wireless Headphones,Electronics,North,391.39,3,65.93,CUST-0067
+2025-01-12,Desk Lamp,Home,South,93.18,2,18.72,CUST-0062
+2025-10-20,Laptop Pro,Electronics,South,1725.16,2,441.03,CUST-0086
+2025-12-27,Budget Tablet,Electronics,South,527.95,2,8.22,CUST-0110
+2025-01-28,Wireless Headphones,Electronics,North,132.01,1,24.41,CUST-0008
+2025-03-24,Smartphone,Electronics,West,3369.21,5,651.76,CUST-0014
+2025-09-21,Laptop Pro,Electronics,East,1834.26,2,454.07,CUST-0093
+2025-11-17,Laptop Pro,Electronics,North,1029.59,1,268.71,CUST-0070
+2025-12-13,Laptop Pro,Electronics,East,4406.14,5,951.74,CUST-0174
+2025-07-27,Smartphone,Electronics,West,1970.28,3,369.47,CUST-0110
+2025-08-02,Wireless Headphones,Electronics,East,127.68,3,20.84,CUST-0075
+2025-05-25,Office Chair,Furniture,South,258.55,1,59.47,CUST-0157
+2025-03-07,Desk Lamp,Home,South,53.41,1,11.39,CUST-0072
+2025-02-02,Wireless Headphones,Electronics,West,133.68,1,22.01,CUST-0050
+2025-08-23,Wireless Headphones,Electronics,South,189.53,3,31.05,CUST-0136
+2025-07-06,Office Chair,Furniture,South,229.31,1,51.57,CUST-0022
+2025-09-10,Laptop Pro,Electronics,East,4563.02,5,937.01,CUST-0117
+2025-09-25,Wireless Headphones,Electronics,West,481.32,4,88.72,CUST-0164
+2025-01-01,Budget Tablet,Electronics,East,204.81,1,2.84,CUST-0129
+2025-11-05,Smartphone,Electronics,North,1412.78,2,244.94,CUST-0141
+2025-08-03,Wireless Headphones,Electronics,West,59.78,1,11.64,CUST-0037
+2025-11-02,Wireless Headphones,Electronics,West,146.63,1,25.7,CUST-0102
+2025-03-23,Laptop Pro,Electronics,North,898.94,1,204.74,CUST-0019
+2025-10-20,Smartphone,Electronics,East,3163.81,5,489.98,CUST-0176
+2025-10-21,Wireless Headphones,Electronics,East,136.66,1,25.84,CUST-0124
+2025-03-01,Smartphone,Electronics,East,589.27,1,101.0,CUST-0175
+2025-04-09,Wireless Headphones,Electronics,East,563.8,4,96.17,CUST-0163
+2025-06-07,Laptop Pro,Electronics,East,2462.08,3,528.05,CUST-0031
+2025-07-11,Laptop Pro,Electronics,East,876.98,1,200.63,CUST-0002
+2025-03-22,Wireless Headphones,Electronics,North,122.53,1,23.32,CUST-0151
+2025-09-15,Budget Tablet,Electronics,West,400.32,2,5.16,CUST-0008
+2025-05-09,Laptop Pro,Electronics,East,4532.0,5,1143.48,CUST-0161
+2025-08-01,Budget Tablet,Electronics,East,134.01,2,2.07,CUST-0088
+2025-11-25,Wireless Headphones,Electronics,North,370.04,3,68.94,CUST-0052
+2025-03-09,Smartphone,Electronics,East,2103.19,3,376.25,CUST-0165
+2025-07-25,Office Chair,Furniture,East,915.68,4,171.61,CUST-0139
+2025-10-07,Wireless Headphones,Electronics,West,233.27,2,39.62,CUST-0071
+2025-09-05,Smartphone,Electronics,East,2043.13,3,363.65,CUST-0145
+2025-08-02,Budget Tablet,Electronics,East,198.24,3,3.21,CUST-0151
+2025-06-25,Smartphone,Electronics,East,2528.64,4,483.8,CUST-0004
+2025-05-05,Laptop Pro,Electronics,West,848.44,1,210.76,CUST-0091
+2025-07-09,Smartphone,Electronics,South,670.23,1,108.43,CUST-0172
+2025-09-14,Budget Tablet,Electronics,South,426.67,2,6.8,CUST-0052
+2025-03-15,Smartphone,Electronics,East,1246.86,2,220.17,CUST-0041
+2025-02-03,Office Chair,Furniture,West,226.39,1,43.12,CUST-0149
+2025-08-26,Desk Lamp,Home,West,190.88,5,41.18,CUST-0178
+2025-11-06,Desk Lamp,Home,East,49.33,1,10.53,CUST-0118
+2025-01-27,Office Chair,Furniture,East,782.38,3,154.66,CUST-0120
+2025-06-19,Smartphone,Electronics,West,2517.22,4,491.67,CUST-0014
+2025-10-01,Office Chair,Furniture,South,452.62,2,92.4,CUST-0011
+2025-12-26,Budget Tablet,Electronics,South,521.39,2,8.46,CUST-0077
+2025-03-15,Desk Lamp,Home,West,189.19,4,33.96,CUST-0090
+2025-07-02,Laptop Pro,Electronics,East,1689.89,2,398.04,CUST-0104
+2025-02-18,Office Chair,Furniture,East,266.17,1,57.05,CUST-0008
+2025-11-28,Laptop Pro,Electronics,North,2148.25,2,438.98,CUST-0086
+2025-03-30,Office Chair,Furniture,North,488.15,2,102.3,CUST-0118
+2025-02-05,Budget Tablet,Electronics,East,440.17,2,7.23,CUST-0117
+2025-04-14,Budget Tablet,Electronics,West,1097.99,5,16.97,CUST-0010
+2025-07-28,Laptop Pro,Electronics,West,4652.33,5,971.41,CUST-0080
+2025-04-18,Wireless Headphones,Electronics,North,421.53,3,80.2,CUST-0044
+2025-04-08,Wireless Headphones,Electronics,East,126.76,1,22.83,CUST-0003
+2025-08-13,Smartphone,Electronics,East,675.6,3,129.65,CUST-0145
+2025-10-11,Wireless Headphones,Electronics,East,231.7,2,42.42,CUST-0085
+2025-07-03,Wireless Headphones,Electronics,East,143.28,1,25.44,CUST-0060
+2025-05-11,Wireless Headphones,Electronics,East,144.33,1,30.03,CUST-0118
+2025-09-05,Desk Lamp,Home,North,102.19,2,18.57,CUST-0149
+2025-05-24,Smartphone,Electronics,West,644.36,1,119.97,CUST-0123
+2025-03-06,Smartphone,Electronics,North,2450.37,4,466.57,CUST-0104
+2025-06-15,Office Chair,Furniture,South,939.38,4,182.22,CUST-0044
+2025-01-21,Laptop Pro,Electronics,East,911.62,1,217.6,CUST-0011
+2025-12-29,Office Chair,Furniture,East,1290.01,5,234.38,CUST-0005
+2025-08-23,Desk Lamp,Home,North,64.73,2,12.21,CUST-0053
+2025-07-30,Wireless Headphones,Electronics,West,126.13,1,23.21,CUST-0119
+2025-09-03,Smartphone,Electronics,South,714.08,1,130.01,CUST-0012
+2025-09-12,Office Chair,Furniture,North,504.36,2,92.89,CUST-0001
+2025-12-12,Wireless Headphones,Electronics,South,150.05,1,27.48,CUST-0091
+2025-08-05,Wireless Headphones,Electronics,East,40.75,1,8.23,CUST-0059
+2025-01-18,Desk Lamp,Home,West,186.83,4,39.96,CUST-0041
+2025-01-08,Office Chair,Furniture,South,685.95,3,125.58,CUST-0124
+2025-03-06,Wireless Headphones,Electronics,East,240.76,2,48.63,CUST-0021
+2025-08-03,Desk Lamp,Home,East,46.81,2,9.92,CUST-0033
+2025-11-16,Desk Lamp,Home,North,55.81,1,11.29,CUST-0150
+2025-06-09,Office Chair,Furniture,East,1016.81,4,220.71,CUST-0065
+2025-07-05,Wireless Headphones,Electronics,East,124.82,1,20.67,CUST-0120
+2025-09-18,Office Chair,Furniture,South,220.67,1,44.48,CUST-0157
+2025-02-01,Office Chair,Furniture,North,733.1,3,165.39,CUST-0178
+2025-03-22,Wireless Headphones,Electronics,West,133.81,1,24.14,CUST-0146
+2025-12-30,Desk Lamp,Home,East,107.66,2,19.91,CUST-0145
+2025-09-17,Desk Lamp,Home,East,153.91,3,31.57,CUST-0028
+2025-09-23,Office Chair,Furniture,East,511.75,2,106.91,CUST-0166
+2025-03-04,Wireless Headphones,Electronics,East,124.66,1,22.77,CUST-0170
+2025-05-15,Desk Lamp,Home,North,200.02,4,37.57,CUST-0128
+2025-05-16,Office Chair,Furniture,West,246.98,1,47.05,CUST-0136
+2025-09-27,Wireless Headphones,Electronics,South,384.5,3,64.06,CUST-0053
+2025-06-12,Office Chair,Furniture,East,823.0,3,180.23,CUST-0021
+2025-11-03,Office Chair,Furniture,West,490.29,2,106.82,CUST-0071
+2025-04-06,Laptop Pro,Electronics,West,1952.02,2,467.18,CUST-0014
+2025-04-20,Budget Tablet,Electronics,West,207.01,1,2.87,CUST-0019
+2025-07-29,Wireless Headphones,Electronics,West,135.75,1,26.24,CUST-0023
+2025-02-10,Desk Lamp,Home,West,51.7,1,11.01,CUST-0024
+2025-04-27,Smartphone,Electronics,East,1307.98,2,206.03,CUST-0081
+2025-05-03,Laptop Pro,Electronics,East,2990.71,3,689.87,CUST-0153
+2025-12-14,Desk Lamp,Home,South,48.34,1,10.55,CUST-0087
+2025-02-25,Desk Lamp,Home,West,133.35,3,28.57,CUST-0131
+2025-06-21,Laptop Pro,Electronics,West,853.33,1,205.52,CUST-0162
+2025-09-26,Smartphone,Electronics,West,655.49,1,105.22,CUST-0061
+2025-06-23,Desk Lamp,Home,East,50.3,1,9.75,CUST-0089
+2025-11-02,Smartphone,Electronics,West,707.31,1,128.6,CUST-0104
+2025-10-28,Laptop Pro,Electronics,East,794.67,1,191.67,CUST-0162
+2025-05-16,Desk Lamp,Home,South,49.98,1,10.59,CUST-0165
+2025-04-06,Laptop Pro,Electronics,North,3488.46,4,733.9,CUST-0108
+2025-06-26,Desk Lamp,Home,East,96.69,2,19.1,CUST-0037
+2025-08-15,Office Chair,Furniture,East,442.79,4,84.97,CUST-0106
+2025-01-21,Budget Tablet,Electronics,West,1010.52,5,14.55,CUST-0086
+2025-03-22,Budget Tablet,Electronics,East,213.8,1,3.09,CUST-0100
+2025-09-02,Desk Lamp,Home,South,158.83,3,30.5,CUST-0170
+2025-07-31,Smartphone,Electronics,North,576.43,1,103.42,CUST-0024
+2025-05-15,Wireless Headphones,Electronics,East,361.74,3,60.1,CUST-0042
+2025-06-29,Laptop Pro,Electronics,North,1588.66,2,369.45,CUST-0037
+2025-12-07,Office Chair,Furniture,North,541.82,2,110.47,CUST-0130
+2025-10-02,Wireless Headphones,Electronics,East,538.05,4,110.09,CUST-0066
+2025-01-12,Office Chair,Furniture,North,220.86,1,40.29,CUST-0066
+2025-10-28,Office Chair,Furniture,West,259.8,1,50.37,CUST-0040
+2025-04-25,Office Chair,Furniture,East,272.8,1,58.95,CUST-0104
+2025-10-12,Wireless Headphones,Electronics,East,530.84,4,90.96,CUST-0137
+2025-10-30,Wireless Headphones,Electronics,East,360.71,3,66.55,CUST-0102
+2025-06-04,Wireless Headphones,Electronics,North,522.04,4,97.48,CUST-0133
+2025-10-28,Wireless Headphones,Electronics,West,264.44,2,46.95,CUST-0091
+2025-06-15,Desk Lamp,Home,North,100.99,2,18.47,CUST-0095
+2025-12-08,Laptop Pro,Electronics,East,4070.8,4,1047.42,CUST-0163
+2025-09-27,Wireless Headphones,Electronics,East,246.81,2,40.86,CUST-0038
+2025-02-01,Desk Lamp,Home,South,93.92,2,16.23,CUST-0003
+2025-03-17,Wireless Headphones,Electronics,South,673.15,5,129.32,CUST-0148
+2025-06-16,Wireless Headphones,Electronics,South,246.52,2,50.79,CUST-0178
+2025-12-10,Desk Lamp,Home,South,107.44,2,20.29,CUST-0110
+2025-08-19,Laptop Pro,Electronics,East,1173.78,4,266.53,CUST-0101
+2025-09-01,Wireless Headphones,Electronics,North,231.98,2,41.23,CUST-0007
+2025-11-06,Smartphone,Electronics,West,1298.33,2,251.33,CUST-0093
+2025-12-03,Wireless Headphones,Electronics,South,288.85,2,47.69,CUST-0081
+2025-01-25,Laptop Pro,Electronics,South,1934.31,2,501.23,CUST-0023
+2025-02-25,Wireless Headphones,Electronics,West,126.98,1,21.67,CUST-0067
+2025-04-06,Smartphone,Electronics,West,1368.88,2,269.01,CUST-0026
+2025-04-20,Budget Tablet,Electronics,South,207.72,1,2.65,CUST-0178
+2025-06-22,Budget Tablet,Electronics,West,235.44,1,3.16,CUST-0056
+2025-03-20,Desk Lamp,Home,East,93.83,2,17.93,CUST-0106
+2025-10-20,Smartphone,Electronics,East,694.52,1,137.49,CUST-0086
+2025-10-18,Wireless Headphones,Electronics,East,257.06,2,48.68,CUST-0054
+2025-04-26,Smartphone,Electronics,North,1771.41,3,296.31,CUST-0134
+2025-04-13,Budget Tablet,Electronics,West,231.51,1,3.2,CUST-0165
+2025-06-10,Wireless Headphones,Electronics,South,235.75,2,47.98,CUST-0111
+2025-04-05,Wireless Headphones,Electronics,West,518.15,4,92.71,CUST-0056
+2025-08-07,Laptop Pro,Electronics,East,294.59,1,60.44,CUST-0043
+2025-10-04,Wireless Headphones,Electronics,East,140.35,1,28.45,CUST-0111
+2025-10-02,Wireless Headphones,Electronics,West,690.51,5,117.29,CUST-0023
+2025-11-09,Wireless Headphones,Electronics,East,295.57,2,48.13,CUST-0168
+2025-07-13,Desk Lamp,Home,South,182.15,4,33.85,CUST-0019
+2025-03-18,Budget Tablet,Electronics,North,825.36,4,11.44,CUST-0098
+2025-06-16,Laptop Pro,Electronics,North,4014.48,4,1047.67,CUST-0117
+2025-10-10,Office Chair,Furniture,South,1295.83,5,282.34,CUST-0045
+2025-04-05,Wireless Headphones,Electronics,West,256.16,2,46.71,CUST-0159
+2025-06-19,Wireless Headphones,Electronics,North,238.75,2,40.42,CUST-0016
+2025-06-21,Laptop Pro,Electronics,East,1813.33,2,402.84,CUST-0180
+2025-08-29,Desk Lamp,Home,South,36.4,1,7.05,CUST-0045
+2025-10-13,Laptop Pro,Electronics,East,1826.84,2,475.75,CUST-0034
+2025-08-17,Wireless Headphones,Electronics,East,88.15,2,16.93,CUST-0101
+2025-10-15,Laptop Pro,Electronics,West,1743.83,2,367.63,CUST-0114
+2025-03-23,Office Chair,Furniture,North,695.84,3,156.61,CUST-0054
+2025-12-21,Desk Lamp,Home,West,96.45,2,17.97,CUST-0171
+2025-06-04,Wireless Headphones,Electronics,West,121.4,1,23.69,CUST-0016
+2025-05-19,Wireless Headphones,Electronics,North,231.43,2,46.4,CUST-0091
+2025-04-01,Wireless Headphones,Electronics,West,699.59,5,134.33,CUST-0042
+2025-02-03,Laptop Pro,Electronics,East,3665.19,4,811.85,
+2025-11-28,Laptop Pro,Electronics,West,977.99,1,248.36,CUST-0100
+2025-05-14,Laptop Pro,Electronics,East,870.65,1,189.6,CUST-0161
+2025-10-31,Office Chair,Furniture,South,253.09,1,56.3,CUST-0144
+2025-06-29,Desk Lamp,Home,West,139.77,3,25.68,CUST-0093
+2025-03-14,Smartphone,Electronics,East,2808.55,4,479.22,CUST-0130
+2025-03-14,Desk Lamp,Home,East,198.99,4,37.96,CUST-0084
+2025-06-14,Smartphone,Electronics,East,633.61,1,113.69,CUST-0121
+2025-04-15,Wireless Headphones,Electronics,East,237.29,2,40.66,CUST-0129
+2025-02-10,Laptop Pro,Electronics,North,800.15,1,196.4,CUST-0110
+2025-05-22,Wireless Headphones,Electronics,East,587.69,5,116.59,CUST-0042
+2025-02-17,Laptop Pro,Electronics,East,1729.08,2,451.48,CUST-0142
+2025-01-05,Desk Lamp,Home,West,52.56,1,10.14,CUST-0146
+2025-04-21,Wireless Headphones,Electronics,South,280.37,2,57.07,CUST-0119
+2025-05-17,Wireless Headphones,Electronics,North,126.89,1,20.63,CUST-0038
+2025-06-15,Smartphone,Electronics,East,2148.17,3,374.15,CUST-0091
+2025-09-13,Desk Lamp,Home,East,47.6,1,8.26,CUST-0050
+2025-09-18,Office Chair,Furniture,West,543.27,2,121.04,CUST-0107
+2025-03-13,Wireless Headphones,Electronics,South,283.06,2,47.36,CUST-0098
+2025-07-07,Wireless Headphones,Electronics,West,120.8,1,23.11,CUST-0110
+2025-07-10,Office Chair,Furniture,East,1010.13,4,207.73,CUST-0130
+2025-03-01,Desk Lamp,Home,North,147.61,3,30.53,CUST-0033
+2025-02-27,Wireless Headphones,Electronics,North,117.04,1,22.84,CUST-0014
+2025-12-16,Smartphone,Electronics,East,1260.39,2,247.99,CUST-0065
+2025-06-22,Office Chair,Furniture,South,229.12,1,43.8,CUST-0106
+2025-09-26,Desk Lamp,Home,East,204.39,4,39.29,CUST-0107
+2025-01-31,Budget Tablet,Electronics,East,414.47,2,6.26,CUST-0048
+2025-06-27,Budget Tablet,Electronics,East,405.5,2,6.61,CUST-0148
+2025-09-16,Laptop Pro,Electronics,South,994.64,1,221.3,CUST-0154
+2025-08-19,Budget Tablet,Electronics,East,192.53,3,3.15,CUST-0161
+2025-08-18,Smartphone,Electronics,South,909.74,3,157.92,CUST-0040
+2025-04-30,Smartphone,Electronics,East,2021.58,3,372.64,CUST-0045
+2025-07-11,Wireless Headphones,Electronics,West,127.05,1,25.93,CUST-0105
+2025-03-18,Wireless Headphones,Electronics,North,117.27,1,20.73,CUST-0138
+2025-03-20,Budget Tablet,Electronics,East,198.68,1,2.97,CUST-0099
+2025-12-01,Wireless Headphones,Electronics,South,309.69,2,55.4,CUST-0030
+2025-09-26,Wireless Headphones,Electronics,North,287.32,2,52.14,CUST-0108
+2025-07-07,Smartphone,Electronics,South,1744.03,3,311.37,CUST-0179
+2025-02-25,Office Chair,Furniture,North,457.61,2,102.33,CUST-0032
+2025-11-30,Laptop Pro,Electronics,North,3250.12,3,681.48,CUST-0095
+2025-05-06,Budget Tablet,Electronics,East,468.57,2,6.81,CUST-0025
+2025-08-20,Budget Tablet,Electronics,West,205.38,2,2.81,CUST-0028
+2025-09-09,Budget Tablet,Electronics,North,895.91,4,13.89,CUST-0021
+2025-09-28,Budget Tablet,Electronics,North,655.09,3,10.72,CUST-0161
+2025-11-23,Wireless Headphones,Electronics,North,138.75,1,26.83,CUST-0144
+2025-01-08,Wireless Headphones,Electronics,South,236.1,2,40.25,CUST-0057
+2025-04-11,Laptop Pro,Electronics,East,2780.19,3,608.43,CUST-0146
+2025-04-22,Smartphone,Electronics,East,2611.04,4,411.52,CUST-0034
+2025-01-18,Budget Tablet,Electronics,South,689.22,3,10.95,CUST-0045
+2025-04-09,Office Chair,Furniture,East,466.3,2,97.83,CUST-0056
+2025-03-11,Smartphone,Electronics,East,647.66,1,123.57,CUST-0169
+2025-10-02,Laptop Pro,Electronics,East,925.45,1,205.96,CUST-0098
+2025-01-02,Smartphone,Electronics,East,580.44,1,99.91,CUST-0025
+2025-06-22,Wireless Headphones,Electronics,South,268.67,2,54.18,CUST-0091
+2025-10-18,Desk Lamp,Home,East,44.42,1,8.7,CUST-0072
+2025-05-08,Office Chair,Furniture,East,505.21,2,106.56,CUST-0139
+2025-11-29,Budget Tablet,Electronics,South,435.88,2,5.81,CUST-0008
+2025-12-14,Budget Tablet,Electronics,East,227.06,1,3.05,CUST-0058
+2025-06-18,Wireless Headphones,Electronics,South,286.75,2,57.81,CUST-0112
+2025-03-20,Smartphone,Electronics,North,1440.46,2,260.82,CUST-0168
+2025-12-25,Budget Tablet,Electronics,West,242.13,1,3.78,CUST-0022
+2025-06-17,Laptop Pro,Electronics,West,912.56,1,187.99,CUST-0068
+2025-10-27,Desk Lamp,Home,East,91.31,2,16.32,CUST-0115
+2025-05-04,Smartphone,Electronics,East,604.83,1,116.97,CUST-0032
+2025-06-04,Office Chair,Furniture,East,1072.79,4,207.54,CUST-0138
+2025-04-28,Office Chair,Furniture,East,455.46,2,83.42,CUST-0118
+2025-12-22,Smartphone,Electronics,South,1431.01,2,241.57,CUST-0077
+2025-06-12,Budget Tablet,Electronics,North,229.94,1,3.13,CUST-0105
+2025-12-06,Laptop Pro,Electronics,West,889.88,1,211.35,CUST-0077
+2025-08-13,Desk Lamp,Home,North,101.76,3,21.35,CUST-0109
+2025-11-23,Laptop Pro,Electronics,South,1022.13,1,240.79,CUST-0005
+2025-02-25,Wireless Headphones,Electronics,West,262.25,2,45.85,CUST-0025
+2025-03-06,Office Chair,Furniture,East,276.56,1,62.08,CUST-0104
+2025-09-28,Budget Tablet,Electronics,East,931.64,4,13.57,CUST-0052
+2025-07-21,Office Chair,Furniture,West,697.88,3,132.28,CUST-0046
+2025-05-06,Office Chair,Furniture,East,1035.98,4,228.72,CUST-0137
+2025-04-26,Laptop Pro,Electronics,South,1797.5,2,387.07,CUST-0125
+2025-12-02,Laptop Pro,Electronics,North,3136.7,3,756.19,CUST-0093
+2025-06-19,Wireless Headphones,Electronics,South,141.11,1,27.21,CUST-0007
+2025-02-20,Wireless Headphones,Electronics,East,132.03,1,24.2,CUST-0060
+2025-03-01,Budget Tablet,Electronics,West,242.86,1,3.41,CUST-0075
+2025-01-25,Office Chair,Furniture,East,1223.64,5,232.05,CUST-0141
+2025-08-07,Budget Tablet,Electronics,South,113.87,1,1.49,CUST-0026
+2025-03-04,Budget Tablet,Electronics,East,420.87,2,6.42,CUST-0111
+2025-12-06,Wireless Headphones,Electronics,South,425.94,3,84.22,CUST-0010
+2025-11-08,Laptop Pro,Electronics,North,1831.93,2,469.68,CUST-0085
+2025-08-04,Office Chair,Furniture,South,166.04,1,35.11,CUST-0055
+2025-01-31,Budget Tablet,Electronics,South,199.0,1,3.23,CUST-0113
+2025-04-09,Budget Tablet,Electronics,North,456.66,2,6.18,CUST-0021
+2025-08-11,Wireless Headphones,Electronics,South,131.73,2,25.12,CUST-0149
+2025-09-13,Laptop Pro,Electronics,East,1944.68,2,491.74,CUST-0074
+2025-04-16,Laptop Pro,Electronics,East,1723.88,2,450.47,CUST-0066
+2025-12-05,Laptop Pro,Electronics,East,1072.47,1,246.75,CUST-0018
+2025-09-27,Wireless Headphones,Electronics,North,132.44,1,24.95,CUST-0110
+2025-11-18,Budget Tablet,Electronics,West,693.81,3,9.04,CUST-0039
+2025-06-27,Smartphone,Electronics,West,594.64,1,112.9,CUST-0054
+2025-11-28,Smartphone,Electronics,North,663.09,1,122.18,CUST-0072
+2025-03-24,Office Chair,Furniture,South,260.35,1,51.5,CUST-0121
+2025-12-07,Desk Lamp,Home,West,111.72,2,21.7,CUST-0091
+2025-05-19,Budget Tablet,Electronics,South,451.18,2,5.81,CUST-0018
+2025-06-18,Desk Lamp,Home,North,44.84,1,8.04,CUST-0100
+2025-07-02,Budget Tablet,Electronics,West,900.61,4,12.02,CUST-0044
+2025-01-07,Laptop Pro,Electronics,West,2743.6,3,618.89,CUST-0087
+2025-05-21,Laptop Pro,Electronics,West,2961.18,3,657.76,CUST-0066
+2025-06-06,Wireless Headphones,Electronics,North,396.27,3,67.04,CUST-0029
+2025-02-23,Laptop Pro,Electronics,West,3694.15,4,842.12,CUST-0055
+2025-03-01,Wireless Headphones,Electronics,North,141.24,1,24.45,CUST-0169
+2025-01-10,Budget Tablet,Electronics,South,438.87,2,7.14,CUST-0103
+2025-06-17,Laptop Pro,Electronics,West,801.34,1,203.72,CUST-0106
+2025-03-12,Office Chair,Furniture,East,787.7,3,144.98,CUST-0143
+2025-08-21,Office Chair,Furniture,South,675.18,4,129.52,CUST-0138
+2025-03-02,Office Chair,Furniture,East,464.15,2,92.07,CUST-0176
+2025-03-28,Laptop Pro,Electronics,West,820.49,1,190.32,CUST-0012
+2025-10-29,Wireless Headphones,Electronics,North,119.63,1,22.71,CUST-0023
+2025-02-12,Laptop Pro,Electronics,East,2011.64,2,427.42,CUST-0071
+2025-09-01,Wireless Headphones,Electronics,South,266.44,2,50.2,CUST-0067
+2025-06-08,Smartphone,Electronics,North,2121.83,3,367.48,CUST-0162
+2025-11-04,Wireless Headphones,Electronics,West,295.95,2,,CUST-0076
+2025-11-02,Desk Lamp,Home,South,106.11,2,18.58,CUST-0062
+2025-05-03,Wireless Headphones,Electronics,West,137.93,1,22.63,CUST-0060
+2025-11-01,Office Chair,Furniture,South,561.74,2,118.76,CUST-0040
+2025-12-06,Desk Lamp,Home,West,57.72,1,10.16,CUST-0085
+2025-11-29,Wireless Headphones,Electronics,West,136.81,1,28.57,CUST-0068
+2025-09-18,Wireless Headphones,Electronics,East,279.02,2,50.58,CUST-0017
+2025-10-09,Office Chair,Furniture,East,219.37,1,48.16,CUST-0004
+2025-11-11,Smartphone,Electronics,West,1492.71,2,236.45,CUST-0050
+2025-04-25,Desk Lamp,Home,West,99.98,2,20.18,CUST-0015
+2025-11-03,Smartphone,Electronics,North,634.94,1,114.91,CUST-0127
+2025-04-30,Laptop Pro,Electronics,East,826.84,1,183.06,CUST-0020
+2025-01-03,Laptop Pro,Electronics,West,817.14,1,209.07,CUST-0005
+2025-05-14,Office Chair,Furniture,West,230.47,1,46.57,CUST-0147
+2025-10-02,Laptop Pro,Electronics,West,938.95,1,193.08,CUST-0030
+2025-07-09,Office Chair,Furniture,North,221.03,1,45.67,CUST-0107
+2025-12-31,Laptop Pro,Electronics,North,1060.94,1,270.05,CUST-0097
+2025-06-02,Wireless Headphones,Electronics,East,368.87,3,69.75,CUST-0151
+2025-06-30,Laptop Pro,Electronics,West,2610.22,3,674.15,CUST-0002
+2025-03-13,Budget Tablet,Electronics,North,628.58,3,8.32,CUST-0080
+2025-09-17,Laptop Pro,Electronics,East,1617.89,2,340.93,CUST-0014
+2025-09-02,Budget Tablet,Electronics,East,1059.21,5,14.64,CUST-0159
+2025-05-19,Laptop Pro,Electronics,West,975.25,1,237.95,CUST-0146
+2025-05-04,Laptop Pro,Electronics,East,949.52,1,197.08,CUST-0099
+2025-04-11,Smartphone,Electronics,East,2310.21,4,365.48,CUST-0135
+2025-04-19,Smartphone,Electronics,East,2504.18,4,443.48,CUST-0067
+2025-01-22,Smartphone,Electronics,West,709.44,1,119.21,CUST-0028
+2025-07-14,Wireless Headphones,Electronics,East,119.86,1,20.47,CUST-0107
+2025-10-01,Smartphone,Electronics,North,3158.31,5,551.22,CUST-0016
+2025-10-04,Laptop Pro,Electronics,West,914.66,1,218.41,CUST-0179
+2025-01-29,Wireless Headphones,Electronics,West,343.06,3,66.05,CUST-0039
+2025-01-23,Desk Lamp,Home,West,47.3,1,9.59,CUST-0135
+2025-10-26,Wireless Headphones,Electronics,West,256.38,2,53.46,CUST-0087
+2025-04-17,Laptop Pro,Electronics,West,1641.08,2,351.6,CUST-0175
+2025-03-03,Budget Tablet,Electronics,West,197.8,1,3.1,CUST-0167
+2025-07-28,Smartphone,Electronics,East,622.52,1,114.11,CUST-0032
+2025-04-17,Laptop Pro,Electronics,North,815.23,1,209.09,CUST-0027
+2025-10-14,Laptop Pro,Electronics,East,2602.69,3,542.95,CUST-0150
+2025-06-11,Desk Lamp,Home,East,52.43,1,11.13,CUST-0080
+2025-10-20,Laptop Pro,Electronics,West,1875.15,2,423.65,CUST-0156
+2025-01-25,Laptop Pro,Electronics,West,1005.78,1,252.36,CUST-0175
+2025-11-18,Laptop Pro,Electronics,West,5229.77,5,1137.81,CUST-0005
+2025-03-19,Budget Tablet,Electronics,West,226.34,1,3.67,CUST-0050
+2025-02-11,Desk Lamp,Home,East,98.36,2,19.56,CUST-0177
+2025-01-08,Laptop Pro,Electronics,South,3302.7,4,722.05,CUST-0084
+2025-10-09,Laptop Pro,Electronics,North,1944.02,2,452.17,CUST-0159
+2025-05-15,Desk Lamp,Home,East,239.48,5,47.06,CUST-0063
+2025-07-03,Office Chair,Furniture,South,257.56,1,56.83,CUST-0099
+2025-06-28,Laptop Pro,Electronics,South,2478.0,3,614.26,CUST-0095
+2025-10-23,Budget Tablet,Electronics,West,392.08,2,5.29,CUST-0024
+2025-06-21,Budget Tablet,Electronics,South,458.28,2,6.49,CUST-0119
+2025-08-02,Smartphone,Electronics,East,218.34,1,35.98,CUST-0026
+2025-03-31,Desk Lamp,Home,West,46.88,1,9.35,CUST-0173
+2025-07-10,Wireless Headphones,Electronics,East,269.86,2,46.99,CUST-0102
+2025-10-10,Laptop Pro,Electronics,South,1780.21,2,435.63,CUST-0050
+2025-10-10,Smartphone,Electronics,North,689.38,1,108.82,CUST-0029
+2025-02-03,Smartphone,Electronics,East,616.5,1,120.07,CUST-0134
+2025-07-24,Smartphone,Electronics,East,1790.2,3,301.52,CUST-0032
+2025-04-03,Desk Lamp,Home,South,219.51,4,47.79,CUST-0087
+2025-05-18,Laptop Pro,Electronics,North,980.26,1,204.98,CUST-0145
+2025-08-19,Smartphone,Electronics,North,655.22,2,124.41,CUST-0090
+2025-09-16,Desk Lamp,Home,East,47.01,1,9.27,CUST-0044
+2025-05-07,Desk Lamp,Home,North,153.57,3,26.92,CUST-0047
+2025-09-05,Laptop Pro,Electronics,South,4709.87,5,1129.16,CUST-0090
+2025-09-06,Laptop Pro,Electronics,North,956.25,1,196.91,CUST-0070
+2025-06-01,Budget Tablet,Electronics,North,211.08,1,3.14,CUST-0058
+2025-03-04,Smartphone,Electronics,West,2571.54,4,425.42,CUST-0093
+2025-05-13,Wireless Headphones,Electronics,East,128.19,1,26.66,CUST-0075
+2025-04-05,Wireless Headphones,Electronics,East,117.07,1,21.79,CUST-0135
+2025-08-03,Laptop Pro,Electronics,East,863.02,3,211.51,CUST-0102
+2025-01-02,Desk Lamp,Home,East,267.46,5,50.52,CUST-0164
+2025-07-15,Wireless Headphones,Electronics,North,427.65,3,84.97,CUST-0054
+2025-01-26,Desk Lamp,Home,West,44.19,1,8.2,CUST-0167
+2025-05-23,Wireless Headphones,Electronics,North,520.05,4,97.36,CUST-0097
+2025-05-15,Smartphone,Electronics,East,1281.18,2,223.09,CUST-0179
+2025-11-26,Laptop Pro,Electronics,West,1934.19,2,438.23,CUST-0095
+2025-11-08,Laptop Pro,Electronics,West,1941.33,2,464.14,CUST-0096
+2025-05-22,Smartphone,Electronics,West,1395.75,2,245.16,CUST-0120
+2025-06-09,Office Chair,Furniture,North,223.82,1,42.84,CUST-0165
+2025-01-12,Laptop Pro,Electronics,North,942.03,1,245.94,CUST-0028
+2025-05-27,Desk Lamp,Home,East,217.49,4,47.46,CUST-0157
+2025-05-15,Office Chair,Furniture,West,1100.82,4,214.31,CUST-0180
+2025-08-15,Wireless Headphones,Electronics,North,129.33,2,25.53,CUST-0019
+2025-04-20,Desk Lamp,Home,West,52.6,1,10.04,CUST-0174
+2025-03-26,Wireless Headphones,Electronics,South,130.98,1,27.31,CUST-0006
+2025-12-30,Wireless Headphones,Electronics,North,464.89,3,77.98,CUST-0020
+2025-08-22,Laptop Pro,Electronics,East,1257.73,4,304.02,CUST-0083
+2025-09-24,Budget Tablet,Electronics,East,414.32,2,6.78,CUST-0028
+2025-11-06,Laptop Pro,Electronics,West,3458.98,4,740.44,CUST-0052
+2025-08-07,Desk Lamp,Home,South,35.89,1,7.38,CUST-0106
+2025-11-03,Office Chair,Furniture,West,295.01,1,57.36,CUST-0137
+2025-04-22,Smartphone,Electronics,South,1992.63,3,352.44,CUST-0101
+2025-07-11,Smartphone,Electronics,East,1184.83,2,192.68,CUST-0170
+2025-12-24,Smartphone,Electronics,West,2225.41,3,412.03,CUST-0014
+2025-09-10,Laptop Pro,Electronics,South,2616.28,3,670.29,CUST-0119
+2025-02-15,Wireless Headphones,Electronics,West,122.73,1,20.28,CUST-0030
+2025-04-02,Smartphone,Electronics,West,633.12,1,113.26,CUST-0047
+2025-06-15,Budget Tablet,Electronics,East,680.03,3,9.33,CUST-0035
+2025-07-08,Budget Tablet,Electronics,North,230.86,1,3.23,CUST-0028
+2025-03-14,Wireless Headphones,Electronics,North,136.93,1,24.11,CUST-0167
+2025-03-17,Smartphone,Electronics,South,660.99,1,108.42,CUST-0148
+2025-06-05,Smartphone,Electronics,North,2367.95,4,389.98,CUST-0168
+2025-05-04,Smartphone,Electronics,South,619.43,1,110.86,CUST-0005
+2025-05-13,Smartphone,Electronics,East,1793.02,3,350.25,CUST-0042
+2025-10-23,Desk Lamp,Home,South,214.83,4,38.55,CUST-0083
+2025-01-03,Laptop Pro,Electronics,North,841.33,1,220.67,CUST-0073
+2025-01-02,Wireless Headphones,Electronics,East,245.27,2,47.58,CUST-0061
+2025-11-07,Office Chair,Furniture,East,526.86,2,95.18,CUST-0115
+2025-07-04,Laptop Pro,Electronics,West,1930.44,2,469.06,CUST-0098
+2025-10-17,Budget Tablet,Electronics,East,449.3,2,7.05,CUST-0095
+2025-01-25,Wireless Headphones,Electronics,West,403.3,3,82.07,CUST-0128
+2025-04-24,Smartphone,Electronics,South,2027.8,3,343.58,CUST-0005
+2025-09-15,Laptop Pro,Electronics,North,2927.3,3,772.45,CUST-0140
+2025-03-11,Laptop Pro,Electronics,West,977.75,1,238.48,CUST-0041
+2025-08-18,Desk Lamp,Home,West,35.86,1,6.28,CUST-0027
+2025-09-11,Office Chair,Furniture,North,242.28,1,55.45,CUST-0154
+2025-05-26,Budget Tablet,Electronics,West,215.31,1,3.08,CUST-0098
+2025-09-02,Laptop Pro,Electronics,South,1770.6,2,401.91,CUST-0146
+2025-03-29,Wireless Headphones,Electronics,East,115.33,1,21.44,CUST-0007
+2025-08-30,Budget Tablet,Electronics,East,135.21,2,1.89,CUST-0166
+2025-05-30,Laptop Pro,Electronics,East,1660.93,2,408.53,CUST-0095
+2025-07-31,Laptop Pro,Electronics,East,961.85,1,243.91,CUST-0089
+2025-05-14,Desk Lamp,Home,North,98.87,2,20.35,CUST-0128
+2025-06-21,Office Chair,Furniture,East,783.52,3,140.34,CUST-0179
+2025-05-04,Desk Lamp,Home,North,54.67,1,11.53,CUST-0085
+2025-04-17,Wireless Headphones,Electronics,West,114.08,1,19.46,CUST-0058
+2025-12-27,Office Chair,Furniture,East,980.14,4,183.72,CUST-0126
+2025-04-07,Smartphone,Electronics,East,581.66,1,110.6,CUST-0023
+2025-02-23,Budget Tablet,Electronics,East,428.11,2,6.18,CUST-0076
+2025-06-14,Smartphone,Electronics,East,1142.35,2,186.18,CUST-0180
+2025-08-30,Budget Tablet,Electronics,North,523.94,5,7.49,CUST-0156
+2025-07-04,Wireless Headphones,Electronics,West,130.14,1,25.93,CUST-0060
+2025-11-26,Desk Lamp,Home,East,150.02,3,27.12,CUST-0008
+2025-03-21,Laptop Pro,Electronics,West,937.41,1,236.81,CUST-0156
+2025-05-30,Laptop Pro,Electronics,East,918.49,1,216.68,CUST-0016
+2025-01-16,Office Chair,Furniture,West,1290.19,5,231.42,CUST-0131
+2025-06-12,Laptop Pro,Electronics,South,952.15,1,228.93,CUST-0137
+2025-01-01,Laptop Pro,Electronics,South,1728.47,2,410.22,CUST-0149
+2025-07-14,Smartphone,Electronics,South,1222.09,2,220.56,CUST-0017
+2025-02-23,Wireless Headphones,Electronics,South,262.55,2,50.35,CUST-0171
+2025-04-10,Wireless Headphones,Electronics,East,142.65,1,29.09,CUST-0157
+2025-04-13,Office Chair,Furniture,East,517.45,2,92.38,CUST-0065
+2025-02-21,Laptop Pro,Electronics,South,901.65,1,194.67,CUST-0121
+2025-01-23,Wireless Headphones,Electronics,South,402.06,3,73.36,CUST-0156
+2025-12-25,Wireless Headphones,Electronics,East,143.89,1,25.64,CUST-0076
+2025-08-02,Laptop Pro,Electronics,South,862.39,2,193.95,CUST-0164
+2025-12-18,Wireless Headphones,Electronics,South,122.97,1,23.53,CUST-0121
+2025-07-01,Laptop Pro,Electronics,East,813.63,1,178.53,CUST-0033
+2025-10-07,Wireless Headphones,Electronics,West,229.95,2,41.87,CUST-0132
+2025-08-31,Desk Lamp,Home,West,30.2,1,6.02,CUST-0024
+2025-10-23,Budget Tablet,Electronics,East,720.56,3,10.06,CUST-0010
+2025-03-15,Wireless Headphones,Electronics,West,251.61,2,50.06,CUST-0163
+2025-10-30,Budget Tablet,Electronics,West,895.17,4,11.52,CUST-0024
+2025-08-03,Budget Tablet,Electronics,East,311.99,5,4.38,CUST-0080
+2025-01-11,Smartphone,Electronics,West,1937.35,3,353.18,CUST-0066
+2025-11-11,Office Chair,Furniture,North,843.66,3,174.29,CUST-0110
+2025-07-09,Budget Tablet,Electronics,West,579.09,3,8.0,CUST-0163
+2025-04-06,Desk Lamp,Home,South,44.76,1,8.28,CUST-0157
+2025-08-28,Wireless Headphones,Electronics,West,62.8,1,12.43,CUST-0005
+2025-07-25,Budget Tablet,Electronics,East,196.24,1,2.75,CUST-0061
+2025-05-02,Laptop Pro,Electronics,West,821.79,1,202.54,CUST-0124
+2025-05-29,Laptop Pro,Electronics,South,1765.35,2,415.4,CUST-0019
+2025-03-13,Wireless Headphones,Electronics,East,263.47,2,53.94,CUST-0029
+2025-01-12,Smartphone,Electronics,East,3288.27,5,617.42,CUST-0179
+2025-09-22,Desk Lamp,Home,West,46.74,1,8.48,CUST-0098
+2025-07-21,Office Chair,Furniture,East,483.27,2,91.33,CUST-0145
+2025-06-29,Laptop Pro,Electronics,East,3970.11,4,1044.6,CUST-0076
+2025-01-08,Wireless Headphones,Electronics,West,363.9,3,66.58,CUST-0109
+2025-01-19,Desk Lamp,Home,North,49.33,1,9.1,CUST-0027
+2025-08-31,Smartphone,Electronics,South,329.84,1,51.95,CUST-0115
+2025-08-20,Office Chair,Furniture,North,176.8,1,33.91,CUST-0053
+2025-06-05,Laptop Pro,Electronics,North,2793.3,3,598.47,CUST-0101
+2025-11-27,Wireless Headphones,Electronics,South,411.44,3,72.49,CUST-0058
+2025-01-18,Office Chair,Furniture,West,1056.73,4,210.28,CUST-0033
+2025-09-29,Wireless Headphones,Electronics,West,116.11,1,19.65,CUST-0071
+2025-09-30,Smartphone,Electronics,West,1156.48,2,223.45,CUST-0062
+2025-02-07,Wireless Headphones,Electronics,North,240.97,2,41.14,CUST-0035
+2025-05-09,Desk Lamp,Home,North,159.31,3,30.3,CUST-0012
+2025-01-04,Office Chair,Furniture,West,223.23,1,49.05,CUST-0006
+2025-04-03,Budget Tablet,Electronics,East,436.66,2,6.76,CUST-0085
+2025-11-21,Laptop Pro,Electronics,South,1017.0,1,245.39,CUST-0160
+2025-04-04,Budget Tablet,Electronics,East,640.97,3,10.37,CUST-0117
+2025-08-17,Smartphone,Electronics,West,659.43,2,101.47,CUST-0078
+2025-07-06,Wireless Headphones,Electronics,East,124.35,1,23.89,CUST-0015
+2025-11-19,Smartphone,Electronics,West,629.18,1,105.49,
+2025-02-13,Wireless Headphones,Electronics,North,400.22,3,81.69,CUST-0003
+2025-10-04,Smartphone,Electronics,South,1404.33,2,253.13,CUST-0013
+2025-07-18,Laptop Pro,Electronics,East,824.57,1,212.61,CUST-0141
+2025-06-01,Smartphone,Electronics,West,582.61,1,110.71,CUST-0056
+2025-02-25,Smartphone,Electronics,South,2150.97,3,389.13,CUST-0132
+2025-05-24,Desk Lamp,Home,South,242.49,5,52.19,CUST-0087
+2025-11-24,Budget Tablet,Electronics,South,214.76,1,2.88,CUST-0082
+2025-01-31,Wireless Headphones,Electronics,East,118.37,1,23.92,CUST-0041
+2025-05-02,Wireless Headphones,Electronics,East,471.24,4,78.7,CUST-0108
+2025-12-27,Budget Tablet,Electronics,East,764.34,3,11.93,CUST-0030
+2025-10-25,Laptop Pro,Electronics,East,3934.32,4,934.99,CUST-0021
+2025-06-26,Laptop Pro,Electronics,East,1957.19,2,412.01,CUST-0121
+2025-01-11,Smartphone,Electronics,North,1366.24,2,265.36,CUST-0003
+2025-10-01,Smartphone,Electronics,East,2429.99,4,477.37,CUST-0136
+2025-01-14,Office Chair,Furniture,East,238.56,1,45.96,CUST-0033
+2025-01-03,Laptop Pro,Electronics,West,1005.29,1,217.81,CUST-0017
+2025-12-05,Desk Lamp,Home,North,105.09,2,19.87,CUST-0053
+2025-10-11,Laptop Pro,Electronics,North,3811.02,4,994.32,CUST-0134
+2025-12-10,Smartphone,Electronics,West,700.55,1,126.75,CUST-0011
+2025-09-13,Laptop Pro,Electronics,South,1798.48,2,383.81,CUST-0166
+2025-11-29,Budget Tablet,Electronics,East,713.98,3,10.41,CUST-0062
+2025-11-01,Desk Lamp,Home,South,53.02,1,9.77,CUST-0114
+2025-04-11,Wireless Headphones,Electronics,North,256.53,2,45.48,CUST-0164
+2025-12-22,Office Chair,Furniture,South,1142.18,4,235.46,CUST-0065
+2025-11-14,Smartphone,Electronics,East,712.34,1,139.62,CUST-0163
+2025-04-18,Budget Tablet,Electronics,West,240.98,1,3.94,CUST-0014
+2025-12-16,Laptop Pro,Electronics,East,1001.32,1,252.41,CUST-0125
+2025-11-08,Wireless Headphones,Electronics,East,129.9,1,24.78,CUST-0126
+2025-05-27,Laptop Pro,Electronics,North,1978.21,2,472.32,CUST-0176
+2025-04-02,Wireless Headphones,Electronics,East,122.02,1,25.33,CUST-0124
+2025-12-10,Office Chair,Furniture,South,509.29,2,104.6,CUST-0023
+2025-04-07,Laptop Pro,Electronics,West,868.43,1,198.94,CUST-0147
+2025-05-26,Wireless Headphones,Electronics,East,429.96,3,79.04,CUST-0168
+2025-02-28,Wireless Headphones,Electronics,West,132.33,1,25.89,CUST-0136
+2025-11-10,Smartphone,Electronics,North,1481.05,2,291.53,CUST-0016
+2025-03-04,Office Chair,Furniture,North,260.54,1,47.57,CUST-0079
+2025-10-15,Laptop Pro,Electronics,West,835.51,1,187.49,CUST-0051
+2025-07-20,Wireless Headphones,Electronics,East,343.65,3,69.66,CUST-0084
+2025-10-27,Desk Lamp,Home,East,103.94,2,20.41,CUST-0158
+2025-05-18,Wireless Headphones,Electronics,North,135.25,1,25.34,CUST-0107
+2025-12-05,Smartphone,Electronics,East,2069.99,3,395.73,CUST-0148
+2025-06-16,Laptop Pro,Electronics,South,879.16,1,191.27,CUST-0123
+2025-08-12,Office Chair,Furniture,East,208.3,2,44.72,CUST-0123
+2025-07-08,Smartphone,Electronics,North,3555.14,5,566.05,CUST-0080
+2025-01-15,Laptop Pro,Electronics,South,996.66,1,258.5,CUST-0092
+2025-11-18,Office Chair,Furniture,South,282.46,1,62.96,CUST-0178
+2025-12-25,Laptop Pro,Electronics,West,4125.99,4,1068.88,CUST-0014
+2025-06-06,Wireless Headphones,Electronics,West,401.36,3,74.59,CUST-0166
+2025-01-03,Laptop Pro,Electronics,South,910.37,1,218.95,CUST-0094
+2025-03-29,Wireless Headphones,Electronics,East,136.98,1,22.48,CUST-0058
+2025-04-02,Laptop Pro,Electronics,West,2872.38,3,733.92,CUST-0043
+2025-04-01,Laptop Pro,Electronics,South,1987.43,2,512.99,CUST-0069
+2025-01-03,Office Chair,Furniture,North,545.65,2,117.53,CUST-0105
+2025-07-12,Wireless Headphones,Electronics,North,134.57,1,23.08,CUST-0022
+2025-09-15,Desk Lamp,Home,West,187.47,4,34.01,CUST-0103
+2025-08-13,Budget Tablet,Electronics,South,110.94,1,1.48,CUST-0059
+2025-02-28,Desk Lamp,Home,South,106.61,2,20.41,CUST-0125
+2025-02-12,Wireless Headphones,Electronics,East,423.27,3,73.91,CUST-0132
+2025-03-28,Wireless Headphones,Electronics,West,628.07,5,123.53,CUST-0050
+2025-08-24,Wireless Headphones,Electronics,South,58.04,1,11.43,CUST-0024
+2025-06-09,Budget Tablet,Electronics,South,656.16,3,9.94,CUST-0066
+2025-09-24,Office Chair,Furniture,North,248.48,1,47.21,CUST-0046
+2025-03-25,Desk Lamp,Home,West,101.7,2,18.08,CUST-0012
+2025-06-04,Laptop Pro,Electronics,East,1863.9,2,403.43,CUST-0020
+2025-11-13,Office Chair,Furniture,East,1290.79,5,231.06,CUST-0148
+2025-02-03,Budget Tablet,Electronics,West,644.92,3,10.28,CUST-0105
+2025-09-28,Wireless Headphones,Electronics,South,121.23,1,21.49,CUST-0122
+2025-12-13,Office Chair,Furniture,East,503.72,2,100.08,CUST-0088
+2025-07-16,Laptop Pro,Electronics,North,889.98,1,194.02,CUST-0007
+2025-06-24,Office Chair,Furniture,South,1230.33,5,241.69,CUST-0004
+2025-04-23,Wireless Headphones,Electronics,North,115.4,1,19.62,CUST-0046
+2025-05-16,Desk Lamp,Home,East,48.55,1,9.08,CUST-0082
+2025-03-26,Desk Lamp,Home,South,106.2,2,22.29,CUST-0076
+2025-01-26,Office Chair,Furniture,South,255.92,1,57.27,CUST-0042
+2025-08-08,Desk Lamp,Home,East,21.37,1,3.79,CUST-0176
+2025-09-04,Smartphone,Electronics,West,1173.64,2,217.2,CUST-0018
+2025-03-22,Wireless Headphones,Electronics,West,283.92,2,55.21,CUST-0025
+2025-07-23,Wireless Headphones,Electronics,North,284.16,2,46.67,CUST-0052
+2025-10-13,Laptop Pro,Electronics,South,909.06,1,214.75,CUST-0164
+2025-06-30,Budget Tablet,Electronics,North,221.72,1,3.22,CUST-0101
+2025-07-05,Laptop Pro,Electronics,South,858.08,1,203.81,CUST-0117
+2025-02-23,Smartphone,Electronics,South,1770.59,3,335.69,CUST-0077
+2025-10-23,Wireless Headphones,Electronics,West,114.83,1,19.22,CUST-0057
+2025-11-29,Budget Tablet,Electronics,East,872.15,4,12.13,CUST-0128
+2025-12-17,Budget Tablet,Electronics,North,233.31,1,3.18,CUST-0018
+2025-01-29,Office Chair,Furniture,North,813.34,3,165.75,CUST-0123
+2025-04-28,Wireless Headphones,Electronics,South,340.63,3,65.11,CUST-0071
+2025-07-25,Wireless Headphones,Electronics,North,268.22,2,52.93,CUST-0078
+2025-11-04,Desk Lamp,Home,North,105.22,2,17.89,CUST-0161
+2025-02-24,Laptop Pro,Electronics,West,845.68,1,195.9,CUST-0172
+2025-07-19,Laptop Pro,Electronics,West,793.31,1,195.84,CUST-0048
+2025-07-01,Desk Lamp,Home,East,164.59,,29.1,CUST-0144
+2025-02-19,Budget Tablet,Electronics,North,418.96,2,6.81,CUST-0128
+2025-03-26,Laptop Pro,Electronics,East,1868.69,2,387.14,CUST-0133
+2025-10-30,Wireless Headphones,Electronics,North,117.13,1,24.23,CUST-0176
+2025-07-14,Laptop Pro,Electronics,South,860.03,1,213.1,CUST-0161
+2025-03-30,Laptop Pro,Electronics,West,1765.57,2,459.34,CUST-0060
+2025-01-13,Office Chair,Furniture,East,518.27,2,111.51,CUST-0020
+2025-01-11,Laptop Pro,Electronics,East,3820.15,4,968.71,CUST-0026
+2025-04-02,Smartphone,Electronics,North,2106.78,3,396.15,CUST-0103
+2025-07-13,Wireless Headphones,Electronics,North,628.23,5,105.88,CUST-0076
+2025-12-12,Office Chair,Furniture,East,237.41,1,45.67,CUST-0046
+2025-10-10,Laptop Pro,Electronics,West,2723.97,3,691.98,CUST-0107
+2025-06-08,Laptop Pro,Electronics,South,3755.24,4,798.37,CUST-0043
+2025-07-02,Smartphone,Electronics,East,2821.75,4,547.23,CUST-0027
+2025-10-15,Budget Tablet,Electronics,South,428.25,2,5.67,CUST-0134
+2025-04-05,Smartphone,Electronics,North,1224.77,2,191.94,CUST-0032
+2025-12-25,Wireless Headphones,Electronics,South,131.45,1,22.61,CUST-0009
+2025-10-27,Desk Lamp,Home,North,53.8,1,10.92,CUST-0167
+2025-01-20,Wireless Headphones,Electronics,South,240.85,2,46.06,CUST-0108
+2025-07-14,Laptop Pro,Electronics,West,887.26,1,183.51,CUST-0082
+2025-04-27,Budget Tablet,Electronics,East,199.94,1,2.8,CUST-0018
+2025-05-10,Desk Lamp,Home,South,52.68,1,10.67,CUST-0179
+2025-04-14,Wireless Headphones,Electronics,West,124.58,1,20.76,CUST-0077
+2025-11-29,Wireless Headphones,Electronics,East,151.61,1,28.07,CUST-0117
+2025-01-28,Office Chair,Furniture,West,248.81,1,53.87,CUST-0002
+2025-11-27,Smartphone,Electronics,East,728.42,1,128.26,CUST-0115
+2025-12-29,Office Chair,Furniture,West,515.51,2,106.32,CUST-0121
+2025-08-14,Budget Tablet,Electronics,East,70.15,1,1.04,CUST-0025
+2025-10-26,Laptop Pro,Electronics,West,955.99,1,232.88,CUST-0002
+2025-05-21,Smartphone,Electronics,South,1340.77,2,257.87,CUST-0026
+2025-02-13,Office Chair,Furniture,South,1055.2,4,201.61,CUST-0145
+2025-02-19,Desk Lamp,Home,East,251.13,5,44.09,CUST-0085
+2025-04-20,Budget Tablet,Electronics,South,225.5,1,2.94,CUST-0167
+2025-12-28,Office Chair,Furniture,South,285.46,1,61.97,CUST-0092
+2025-11-02,Desk Lamp,Home,East,112.11,2,19.65,CUST-0060
+2025-02-14,Laptop Pro,Electronics,South,1827.07,2,433.95,CUST-0134
+2025-03-17,Desk Lamp,Home,West,243.83,5,41.76,CUST-0071
+2025-08-13,Desk Lamp,Home,West,67.33,2,12.91,CUST-0166
+2025-04-19,Budget Tablet,Electronics,East,415.82,2,6.47,CUST-0061
+2025-07-12,Smartphone,Electronics,North,627.92,1,118.67,CUST-0104
+2025-09-20,Wireless Headphones,Electronics,East,134.99,1,23.14,CUST-0139
+2025-09-05,Office Chair,Furniture,West,239.88,1,45.65,CUST-0090
+2025-11-21,Desk Lamp,Home,East,97.91,2,19.46,CUST-0144
+2025-07-29,Budget Tablet,Electronics,West,216.87,1,2.8,CUST-0090
+2025-03-27,Budget Tablet,Electronics,East,213.45,1,2.94,CUST-0023
+2025-01-02,Wireless Headphones,Electronics,South,123.44,1,20.45,CUST-0107
+2025-03-07,Office Chair,Furniture,West,1160.94,5,244.96,CUST-0070
+2025-12-15,Wireless Headphones,Electronics,West,306.65,2,57.7,CUST-0121
+2025-08-02,Budget Tablet,Electronics,East,314.69,5,4.88,CUST-0007
+2025-08-23,Laptop Pro,Electronics,East,303.09,1,64.87,CUST-0061
+2025-07-06,Desk Lamp,Home,East,200.98,4,40.85,CUST-0056
+2025-11-20,Smartphone,Electronics,East,2015.67,3,362.56,CUST-0162
+2025-10-17,Smartphone,Electronics,West,657.26,1,101.14,CUST-0022
+2025-08-21,Wireless Headphones,Electronics,East,37.14,1,7.07,CUST-0050
+2025-01-05,Smartphone,Electronics,North,702.57,1,139.01,CUST-0055
+2025-02-13,Budget Tablet,Electronics,North,684.17,3,11.18,CUST-0145
+2025-02-01,Office Chair,Furniture,South,267.53,1,60.39,CUST-0135
+2025-02-23,Desk Lamp,Home,East,131.52,3,26.63,CUST-0046
+2025-10-27,Wireless Headphones,Electronics,East,143.49,1,28.35,CUST-0027
+2025-07-23,Laptop Pro,Electronics,East,4636.44,5,1147.15,CUST-0096
+2025-03-14,Laptop Pro,Electronics,East,1645.56,2,412.6,CUST-0069
+2025-07-22,Smartphone,Electronics,West,2859.4,4,495.89,CUST-0093
+2025-10-03,Smartphone,Electronics,East,2403.45,4,383.23,CUST-0069
+2025-07-14,Office Chair,Furniture,East,502.89,2,112.65,CUST-0077
+2025-01-22,Laptop Pro,Electronics,North,839.43,1,210.39,CUST-0008
+2025-06-05,Smartphone,Electronics,North,656.43,1,125.27,CUST-0022
+2025-02-13,Smartphone,Electronics,West,3210.27,5,617.85,CUST-0088
+2025-02-12,Laptop Pro,Electronics,East,3608.15,4,751.67,CUST-0142
+2025-03-27,Wireless Headphones,Electronics,South,116.48,1,20.95,CUST-0028
+2025-12-03,Wireless Headphones,Electronics,South,253.07,2,47.95,CUST-0169
+2025-05-02,Office Chair,Furniture,North,997.96,4,214.26,CUST-0107
+2025-04-18,Desk Lamp,Home,East,147.52,3,25.19,CUST-0006
+2025-05-27,Wireless Headphones,Electronics,West,676.75,5,133.14,CUST-0168
+2025-07-01,Wireless Headphones,Electronics,East,130.09,1,24.57,CUST-0105
+2025-08-23,Smartphone,Electronics,West,321.3,1,58.59,CUST-0128
+2025-11-01,Laptop Pro,Electronics,East,2852.28,3,673.31,CUST-0082
+2025-12-27,Laptop Pro,Electronics,West,977.1,1,238.81,CUST-0159
+2025-02-19,Budget Tablet,Electronics,East,699.18,3,11.44,CUST-0083
+2025-09-20,Budget Tablet,Electronics,West,390.45,2,5.77,CUST-0088
+2025-05-26,Office Chair,Furniture,South,275.4,1,54.48,CUST-0147
+2025-07-22,Desk Lamp,Home,East,212.85,4,41.28,CUST-0007
+2025-03-31,Smartphone,Electronics,South,1326.23,2,214.42,CUST-0152
+2025-04-27,Smartphone,Electronics,West,1436.29,2,241.3,CUST-0060
+2025-05-08,Budget Tablet,Electronics,East,198.87,1,2.85,CUST-0165
+2025-09-16,Budget Tablet,Electronics,South,808.36,4,10.88,CUST-0153
+2025-09-20,Laptop Pro,Electronics,North,1603.97,2,411.97,CUST-0121
+2025-10-20,Laptop Pro,Electronics,East,3405.24,4,884.6,CUST-0019
+2025-08-14,Wireless Headphones,Electronics,North,59.03,1,10.73,CUST-0171
+2025-09-09,Laptop Pro,Electronics,South,1851.83,2,439.59,CUST-0036
+2025-10-04,Laptop Pro,Electronics,South,856.77,1,221.67,CUST-0033
+2025-08-31,Wireless Headphones,Electronics,North,58.96,1,9.58,CUST-0074
+2025-06-21,Smartphone,Electronics,East,1320.13,2,212.91,CUST-0066
+2025-05-26,Wireless Headphones,Electronics,East,143.69,1,26.88,CUST-0060
+2025-04-22,Budget Tablet,Electronics,East,974.85,4,13.96,CUST-0095
+2025-09-29,Laptop Pro,Electronics,East,3614.6,4,840.22,CUST-0137
+2025-11-08,Smartphone,Electronics,North,746.63,1,117.53,CUST-0085
+2025-02-17,Smartphone,Electronics,North,1150.86,2,179.69,CUST-0014
+2025-04-02,Smartphone,Electronics,East,611.68,1,120.45,CUST-0133
+2025-12-31,Office Chair,Furniture,South,275.8,1,52.13,CUST-0140
+2025-01-09,Laptop Pro,Electronics,North,1948.6,2,491.01,CUST-0083
+2025-05-15,Wireless Headphones,Electronics,West,126.86,1,23.25,CUST-0152
+2025-07-06,Wireless Headphones,Electronics,North,482.13,4,99.62,
+2025-12-24,Budget Tablet,Electronics,East,221.4,1,2.87,CUST-0106
+2025-02-14,Wireless Headphones,Electronics,South,139.96,1,27.89,CUST-0110
+2025-02-10,Office Chair,Furniture,South,251.06,1,53.57,CUST-0027
+2025-09-22,Smartphone,Electronics,East,682.11,1,131.13,CUST-0138
+2025-06-22,Desk Lamp,Home,West,158.36,3,27.48,CUST-0058
+2025-03-30,Desk Lamp,Home,North,135.11,3,27.76,CUST-0174
+2025-12-12,Smartphone,Electronics,South,662.92,1,115.68,CUST-0131
+2025-12-02,Wireless Headphones,Electronics,South,125.08,1,20.48,CUST-0138
+2025-10-15,Office Chair,Furniture,East,899.08,4,190.23,CUST-0076
+2025-10-15,Budget Tablet,Electronics,East,238.08,1,3.38,CUST-0009
+2025-01-13,Smartphone,Electronics,East,696.28,1,132.71,CUST-0163
+2025-08-08,Desk Lamp,Home,East,62.13,3,10.73,CUST-0034
+2025-07-22,Smartphone,Electronics,East,2782.46,4,529.82,CUST-0044
+2025-06-14,Budget Tablet,Electronics,West,1166.0,5,14.89,CUST-0002
+2025-08-12,Wireless Headphones,Electronics,South,138.25,2,27.78,CUST-0115
+2025-05-24,Laptop Pro,Electronics,East,792.38,1,179.36,CUST-0123
+2025-04-27,Office Chair,Furniture,South,754.26,3,160.93,CUST-0108
+2025-08-28,Smartphone,Electronics,South,292.94,1,51.21,CUST-0007
+2025-06-27,Smartphone,Electronics,East,577.53,1,104.24,CUST-0045
+2025-11-08,Budget Tablet,Electronics,West,464.74,2,7.29,CUST-0052
+2025-02-16,Office Chair,Furniture,East,499.8,2,,CUST-0073
+2025-01-05,Budget Tablet,Electronics,East,428.35,2,6.37,CUST-0145
+2025-10-15,Laptop Pro,Electronics,East,1720.34,2,447.42,CUST-0162
+2025-06-15,Smartphone,Electronics,South,695.4,1,122.3,CUST-0150
+2025-06-15,Smartphone,Electronics,East,707.94,1,122.05,CUST-0136
+2025-03-26,Laptop Pro,Electronics,East,1831.78,2,398.52,CUST-0088
+2025-09-01,Budget Tablet,Electronics,South,401.65,2,6.12,CUST-0134
+2025-09-10,Desk Lamp,Home,North,134.02,3,24.69,CUST-0067
+2025-05-05,Wireless Headphones,Electronics,West,284.49,2,58.44,CUST-0158
+2025-06-22,Office Chair,Furniture,East,494.21,2,95.85,CUST-0100
+2025-12-03,Smartphone,Electronics,West,3375.5,5,604.56,CUST-0025
+2025-08-14,Smartphone,Electronics,East,819.02,4,136.77,CUST-0065
+2025-02-27,Smartphone,Electronics,North,2585.87,4,399.81,CUST-0015
+2025-12-31,Laptop Pro,Electronics,South,2664.87,3,548.89,CUST-0167
+2025-08-17,Office Chair,Furniture,West,512.72,3,105.57,CUST-0043
+2025-08-24,Smartphone,Electronics,East,203.53,1,35.91,CUST-0041
+2025-11-04,Laptop Pro,Electronics,East,926.23,1,197.62,CUST-0076
+2025-07-29,Laptop Pro,Electronics,East,903.72,1,223.03,CUST-0056
+2025-08-28,Smartphone,Electronics,East,378.99,2,68.31,CUST-0026
+2025-03-19,Wireless Headphones,Electronics,South,563.36,4,98.43,CUST-0109
+2025-03-08,Laptop Pro,Electronics,North,2528.38,3,611.19,CUST-0128
+2025-04-15,Office Chair,Furniture,East,683.45,3,128.43,CUST-0160
+2025-10-04,Wireless Headphones,Electronics,South,341.38,3,67.83,CUST-0129
+2025-02-10,Budget Tablet,Electronics,East,722.13,3,11.27,CUST-0035
+2025-09-10,Wireless Headphones,Electronics,West,134.7,1,26.79,CUST-0071
+2025-06-22,Wireless Headphones,Electronics,South,283.75,2,49.1,CUST-0050
+2025-04-11,Smartphone,Electronics,East,628.92,1,104.34,CUST-0155
+2025-01-24,Smartphone,Electronics,East,597.44,1,115.86,CUST-0033
+2025-08-23,Budget Tablet,Electronics,South,114.76,1,1.62,CUST-0090
+2025-11-19,Smartphone,Electronics,East,1482.49,2,253.27,CUST-0053
+2025-09-27,Office Chair,Furniture,West,958.08,4,201.51,CUST-0177
+2025-09-28,Office Chair,Furniture,North,1015.01,4,219.52,CUST-0073
+2025-12-10,Budget Tablet,Electronics,East,512.21,2,6.86,CUST-0170
+2025-05-26,Office Chair,Furniture,South,791.8,3,143.05,CUST-0044
+2025-12-16,Laptop Pro,Electronics,South,1028.15,1,223.18,CUST-0066
+2025-01-25,Smartphone,Electronics,West,709.17,1,118.59,CUST-0072
+2025-12-15,Desk Lamp,Home,East,94.6,2,19.51,CUST-0069
+2025-11-27,Desk Lamp,Home,East,54.43,1,11.92,CUST-0155
+2025-01-10,Smartphone,Electronics,East,1226.06,2,210.68,CUST-0047
+2025-03-21,Wireless Headphones,Electronics,West,478.84,4,85.84,CUST-0149
+2025-04-16,Laptop Pro,Electronics,East,3440.44,4,868.81,CUST-0091
+2025-08-14,Smartphone,Electronics,West,301.05,1,51.34,CUST-0055
+2025-05-01,Laptop Pro,Electronics,North,2892.24,3,707.86,CUST-0104
+2025-06-12,Smartphone,Electronics,East,1280.07,2,203.7,CUST-0022
+2025-11-06,Desk Lamp,Home,South,53.45,1,9.29,CUST-0035
+2025-08-03,Laptop Pro,Electronics,West,2007.13,5,435.87,CUST-0088
+2025-08-21,Wireless Headphones,Electronics,East,73.41,2,13.87,CUST-0036
+2025-06-17,Budget Tablet,Electronics,West,209.49,1,3.46,CUST-0122
+2025-04-30,Wireless Headphones,Electronics,South,245.41,2,46.14,CUST-0025
+2025-04-21,Smartphone,Electronics,South,2586.58,4,436.14,CUST-0179
+2025-10-03,Wireless Headphones,Electronics,North,656.61,5,130.84,CUST-0160
+2025-11-30,Budget Tablet,Electronics,South,918.19,4,14.26,CUST-0103
+2025-05-24,Desk Lamp,Home,South,44.1,1,9.63,CUST-0012
+2025-11-15,Laptop Pro,Electronics,West,1048.68,1,223.07,CUST-0071
+2025-05-28,Smartphone,Electronics,South,1353.98,2,239.0,CUST-0059
+2025-03-01,Laptop Pro,Electronics,South,3005.26,3,740.15,CUST-0062
+2025-01-14,Wireless Headphones,Electronics,South,512.14,4,103.12,CUST-0046
+2025-08-05,Smartphone,Electronics,East,382.79,2,67.6,CUST-0107
+2025-11-15,Wireless Headphones,Electronics,North,381.05,3,77.94,CUST-0062
+2025-02-11,Budget Tablet,Electronics,East,242.6,1,3.96,CUST-0041
+2025-10-24,Wireless Headphones,Electronics,East,500.17,4,91.87,CUST-0050
+2025-04-26,Office Chair,Furniture,East,242.02,1,53.95,CUST-0126
+2025-03-15,Budget Tablet,Electronics,East,243.87,1,3.84,CUST-0144
+2025-10-21,Laptop Pro,Electronics,East,1970.24,2,494.27,CUST-0028
+2025-06-27,Laptop Pro,Electronics,West,914.81,1,219.75,CUST-0143
+2025-03-09,Budget Tablet,Electronics,West,385.79,2,5.3,CUST-0151
+2025-08-01,Laptop Pro,Electronics,East,505.5,2,130.18,CUST-0016
+2025-06-04,Smartphone,Electronics,South,1875.32,3,352.93,CUST-0039
+2025-03-08,Laptop Pro,Electronics,East,1835.13,2,460.03,CUST-0033
+2025-11-16,Laptop Pro,Electronics,East,1006.36,1,250.17,CUST-0013
+2025-08-23,Office Chair,Furniture,South,670.26,4,153.88,CUST-0178
+2025-04-20,Laptop Pro,Electronics,South,4602.88,5,945.87,CUST-0090
+2025-12-08,Smartphone,Electronics,East,1357.26,2,230.09,CUST-0036
+2025-02-12,Wireless Headphones,Electronics,West,245.92,2,42.19,CUST-0117
+2025-10-02,Office Chair,Furniture,East,275.64,1,55.5,CUST-0054
+2025-06-16,Laptop Pro,Electronics,North,801.78,1,203.63,CUST-0117
+2025-01-31,Budget Tablet,Electronics,East,488.05,2,7.09,CUST-0017
+2025-08-02,Office Chair,Furniture,South,884.48,5,165.41,CUST-0059
+2025-11-18,Smartphone,Electronics,East,1278.43,2,202.73,CUST-0047
+2025-03-08,Laptop Pro,Electronics,North,1627.29,2,392.35,CUST-0056
+2025-08-14,Laptop Pro,Electronics,East,577.12,2,142.48,CUST-0068
+2025-03-20,Wireless Headphones,Electronics,East,113.77,1,18.96,CUST-0125
+2025-04-23,Laptop Pro,Electronics,South,991.93,1,212.1,CUST-0094
+2025-12-27,Desk Lamp,Home,East,146.46,3,29.72,CUST-0177
+2025-11-28,Smartphone,Electronics,West,710.13,1,120.44,CUST-0072
+2025-04-01,Smartphone,Electronics,East,1985.09,3,349.92,CUST-0009
+2025-11-15,Smartphone,Electronics,West,2150.16,3,356.66,CUST-0046
+2025-03-02,Desk Lamp,Home,North,47.76,1,9.81,CUST-0097
+2025-09-19,Office Chair,Furniture,South,516.96,2,105.99,CUST-0153
+2025-10-08,Office Chair,Furniture,East,717.47,3,159.55,CUST-0153
+2025-01-28,Desk Lamp,Home,East,53.88,1,9.27,CUST-0040
+2025-07-23,Wireless Headphones,Electronics,East,125.01,1,25.02,CUST-0106
+2025-10-03,Budget Tablet,Electronics,East,198.07,1,3.12,CUST-0023
+2025-08-02,Budget Tablet,Electronics,West,428.12,4,5.92,CUST-0030
+2025-08-11,Wireless Headphones,Electronics,West,265.03,4,47.64,CUST-0156
+2025-09-01,Laptop Pro,Electronics,East,4999.51,5,1178.29,CUST-0105
+2025-10-02,Office Chair,Furniture,South,262.57,1,48.14,CUST-0135
+2025-12-16,Desk Lamp,Home,East,47.48,1,8.15,CUST-0045
+2025-05-15,Smartphone,Electronics,East,1173.31,2,208.5,CUST-0054
+2025-11-20,Laptop Pro,Electronics,East,3825.27,4,919.51,CUST-0051
+2025-12-29,Laptop Pro,Electronics,West,1074.3,1,279.6,CUST-0019
+2025-05-02,Budget Tablet,Electronics,East,432.02,2,7.04,CUST-0151
+2025-11-06,Smartphone,Electronics,East,1389.57,2,256.71,CUST-0017
+2025-11-09,Laptop Pro,Electronics,West,959.16,1,240.7,CUST-0101
+2025-11-22,Wireless Headphones,Electronics,West,422.54,3,72.33,CUST-0161
+2025-09-30,Wireless Headphones,Electronics,West,138.01,1,26.53,CUST-0081
+2025-11-26,Wireless Headphones,Electronics,South,134.14,1,25.78,CUST-0005
+2025-06-22,Smartphone,Electronics,East,2453.12,4,377.61,CUST-0015
+2025-01-28,Wireless Headphones,Electronics,West,260.16,2,47.46,CUST-0032
+2025-03-29,Laptop Pro,Electronics,West,5017.21,5,1208.82,CUST-0043
+2025-02-21,Laptop Pro,Electronics,South,1831.83,2,431.15,CUST-0037
+2025-11-01,Desk Lamp,Home,East,172.85,3,30.94,CUST-0171
+2025-08-07,Desk Lamp,Home,East,57.2,3,11.41,CUST-0008
+2025-07-29,Laptop Pro,Electronics,West,2511.03,3,558.72,CUST-0077
+2025-06-22,Laptop Pro,Electronics,East,1877.96,2,441.39,CUST-0022
+2025-06-17,Laptop Pro,Electronics,North,4239.8,5,998.4,CUST-0034
+2025-09-02,Wireless Headphones,Electronics,North,134.93,1,23.69,CUST-0063
+2025-08-24,Wireless Headphones,Electronics,West,65.82,1,10.99,CUST-0140
+2025-06-24,Wireless Headphones,Electronics,West,460.57,4,94.69,CUST-0022
+2025-04-13,Desk Lamp,Home,East,150.59,3,29.14,CUST-0020
+2025-11-29,Budget Tablet,Electronics,West,488.16,2,7.43,CUST-0028
+2025-01-19,Wireless Headphones,Electronics,West,683.52,5,138.7,CUST-0137
+2025-09-13,Wireless Headphones,Electronics,West,115.37,1,22.02,CUST-0018
+2025-08-10,Desk Lamp,Home,East,61.45,3,12.78,CUST-0055
+2025-03-08,Budget Tablet,Electronics,West,1013.99,5,14.91,CUST-0061
+2025-07-16,Laptop Pro,Electronics,East,2795.62,3,673.89,CUST-0079
+2025-04-04,Laptop Pro,Electronics,North,1642.89,2,382.58,CUST-0118
+2025-03-12,Office Chair,Furniture,West,228.2,1,44.69,CUST-0067
+2025-10-13,Laptop Pro,Electronics,South,1625.54,2,350.86,CUST-0060
+2025-10-28,Budget Tablet,Electronics,South,724.08,3,10.52,CUST-0100
+2025-10-09,Budget Tablet,Electronics,North,211.72,1,3.29,CUST-0056
+2025-12-10,Smartphone,Electronics,North,699.46,1,130.03,CUST-0072
+2025-12-01,Smartphone,Electronics,South,1308.77,2,240.92,CUST-0092
+2025-10-20,Wireless Headphones,Electronics,East,252.31,2,41.48,CUST-0030
+2025-02-08,Wireless Headphones,Electronics,North,403.14,3,67.75,CUST-0013
+2025-09-16,Smartphone,Electronics,South,1927.93,3,363.91,CUST-0118
+2025-09-17,Desk Lamp,Home,South,45.88,1,9.56,CUST-0179
+2025-10-31,Desk Lamp,Home,East,106.3,2,20.67,CUST-0055
+2025-10-05,Laptop Pro,Electronics,North,1640.93,2,341.68,CUST-0009
+2025-03-09,Wireless Headphones,Electronics,North,479.48,4,90.72,CUST-0168
+2025-04-23,Budget Tablet,Electronics,West,671.21,3,11.04,CUST-0159
+2025-07-31,Office Chair,Furniture,North,816.48,3,171.57,CUST-0062
+2025-09-27,Laptop Pro,Electronics,East,2821.71,3,683.16,CUST-0055
+2025-10-17,Smartphone,Electronics,East,2610.39,4,476.34,CUST-0117
+2025-06-30,Wireless Headphones,Electronics,West,356.06,3,69.79,CUST-0008
+2025-06-02,Wireless Headphones,Electronics,North,230.5,2,38.78,CUST-0028
+2025-04-18,Desk Lamp,Home,East,94.36,2,19.39,CUST-0110
+2025-07-04,Wireless Headphones,Electronics,West,404.83,3,72.99,CUST-0096
+2025-05-14,Desk Lamp,Home,South,54.17,1,10.36,CUST-0050
+2025-12-21,Budget Tablet,Electronics,West,518.65,2,7.24,CUST-0039
+2025-07-07,Wireless Headphones,Electronics,West,568.13,5,114.8,CUST-0093
+2025-12-04,Laptop Pro,Electronics,South,1767.55,2,399.05,CUST-0130
+2025-01-08,Laptop Pro,Electronics,West,2888.28,3,660.06,CUST-0102
+2025-05-09,Laptop Pro,Electronics,South,926.23,1,242.35,CUST-0048
+2025-07-18,Wireless Headphones,Electronics,East,476.15,4,82.51,CUST-0078
+2025-11-16,Office Chair,Furniture,South,287.89,1,65.21,CUST-0079
+2025-08-13,Budget Tablet,Electronics,West,98.53,1,1.37,CUST-0162
+2025-01-26,Wireless Headphones,Electronics,South,285.37,2,58.43,CUST-0119
+2025-05-17,Laptop Pro,Electronics,North,884.52,1,227.01,CUST-0086
+2025-07-19,Smartphone,Electronics,East,614.03,1,95.6,CUST-0012
+2025-03-05,Laptop Pro,Electronics,South,2454.94,3,593.59,CUST-0066
+2025-09-24,Wireless Headphones,Electronics,South,506.12,4,98.14,CUST-0036
+2025-06-07,Desk Lamp,Home,West,44.47,1,7.83,CUST-0063
+2025-03-23,Smartphone,Electronics,South,1295.54,2,221.31,CUST-0153
+2025-07-13,Smartphone,Electronics,South,648.06,1,106.57,CUST-0175
+2025-01-06,Smartphone,Electronics,East,1946.03,3,378.45,CUST-0138
+2025-04-25,Budget Tablet,Electronics,East,221.0,1,2.89,CUST-0106
+2025-10-19,Smartphone,Electronics,East,1223.85,2,192.48,CUST-0125
+2025-06-06,Smartphone,Electronics,North,1176.4,2,183.82,CUST-0176
+2025-09-25,Wireless Headphones,Electronics,West,252.2,2,44.16,CUST-0034
+2025-07-14,Smartphone,Electronics,East,1246.39,2,233.57,CUST-0049
+2025-06-19,Desk Lamp,Home,South,100.84,2,21.4,CUST-0003
+2025-02-08,Wireless Headphones,Electronics,West,124.07,1,23.58,CUST-0148
+2025-10-21,Office Chair,Furniture,North,478.97,2,95.4,CUST-0005
+2025-12-07,Laptop Pro,Electronics,East,2854.39,3,607.68,CUST-0153
+2025-02-02,Wireless Headphones,Electronics,East,539.93,4,110.63,CUST-0133
+2025-12-08,Laptop Pro,Electronics,East,1805.98,2,406.14,CUST-0081
+2025-08-06,Office Chair,Furniture,South,162.64,1,29.41,CUST-0070
+2025-06-20,Smartphone,Electronics,East,1332.01,2,229.6,CUST-0056
+2025-05-14,Budget Tablet,Electronics,West,444.92,2,6.04,CUST-0124
+2025-05-06,Wireless Headphones,Electronics,East,120.52,1,19.59,CUST-0065
+2025-02-19,Desk Lamp,Home,East,97.79,2,18.66,CUST-0036
+2025-07-02,Laptop Pro,Electronics,East,1689.89,2,398.04,CUST-0104
+2025-09-28,Budget Tablet,Electronics,North,655.09,3,10.72,CUST-0161
+2025-07-01,Laptop Pro,Electronics,East,813.63,1,178.53,CUST-0033
+2025-03-02,Desk Lamp,Home,North,47.76,1,9.81,CUST-0097
