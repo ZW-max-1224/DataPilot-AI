@@ -18,6 +18,12 @@
 #              that introduced this workflow. See pyproject.toml for details.
 #   * No dependency on a live LLM, LangSmith, MySQL or remote Qdrant. This workflow
 #     installs packages from PyPI and runs tests — nothing else.
+#
+# Action versions are pinned to the current majors (checkout@v7, setup-python@v7).
+# The previous v4/v5 pair targeted Node.js 20, which runners now force onto Node.js 24
+# with a deprecation warning; v7 removes that warning.
+#
+# Verified on the initial push: the whole job passes in ~1m41s on ubuntu-latest.
 
 name: CI
 
@@ -35,10 +41,10 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Python 3.11
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.11"
           cache: pip
