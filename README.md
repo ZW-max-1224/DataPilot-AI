@@ -8,6 +8,11 @@
 >
 > **尚未真实验证：**MySQL 连接与写入、LangSmith Trace。这两项目前只有离线 Mock 测试；未配置时代码不会伪造结果。
 
+<!-- 界面截图占位（HTML 注释在 GitHub 上不可见，所以这里不会显示破图）。
+     截图存为 docs/images/demo.png 后，把下面这行的注释去掉即可，或者让维护者代做。
+![DataPilot AI 演示](docs/images/demo.png)
+-->
+
 ## 业务流程
 
 ```mermaid
@@ -326,8 +331,9 @@ app/
 └── ui/           # Streamlit 应用
  data/            # 合成 Demo CSV、内置知识和本地忽略目录
  docs/            # 算法、数据画像、工具说明、审查报告、真实运行验收记录与面试演示稿
+ docs/images/     # README 界面截图（拍摄与引用约定见该目录的 README）
  i18n/            # 中英文 UI 文案
- scripts/         # 配置自检工具（Embedding provider 检查）
+ scripts/         # 配置自检工具（Embedding provider 与 RAG 检索自检）
  tests/           # 离线单元测试
 ```
 
