@@ -236,3 +236,48 @@ def test_the_two_group_sum_tools_agree_about_all_missing_groups():
     top_by_group = {row["g"]: row["v"] for row in top.rows}
     assert stats_by_group["a"] is None and top_by_group["a"] is None
     assert stats_by_group["b"] == top_by_group["b"] == 5.0
+
+
+def test_chart_configures_a_cjk_capable_font():
+    """Chinese chart text must not render as tofu boxes.
+
+    A live demo showed the title "各月销售额趋势（2025）" drawn as empty rectangles,
+    because matplotlib's default font has no CJK glyphs.
+    """
+    import matplotlib
+    from matplotlib import font_manager
+
+    from app.tools import visualization_tools
+
+    available = {font.name for font in font_manager.fontManager.ttflist}
+    installed = [name for name in visualization_tools.CJK_FONT_CANDIDATES if name in available]
+    if installed:
+        configured = list(matplotlib.rcParams["font.sans-serif"])
+        assert any(name in configured for name in installed), (
+            "a CJK-capable font is installed but matplotlib is not configured to use it"
+        )
+    # Several CJK fonts lack the Unicode minus, which turns negative labels into boxes.
+    assert matplotlib.rcParams["axes.unicode_minus"] is False
+
+
+def test_many_x_categories_are_thinned_but_every_point_is_kept():
+    """344 daily points once produced 344 tick labels, i.e. a black band on the axis."""
+    days = pd.date_range("2025-01-01", periods=200, freq="D").strftime("%Y-%m-%d")
+    frame = pd.DataFrame({"day": list(days), "value": [float(index) for index in range(200)]})
+    artifact = create_chart(frame, chart_type="line", x="day", y="value")
+    try:
+        assert len(artifact.figure.axes[0].get_xticks()) <= 8
+        assert artifact.result.plotted_rows == 200          # no data point is dropped
+        assert any("tick labels" in warning for warning in artifact.result.warnings)
+    finally:
+        artifact.release()
+
+
+def test_few_x_categories_are_not_thinned():
+    frame = pd.DataFrame({"month": ["2025-01", "2025-02", "2025-03"], "sales": [1.0, 2.0, 3.0]})
+    artifact = create_chart(frame, chart_type="line", x="month", y="sales")
+    try:
+        assert len(artifact.figure.axes[0].get_xticks()) == 3
+        assert artifact.result.warnings == []
+    finally:
+        artifact.release()

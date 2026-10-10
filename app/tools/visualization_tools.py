@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+import math
 
 import matplotlib
 
@@ -6,7 +7,9 @@ matplotlib.use("Agg")
 
 import matplotlib.pyplot as plt
 import pandas as pd
+from matplotlib import font_manager
 from matplotlib.figure import Figure
+from matplotlib.ticker import MaxNLocator
 
 from app.models.analysis_result import ChartRequest, ChartResult
 from app.tools.analysis_tools import (
@@ -16,6 +19,42 @@ from app.tools.analysis_tools import (
 MAX_PLOT_POINTS = 2_000
 MAX_BAR_CATEGORIES = 30
 MAX_GROUP_SERIES = 10
+# Tick labels a continuous line-chart axis may show before matplotlib is told to thin
+# them out; beyond this they overlap into a black band.
+MAX_X_TICKS = 8
+
+# Matplotlib's default font (DejaVu Sans) has no CJK glyphs, so a Chinese chart title
+# or a Chinese column name rendered as tofu boxes ("各月销售额趋势" -> "字字字字字字").
+# This is a Chinese-first data tool, so pick the first CJK-capable font that is actually
+# installed. Ordered by platform: Windows, macOS, Linux, then a wide-coverage fallback.
+CJK_FONT_CANDIDATES = (
+    "Microsoft YaHei", "SimHei", "Microsoft JhengHei",
+    "PingFang SC", "Hiragino Sans GB",
+    "Noto Sans CJK SC", "Noto Sans SC", "Source Han Sans SC",
+    "WenQuanYi Zen Hei", "Arial Unicode MS",
+)
+
+
+def configure_cjk_font() -> str | None:
+    """Point matplotlib at an installed CJK font; return the chosen family.
+
+    Returns ``None`` when no candidate is installed, in which case the previous default
+    is kept rather than crashing: an English-only dataset still renders correctly, and a
+    missing font must not take the whole charting tool down.
+    """
+    installed = {font.name for font in font_manager.fontManager.ttflist}
+    chosen = [name for name in CJK_FONT_CANDIDATES if name in installed]
+    if chosen:
+        # Keep the candidates as a preference list so a partially covered font still
+        # falls back to another CJK font instead of to glyph-less DejaVu.
+        matplotlib.rcParams["font.sans-serif"] = [*chosen, "DejaVu Sans"]
+    # The Unicode minus sign is missing from several CJK fonts, which turns negative
+    # axis labels into boxes; the ASCII hyphen is always available.
+    matplotlib.rcParams["axes.unicode_minus"] = False
+    return chosen[0] if chosen else None
+
+
+CONFIGURED_CJK_FONT = configure_cjk_font()
 
 
 @dataclass
@@ -111,7 +150,30 @@ def create_chart(
                 else:
                     grouped = grouped.sort_values(request.x)
                     axis.plot(grouped[request.x], grouped[request.y], marker="o", linewidth=1.8, color="#4f7cff")
+                    # A date column read from CSV stays text, so matplotlib builds a
+                    # categorical axis with one tick label per point: 344 daily dates
+                    # merged into an unreadable black band. Keep every data point but
+                    # label only a readable subset. Multi-series charts are skipped here
+                    # because each series contributes its own categorical ordering.
+                    labels = [str(value) for value in grouped[request.x]]
+                    if len(labels) > MAX_X_TICKS:
+                        stride = math.ceil(len(labels) / MAX_X_TICKS)
+                        shown = list(range(0, len(labels), stride))
+                        axis.set_xticks(shown)
+                        axis.set_xticklabels([labels[index] for index in shown], rotation=30, ha="right")
+                        warnings.append(
+                            f"{len(labels)} x values were plotted; only {len(shown)} tick "
+                            "labels are shown to keep the axis readable."
+                        )
                 plotted_rows = len(grouped)
+                # Numeric/date axes can thin their own ticks; categorical axes were
+                # handled above.
+                x_is_continuous = (
+                    pd.api.types.is_numeric_dtype(grouped[request.x])
+                    or pd.api.types.is_datetime64_any_dtype(grouped[request.x])
+                )
+                if x_is_continuous:
+                    axis.xaxis.set_major_locator(MaxNLocator(nbins=MAX_X_TICKS))
             else:
                 category_totals = grouped.groupby(request.x, dropna=False)[request.y].sum()
                 keep_categories = category_totals.sort_values(ascending=False).head(MAX_BAR_CATEGORIES).index
