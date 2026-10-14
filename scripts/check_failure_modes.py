@@ -35,6 +35,12 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
 
+# 诊断脚本绝不能因为「打印」而崩掉。中文 Windows 的 GBK 代码页无法编码 ✓ / ✗，
+# 一旦输出被管道或重定向，print 就会抛 UnicodeEncodeError，让人误以为是实验失败。
+# 这里保留终端原有编码，只把无法编码的字符替换成 ?，让脚本在任何代码页下都能跑完。
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(errors="replace")
+
 import pandas as pd  # noqa: E402
 
 from app.agent import AgentRequest, AnalystAgent  # noqa: E402
