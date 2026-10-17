@@ -137,9 +137,6 @@ def aggregate_metrics(results: list[EvaluationResult]) -> dict[str, MetricValue]
         "citation_recall": "citation_recall",
         "grounded_answer_rate": "grounded_answer",
         "agent_success_rate": "agent_success",
-        "max_iteration_violation_rate": "max_iteration_violation",
-        "invalid_tool_rate": "invalid_tool",
-        "duplicate_tool_rate": "duplicate_tool_call",
         "exact_match_rate": "exact_match",
         "numeric_accuracy": "numeric_accuracy",
     }
