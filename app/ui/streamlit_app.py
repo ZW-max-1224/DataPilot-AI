@@ -150,13 +150,14 @@ def _quality_issue_description(issue_code: str, profile: DatasetProfile, text: d
     return text.get(f"quality_desc_{suffix}", text["quality_issue_fallback"]).format(rate=rate)
 
 
-def _render_structured_answer(structured, translations: dict[str, str]) -> None:
+def _render_structured_answer(structured, translations: dict[str, str], steps=()) -> None:
     """Render the structured report, keeping facts and hypotheses visibly distinct."""
     badges = {"fact": "✅", "interpretation": "🔎", "hypothesis": "⚠️"}
     labels = {"fact": translations["claim_fact"],
               "interpretation": translations["claim_interpretation"],
               "hypothesis": translations["claim_hypothesis"]}
     st.markdown(f"##### {translations['agent_structured_title']}")
+    st.caption(translations["claim_verification_note"])
     st.markdown(f"**{translations['result_executive_summary']}**")
     st.write(structured.executive_summary)
     if structured.key_findings:
@@ -168,7 +169,21 @@ def _render_structured_answer(structured, translations: dict[str, str]) -> None:
             # caption line: the badge and the tool it was verified with belong together,
             # and a repeated caption added five extra lines for five findings.
             evidence = f" · `{finding.evidence_tool}`" if finding.evidence_tool else ""
-            st.markdown(f"{index}. {finding.statement} — {badge} {label}{evidence}")
+            if finding.claim_type == "fact" and finding.evidence:
+                # Exact source values may contain Markdown. Render them as text so
+                # a cell cannot forge links, badges, or extra factual claims.
+                st.markdown(f"{index}. {badge} {label}{evidence}")
+                st.text(finding.statement)
+                calls = {step.call_id: step for step in steps if step.action_type == "tool_call"}
+                with st.expander(translations["claim_evidence_details"].format(index=index)):
+                    st.json([
+                        {**reference.model_dump(exclude_none=True),
+                         "tool_name": calls[reference.call_id].tool_name,
+                         "parameters": calls[reference.call_id].tool_input}
+                        for reference in finding.evidence if reference.call_id in calls
+                    ])
+            else:
+                st.markdown(f"{index}. {finding.statement} — {badge} {label}{evidence}")
     if structured.recommendations:
         st.markdown(f"**{translations['result_recommendations']}**")
         for item in structured.recommendations:
@@ -879,7 +894,7 @@ else:
     agent_response: AgentResponse | None = st.session_state.get("agent_response")
     if agent_response is not None:
         if agent_response.structured is not None:
-            _render_structured_answer(agent_response.structured, t)
+            _render_structured_answer(agent_response.structured, t, agent_response.steps)
         else:
             st.caption(t["structured_missing_note"])
         if agent_response.downgraded_findings:
@@ -908,7 +923,9 @@ else:
             st.markdown(f"**{t['agent_steps']}**")
             for index, step in enumerate(agent_response.steps, start=1):
                 st.write(f"{index}. {step.summary}")
-                if step.detail:
+                if step.call_id:
+                    st.caption(f"{step.call_id} · {step.detail or step.tool_name}")
+                elif step.detail:
                     # What the tool was actually asked to compute. Two calls to the same
                     # tool with different arguments looked like an accidental repeat
                     # while only the summary was shown.

@@ -17,7 +17,7 @@
 # 跑应用
 .\.venv\Scripts\python.exe -m streamlit run app/ui/streamlit_app.py
 
-# 测试（必须全绿，当前基线 251 passed）
+# 测试（必须全绿，当前基线 311 passed）
 .\.venv\Scripts\python.exe -m pytest -q
 
 # 代码检查（必须通过）
@@ -60,7 +60,7 @@ tests/            # 全离线单元测试
 
 2. **测试必须保持离线。** 不允许真实网络、真实 LLM Key、真实 MySQL、远程 Qdrant。LLM 用 Mock，Qdrant 用真实本地客户端 + `tmp_path`。CI 会跑 `pytest -q`。
 
-3. **`fact` 结论必须有工具证据。** 没有真实工具结果的 `fact` 会被代码自动降级为 `hypothesis`。不要绕过这个逻辑，也不要让 UI 把模型自身知识说成"知识库证据"。
+3. **`fact` 结论必须有字段级工具证据。** 必须引用本轮成功调用的 `call_id`、JSON Pointer 结果字段、匹配值和单位；程序核对后生成事实文本。缺失或不匹配的引用自动降级为 `hypothesis`，仅写工具名不再足够。总结、解释、建议与原始叙述未经校验。详见 `docs/fact-evidence.md`。不要绕过这个逻辑，也不要让 UI 把模型自身知识说成"知识库证据"。
 
 4. **i18n 不允许 UI 硬编码中文。** 新增界面文案必须同时加到 `i18n/en-US.json` 和 `i18n/zh-CN.json`，**键集合与顺序必须完全一致**（`tests/test_i18n.py` 会静态检查）。语言选择器本身例外。
 

@@ -8,9 +8,11 @@
 >
 > **尚未真实验证：**MySQL 连接与写入、LangSmith Trace。这两项目前只有离线 Mock 测试；未配置时代码不会伪造结果。
 
+**最新验证（2026-10-22）：**311 项离线测试全部通过，Ruff 与依赖检查通过；新增字段级事实证据校验，并通过一次真实模型合成数据冒烟验证。mypy 仍有 33 个历史类型错误，作为非阻断检查。详见 [事实证据校验与验证记录](docs/fact-evidence.md)。
+
 ![DataPilot AI 演示：用自然语言提问后，Agent 调用受控工具并输出结构化结论](docs/images/demo.png)
 
-*演示：提问"为什么 8 月销售额下降？"后，Agent 只调用白名单工具，并把每条结论标注为 **✅ 事实（工具已计算）** / **🔎 解释** / **⚠️ 假设（需进一步验证）**，同时给出该结论的证据工具。标为"事实"的结论必须有真实运行过的工具作为证据，这是**代码强制**的，不是靠 Prompt 请求；"分析步骤"里还能看到每次调用实际用的参数（例如 `metric=sales, aggregation=sum`）。*
+*历史演示截图（2026-10-10）：提问"为什么 8 月销售额下降？"后，Agent 只调用白名单工具，并区分事实、解释与假设，同时展示证据工具和实际调用参数。当前版本进一步要求事实引用具体调用编号、结果字段、值和单位，由程序核对并生成事实摘录；界面可展开查看引用证据。*
 
 ## 业务流程
 
@@ -53,7 +55,7 @@ flowchart LR
 - LLM Playground 可观察真实模式或 Demo 模式及 Token 使用量；页面只显示 Key 的配置状态，永不显示 Key 内容。
 - Phase 6 AI Analyst：LLM 以严格 JSON/Pydantic 契约选择已有工具，Agent 最多执行 8 次决策；工具结果序列化并限制大小后才进入后续模型上下文。
 - Agent 可靠性（Phase 6 加固，已真实运行验证）：容忍 Markdown 围栏的 JSON；解析失败时把校验错误回灌并重试；工具错误作为观察值反馈给模型自我纠正；参数完全相同的重复调用复用上次结果；最后一次决策强制收敛；SDK 传输重试（`LLM_MAX_RETRIES`）。**任何终止路径都会返回已经计算出的证据，而不是只返回一句错误。**
-- 结构化结论：最终回答包含 Executive Summary / Key Findings / Recommendations，每条结论标注 `fact` / `interpretation` / `hypothesis`。**标为 fact 的结论必须有真实运行过的工具作为证据，否则自动降级为 hypothesis**，UI 用不同徽章区分。
+- 结构化结论：最终回答包含 Executive Summary / Key Findings / Recommendations，每条结论标注 `fact` / `interpretation` / `hypothesis`。**fact 必须引用本轮成功调用的 `call_id`、具体结果字段、匹配的值和单位**；通过后由程序生成字段摘录，未通过则降级为 hypothesis。总结、解释、建议与模型叙述未经程序校验。详见 [事实证据校验说明](docs/fact-evidence.md)。
 - Agent 图表：模型只选择图表参数，Matplotlib 在服务端绘图，图表随 Agent 结果返回并在 UI 渲染（渲染后释放 figure）。
 - Agent UI 仅在 LLM 配置完整时开放；无数据集可进行知识检索，有数据分析需求时 Pandas Tool 会要求先加载数据集；Demo Mode 不伪造工具调用。
 - Phase 7 LangSmith：可选 Trace 覆盖 Agent、LLM 调用和工具调用，使用脱敏后的运行摘要；默认关闭。
@@ -188,7 +190,7 @@ QDRANT_COLLECTION=datapilot_knowledge
 
 **LangSmith Trace：**每次 RAG 调用增加 `Knowledge Retrieval` 子 span，记录 query SHA-256 摘要、长度、top-k、知识库/数据集 ID、耗时、结果数、文档/切片 ID 和 score；不记录查询全文、chunk 正文或向量。
 
-**本地验证边界：**自动化测试使用真实 Qdrant 本地持久化客户端验证 collection、upsert、检索过滤和删除；Embedding API 使用 Mock 验证接口和失败处理。当前尚未验证真实 Embedding Provider、真实 MySQL 服务或远程 Qdrant 服务，也未验证真实 LangSmith Trace。Qdrant local 适合单机学习和 MVP；本地目录不应由多个进程同时打开。
+**本地验证边界：**自动化测试使用真实 Qdrant 本地持久化客户端验证 collection、upsert、检索过滤和删除；Embedding API 使用 Mock 验证接口和失败处理。真实 Embedding Provider 与本地 Qdrant 的 RAG 链路已单独验收（见下文历史验收记录）；真实 MySQL、远程 Qdrant 与 LangSmith Trace 仍未验证。Qdrant local 适合单机学习和 MVP；本地目录不应由多个进程同时打开。
 
 ## Phase 10：Evaluation
 
@@ -262,8 +264,12 @@ Linux/Ubuntu：创建虚拟环境后使用 `.venv/bin/python -m pip install -r r
 
 ```powershell
 .\.venv\Scripts\python.exe -m pytest -q
+.\.venv\Scripts\python.exe -m ruff check .
 .\.venv\Scripts\python.exe -m pip check
+.\.venv\Scripts\python.exe -m mypy
 ```
+
+截至 2026-10-22，离线测试为 **311 passed**，Ruff 与依赖检查通过；mypy 为 **33 errors in 16 files**，目前不阻断 CI。
 
 单元测试不调用网络、真实 LLM 或远程数据库；Qdrant 测试使用真实本地持久化客户端和临时目录。`tests/test_streamlit_ui.py` 使用 Streamlit AppTest 覆盖 Demo 分析、柱状/折线图、语言切换，以及 Demo → 两份上传 CSV → Demo 的会话状态切换。演示数据为 `data/sample_sales.csv`。
 
@@ -295,16 +301,17 @@ Linux/Ubuntu：创建虚拟环境后使用 `.venv/bin/python -m pip install -r r
 
 | 项目 | 状态 | 证据 |
 |---|---|---|
-| 离线测试 | 通过 | `pytest -q`，全部通过 |
+| 离线测试 | 通过 | 2026-10-22：`pytest -q`，**311 passed** |
+| **字段级事实证据校验** | **通过** | 2026-10-22：离线回归与中英文 UI 检查通过；真实模型使用 3 行合成数据，2 次请求返回 1 条事实、2 个匹配字段引用，降级数 0；不代表复杂问题或 RAG 新契约已全面在线验收 |
 | 真实 LLM 单次调用 | 通过 | 配置真实 Key 后由 `LLMService` 实际调用 |
-| **真实 Agent 端到端** | **通过** | 6 个代表性中文提问（趋势、归因、Top N、异常、分组、图表）全部成功，均返回结构化结论；图表随结果返回 |
-| **Embedding → RAG 端到端** | **通过** | `scripts/check_rag.py`：11 个切片；3 个相关问题全部**排名第 1** 命中；相关最高分 0.7728 vs 无关 0.3109。Agent 级：纯知识问答、知识+Pandas 组合、知识库无关问题三种场景 3/3 成功，**编造来源 0 条** |
+| **真实 Agent 端到端** | **历史验收通过** | 2026-10-10：6 个代表性中文提问（趋势、归因、Top N、异常、分组、图表）全部成功，均返回结构化结论；图表随结果返回。此批次早于字段级引用契约 |
+| **Embedding → RAG 端到端** | **历史验收通过** | 2026-10-10：`scripts/check_rag.py` 索引 11 个切片；3 个相关问题全部排名第 1；相关最高分 0.7728 vs 无关 0.3109。Agent 级三种场景 3/3 成功，编造来源 0 条；本次未重跑 |
 | MySQL 读写 | **未验证** | `MYSQL_USER` 为空时持久化整体关闭 |
 | LangSmith Trace | **未验证** | 默认关闭；未产生真实 Trace |
 
 **检索不可用时的诚实行为（已验证）：**当知识库不可用或没有检索到内容时，`AgentResponse.retrieval_status` 为 `unavailable`/`no_results`，步骤摘要与 UI 都会明确说明"以下内容来自模型自身知识，不属于本项目知识库的证据"，模型也被要求主动声明。修复前的行为是：运行标记为成功、工具记为已调用、步骤说"获取结构化分析结果"，用户会把模型自己的知识当成知识库证据。
 
-真实的验收记录与命令输出见 [docs/real_run_acceptance_v2.md](docs/real_run_acceptance_v2.md)（加固后的当前状态）与 [docs/real_run_acceptance.md](docs/real_run_acceptance.md)（加固前的历史快照）；审查与修复过程见 [docs/code-review-and-next-steps.md](docs/code-review-and-next-steps.md)。LLM endpoint 存在间歇性连接失败；失败时 Agent 返回已经计算出的证据并把未完成的部分标注出来，不会伪造结论。
+最新字段级校验与验证记录见 [docs/fact-evidence.md](docs/fact-evidence.md)。2026-10-10 的真实验收记录与命令输出见 [docs/real_run_acceptance_v2.md](docs/real_run_acceptance_v2.md)（当时加固后的快照）与 [docs/real_run_acceptance.md](docs/real_run_acceptance.md)（加固前的快照）；审查与修复过程见 [docs/code-review-and-next-steps.md](docs/code-review-and-next-steps.md)。LLM endpoint 存在间歇性连接失败；失败时 Agent 返回已经计算出的证据并把未完成的部分标注出来，不会伪造结论。
 
 ## 技术栈（当前已使用）
 

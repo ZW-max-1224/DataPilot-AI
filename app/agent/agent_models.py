@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 import logging
-from typing import Any, Literal
+from typing import Annotated, Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, PrivateAttr, model_validator
+from pydantic import BaseModel, ConfigDict, Field, PrivateAttr, ValidationError, model_validator
 
 from app.models.dataset_context import DatasetContext
 
@@ -13,7 +13,7 @@ MAX_ITERATIONS = 8
 
 # A finding is either computed from data, an explanation of that data, or an
 # unverified guess. The distinction is enforced in code, not only asked for in a
-# prompt: a "fact" without a real tool call is downgraded to "hypothesis".
+# prompt: a "fact" without matching result-field references is downgraded.
 ClaimType = Literal["fact", "interpretation", "hypothesis"]
 
 # Whether a knowledge lookup actually produced usable evidence. An answer written
@@ -21,6 +21,22 @@ ClaimType = Literal["fact", "interpretation", "hypothesis"]
 # knowledge-base evidence, so the outcome is tracked on the response and shown in
 # the UI instead of being implied by "search_knowledge" appearing in tools_used.
 RetrievalStatus = Literal["not_attempted", "ok", "no_results", "unavailable"]
+
+
+class EvidenceReference(BaseModel):
+    """An exact scalar assertion against one server-assigned tool invocation.
+
+    Paths are JSON Pointers relative to the tool's data object, not expressions.
+    Unknown source units remain source units; currency is never inferred.
+    """
+
+    model_config = ConfigDict(extra="forbid", strict=True, allow_inf_nan=False)
+
+    call_id: str = Field(pattern=r"^call_[1-8]$")
+    result_path: str = Field(min_length=1, max_length=256, pattern=r"^/")
+    value: Annotated[str, Field(max_length=160)] | int | float | bool
+    unit: Literal["source", "percent", "count"] = "source"
+    decimal_places: int | None = Field(default=None, ge=0, le=6)
 
 
 class Finding(BaseModel):
@@ -31,6 +47,7 @@ class Finding(BaseModel):
     statement: str = Field(min_length=1, max_length=500)
     claim_type: ClaimType = "interpretation"
     evidence_tool: str | None = Field(default=None, max_length=80)
+    evidence: list[EvidenceReference] = Field(default_factory=list, max_length=4)
 
 
 class FinalAnswer(BaseModel):
@@ -81,6 +98,7 @@ class RawFinding(BaseModel):
     statement: str = Field(default="", max_length=800)
     claim_type: str | None = Field(default=None, max_length=40)
     evidence_tool: str | None = Field(default=None, max_length=80)
+    evidence: list[Any] = Field(default_factory=list)
 
 
 class RawFinalAnswer(BaseModel):
@@ -126,6 +144,21 @@ class RawFinalAnswer(BaseModel):
             return _first_text(item, RECOMMENDATION_KEYS)
         return ""
 
+    @staticmethod
+    def _coerce_evidence(item: Any) -> list[EvidenceReference]:
+        """A malformed reference invalidates the whole evidence set, not the run."""
+        if isinstance(item, RawFinding):
+            item = item.model_dump()
+        if not isinstance(item, dict):
+            return []
+        references = item.get("evidence")
+        if not isinstance(references, list) or not 1 <= len(references) <= 4:
+            return []
+        try:
+            return [EvidenceReference.model_validate(reference) for reference in references]
+        except ValidationError:
+            return []
+
     def normalized(self, fallback_summary: str) -> FinalAnswer:
         """Coerce inbound variants into the strict output contract."""
         findings: list[Finding] = []
@@ -136,6 +169,7 @@ class RawFinalAnswer(BaseModel):
             statement, claim_type, evidence_tool = coerced
             findings.append(Finding(
                 statement=statement[:500], claim_type=claim_type, evidence_tool=evidence_tool,
+                evidence=self._coerce_evidence(item),
             ))
         if self.key_findings and not findings:
             # Never drop conclusions silently: make the loss visible in the logs.
@@ -186,6 +220,7 @@ class AgentRequest(BaseModel):
 
 class AgentStep(BaseModel):
     action_type: Literal["tool_call", "final", "error"]
+    call_id: str | None = Field(default=None, pattern=r"^call_[1-8]$")
     tool_name: str | None = None
     tool_input: dict[str, Any] | None = None
     tool_output: dict[str, Any] | None = None
@@ -214,7 +249,7 @@ class AgentResponse(BaseModel):
     # the answer was validated.
     structured: FinalAnswer | None = None
     # How many findings claimed to be facts were downgraded to hypotheses because no
-    # matching tool call had run. Surfaced so the UI can state it explicitly.
+    # successful call and result-field reference matched. Surfaced in the UI.
     downgraded_findings: int = Field(default=0, ge=0)
     # Outcome of the knowledge lookup. "unavailable"/"no_results" means the answer is
     # NOT grounded in the project knowledge base, and the UI must say so.

@@ -232,7 +232,11 @@ def test_fact_backed_by_a_real_tool_call_is_kept(context):
         action_final_structured("B 最高。", {
             "executive_summary": "B 的销售额最高。",
             "key_findings": [
-                {"statement": "B 的销售额为 30。", "claim_type": "fact", "evidence_tool": "find_top_n"},
+                {"statement": "B 的销售额为 30。", "claim_type": "fact", "evidence_tool": "find_top_n",
+                 "evidence": [
+                     {"call_id": "call_1", "result_path": "/rows/0/product", "value": "B"},
+                     {"call_id": "call_1", "result_path": "/rows/0/sales", "value": 30},
+                 ]},
                 {"statement": "可能是因为 B 更受欢迎。", "claim_type": "hypothesis"},
             ],
         }),
@@ -323,11 +327,12 @@ def test_provider_field_aliases_are_not_silently_dropped(context):
     result = AnalystAgent(llm).run(AgentRequest(user_query="分析", dataset_context=context))
     assert result.success
     assert [finding.statement for finding in result.structured.key_findings] == ["结论一", "结论二"]
-    assert result.structured.key_findings[0].claim_type == "fact"
-    assert result.structured.key_findings[0].evidence_tool == "find_top_n"
+    # Aliases are preserved, but a tool name alone no longer certifies a fact.
+    assert result.structured.key_findings[0].claim_type == "hypothesis"
+    assert result.structured.key_findings[0].evidence_tool is None
     assert result.structured.key_findings[1].claim_type == "hypothesis"
     assert result.structured.recommendations == ["建议一", "建议二"]
-    assert result.downgraded_findings == 0
+    assert result.downgraded_findings == 1
 
 
 def test_decision_token_budget_is_large_enough_for_a_structured_answer(context):

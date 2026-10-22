@@ -10,8 +10,9 @@ from pydantic import ValidationError
 
 from app.agent.agent_models import (
     MAX_ITERATIONS, AgentAction, AgentError, AgentRequest, AgentResponse, AgentStep,
-    FinalAnswer, Finding, RawFinalAnswer,
+    FinalAnswer, RawFinalAnswer,
 )
+from app.agent.evidence import ToolEvidence, verify_finding
 from app.models.dataset_context import DatasetContext
 from app.models.llm_models import LLMRequest
 from app.services.llm_service import LLMResponseError, LLMService, LLMServiceError
@@ -32,7 +33,8 @@ DEGRADED_SCHEMA_COLUMNS = 15
 # A structured final answer (narrative + findings + recommendations) routinely needs
 # more than the 1_200 tokens this used to allow. When the reply was cut off mid-JSON
 # the decision counted as malformed, so a long answer could fail an otherwise good run.
-DECISION_MAX_TOKENS = 2_000
+# Field references add structured output; leave room for the bounded evidence list.
+DECISION_MAX_TOKENS = 3_000
 MAX_KNOWLEDGE_SEARCHES = 2
 # A malformed model decision is retried with the validation error fed back, up to
 # this many extra attempts, before the run is abandoned. Models intermittently
@@ -74,15 +76,26 @@ a source title or file name.
 For action=final, put the user-facing narrative in final_answer AND fill the "analysis"
 object: executive_summary (one sentence), key_findings and recommendations. Every finding
 must set claim_type:
-- "fact" ONLY for a value, ranking or change that a tool call actually returned, and set
-  evidence_tool to that exact registered tool name;
+- "fact" ONLY for scalar values actually returned by successful tool calls. Set
+  evidence_tool to the registered tool name and evidence to 1-4 references, each with
+  call_id from tool_history, result_path (JSON Pointer relative to result.data), value,
+  unit (source, percent, or count), and optional decimal_places (0-6, decimal half-up).
+  Example: {"statement":"B has sales of 30.","claim_type":"fact","evidence_tool":"find_top_n",
+  "evidence":[{"call_id":"call_1","result_path":"/rows/0/product","value":"B","unit":"source"},
+  {"call_id":"call_1","result_path":"/rows/0/sales","value":30,"unit":"source"}]}.
+  Escape / and ~ inside object keys as ~1 and ~0. Percent fields use percent (5 means
+  5%, not 0.05); count fields use count. Dataset measurement units are source, never
+  an assumed currency. Include group/period fields alongside their measures. The server
+  displays facts as literal checked fields, not your prose. Use interpretation for
+  explanations, derived arithmetic, rankings beyond returned fields, and paraphrased
+  knowledge; those are not mechanically verified;
 - "interpretation" when you explain what those computed numbers mean;
 - "hypothesis" when you suggest a cause the data does not prove.
-Never label a guess as a fact: a "fact" whose evidence_tool did not run is downgraded.
+Facts without matching successful call IDs, result values, and units are downgraded.
 If you did not run any tool, use only "interpretation" and "hypothesis" findings.
 Keep the reply compact so it is never cut off: at most 5 key_findings, each statement
 under 160 characters, at most 3 recommendations, and the final_answer narrative under
-1_200 characters. Use the field names statement, claim_type, evidence_tool and as plain
+1_200 characters. Use the field names statement, claim_type, evidence_tool, evidence and plain
 strings for recommendations.
 """
 
@@ -152,6 +165,8 @@ class AnalystAgent:
         knowledge_calls = 0
         tool_error_counts: dict[str, int] = {}
         seen_calls: dict[str, dict[str, Any]] = {}
+        seen_call_ids: dict[str, str] = {}
+        evidence_calls: dict[str, ToolEvidence] = {}
         for iteration in range(MAX_ITERATIONS):
             decision_count = iteration + 1
             is_last_decision = decision_count == MAX_ITERATIONS
@@ -177,14 +192,14 @@ class AnalystAgent:
 
             if action.action == "final":
                 answer = action.final_answer or ""
-                structured, downgraded = self._validate_structured(action.analysis, tools_used, answer)
+                structured, downgraded = self._validate_structured(action.analysis, evidence_calls, answer)
                 if knowledge_sources:
                     answer = re.split(r"(?im)^(?:sources|来源)\s*[:：]\s*$", answer, maxsplit=1)[0].rstrip()
                     source_lines = "\n".join(f"- {source}" for source in knowledge_sources)
                     answer = f"{answer.rstrip()}\n\nSources:\n{source_lines}"
                 summary = "根据已获得的数据分析结果整理最终答复。"
                 if downgraded:
-                    summary += f"（{downgraded} 条缺少工具证据的结论已自动降级为假设）"
+                    summary += f"（{downgraded} 条工具证据未通过核对的结论已自动降级为假设）"
                 if structured is None:
                     summary += "（模型未提供结构化结论，以下为原始叙述）"
                 steps.append(AgentStep(action_type="final", summary=summary))
@@ -194,7 +209,7 @@ class AnalystAgent:
 
             name = action.tool_name or ""
             try:
-                get_analysis_tool_spec(name)
+                spec = get_analysis_tool_spec(name)
             except Exception:
                 return self._failure("tool_not_allowed", f"拒绝调用未注册的工具：{name[:80]}", steps, tools_used, decision_count)
 
@@ -219,18 +234,22 @@ class AnalystAgent:
                 # an observation instead of re-executing, so the budget goes to new
                 # evidence rather than to repeats.
                 cached = seen_calls[call_signature]
+                cached_call_id = seen_call_ids[call_signature]
+                cached_input = spec.input_model.model_validate(action.tool_input or {}).model_dump(exclude_none=True)
                 steps.append(AgentStep(
-                    action_type="tool_call", tool_name=name, tool_input=action.tool_input,
+                    action_type="tool_call", call_id=cached_call_id, tool_name=name,
+                    tool_input=cached_input,
                     tool_output=cached, summary=f"检测到重复调用 {name}（参数相同），已复用之前的结果。",
                     detail=self._argument_digest(action.tool_input),
                 ))
-                history.append({"tool": name, "result": cached,
+                history.append({"call_id": cached_call_id, "tool": name, "parameters": cached_input, "result": cached,
                                 "note": "You already called this tool with these exact arguments. "
                                         "Reuse this result and return action=final."})
                 if len(history) > 4:
                     history = history[-4:]
                 continue
 
+            call_id = f"call_{decision_count}"
             with self._tracing.span(
                 f"Tool: {name}",
                 run_type="tool",
@@ -285,14 +304,15 @@ class AnalystAgent:
                 message = error.message if error else "工具执行失败。"
                 tool_error_counts[name] = tool_error_counts.get(name, 0) + 1
                 summary = f"工具 {name} 未能完成分析（{code}），已把错误反馈给模型修正参数。"
-                steps.append(AgentStep(action_type="error", tool_name=name,
+                steps.append(AgentStep(action_type="error", call_id=call_id, tool_name=name,
                                        tool_input=action.tool_input, tool_output=self._bounded(output),
                                        summary=summary, detail=self._argument_digest(action.tool_input)))
                 if code in RECOVERABLE_TOOL_ERROR_CODES and tool_error_counts[name] <= MAX_TOOL_ERROR_REPEATS:
                     # A structured tool error is an observation, not a fatal outcome:
                     # feed it back so the model can correct a hallucinated column name
                     # or an invalid enum value instead of losing the whole run.
-                    history.append({"tool": name, "error": {"code": code, "message": message}})
+                    history.append({"call_id": call_id, "tool": name,
+                                    "error": {"code": code, "message": message}})
                     if len(history) > 4:
                         history = history[-4:]
                     continue
@@ -310,10 +330,17 @@ class AnalystAgent:
                 summary = f"调用白名单工具 {name} 获取结构化分析结果。"
             bounded_output = self._bounded(output)
             seen_calls[call_signature] = bounded_output
-            steps.append(AgentStep(action_type="tool_call", tool_name=name,
-                                   tool_input=action.tool_input, tool_output=bounded_output,
+            seen_call_ids[call_signature] = call_id
+            # Full JSON tool results stay run-local, separate from truncated model
+            # observations and telemetry. Failed/unavailable retrieval is not evidence.
+            if name != "search_knowledge" or (output["data"].get("status") == "ok" and retrieval_hits):
+                evidence_calls[call_id] = ToolEvidence(tool_name=name, data=output["data"] or {})
+            normalized_input = spec.input_model.model_validate(action.tool_input or {}).model_dump(exclude_none=True)
+            steps.append(AgentStep(action_type="tool_call", call_id=call_id, tool_name=name,
+                                   tool_input=normalized_input, tool_output=bounded_output,
                                    summary=summary, detail=self._argument_digest(action.tool_input)))
-            history.append({"tool": name, "result": bounded_output})
+            history.append({"call_id": call_id, "tool": name, "parameters": normalized_input,
+                            "result": bounded_output})
             if len(history) > 4:
                 history = history[-4:]
 
@@ -441,30 +468,15 @@ class AnalystAgent:
         }
 
     @staticmethod
-    def _validate_structured(analysis: RawFinalAnswer | None, tools_used: list[str],
+    def _validate_structured(analysis: RawFinalAnswer | None, calls: dict[str, ToolEvidence],
                              fallback_summary: str = "") -> tuple[FinalAnswer | None, int]:
-        """Normalize the structured block and enforce fact evidence.
-
-        This is the code-level counterpart of the prompt rule "do not present a guess
-        as a fact": an unsupported fact is downgraded to a hypothesis (and counted) so
-        it is never rendered as verified evidence. The inbound shape is tolerated
-        (aliases, extra keys, plain strings) because a presentation mistake must not
-        discard a whole analysis; the guarantee itself is applied afterwards.
-        """
+        """Normalize model presentation and verify against this run's result fields."""
         if analysis is None:
             return None, 0
         normalized = analysis.normalized(fallback_summary)
-        used = set(tools_used)
-        findings: list[Finding] = []
-        downgraded = 0
-        for finding in normalized.key_findings:
-            if finding.claim_type == "fact" and finding.evidence_tool not in used:
-                findings.append(finding.model_copy(update={"claim_type": "hypothesis", "evidence_tool": None}))
-                downgraded += 1
-            else:
-                findings.append(finding)
-        if not downgraded:
-            return normalized, 0
+        findings = [verify_finding(finding, calls) for finding in normalized.key_findings]
+        downgraded = sum(before.claim_type == "fact" and after.claim_type != "fact"
+                         for before, after in zip(normalized.key_findings, findings))
         return normalized.model_copy(update={"key_findings": findings}), downgraded
 
     def _decide(self, prompt: str, decision_span) -> tuple[AgentAction | None, tuple[str, str] | None]:

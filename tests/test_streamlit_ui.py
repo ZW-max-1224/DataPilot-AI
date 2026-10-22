@@ -52,6 +52,50 @@ def test_the_hermetic_fixture_hides_the_developers_real_configuration():
     assert not EmbeddingSettings.from_env().is_configured
 
 
+@pytest.mark.parametrize("locale", ["zh-CN", "en-US"])
+def test_checked_fact_references_are_visible_as_plain_text_with_call_scope(locale, monkeypatch):
+    from app.agent import AgentResponse, AgentStep, AnalystAgent
+    from app.agent.agent_models import RawFinalAnswer
+    from app.agent.evidence import ToolEvidence
+    from app.services.llm_service import LLMService
+
+    # Enable the Agent section with dummy settings, while prohibiting model calls.
+    monkeypatch.setenv("LLM_API_KEY", "offline-ui-placeholder")
+    monkeypatch.setenv("LLM_BASE_URL", "https://example.invalid/v1")
+    monkeypatch.setenv("LLM_MODEL", "offline-test")
+
+    def reject_model_call(*args, **kwargs):
+        raise AssertionError("UI rendering must not invoke an external model")
+
+    monkeypatch.setattr(LLMService, "generate", reject_model_call)
+
+    source_value = "B **not a badge** [not a link](https://example.test)"
+    structured, _ = AnalystAgent._validate_structured(RawFinalAnswer(key_findings=[{
+        "statement": "Wrong model prose.", "claim_type": "fact", "evidence_tool": "find_top_n",
+        "evidence": [{"call_id": "call_1", "result_path": "/rows/0/product", "value": source_value}],
+    }]), {"call_1": ToolEvidence("find_top_n", {"rows": [{"product": source_value}]})})
+    response = AgentResponse(
+        final_answer="Model narrative.", success=True, structured=structured,
+        steps=[AgentStep(action_type="tool_call", call_id="call_1", tool_name="find_top_n",
+                         tool_input={"column": "sales", "n": 1, "ascending": False}, summary="Computed.")],
+    )
+    app = AppTest.from_file(APP, default_timeout=30).run()
+    app.radio(key="dataset_source_choice").set_value("demo").run()
+    app.selectbox(key="locale").set_value(locale).run()
+    app.session_state["agent_response"] = response
+    app.run()
+    assert not app.exception, [error.message for error in app.exception]
+    assert any(source_value in element.value for element in app.text)
+    assert not any(source_value in element.value for element in app.markdown)
+    import json
+    catalog = json.loads((APP.parents[2] / "i18n" / f"{locale}.json").read_text(encoding="utf-8"))
+    assert any(element.value == catalog["claim_verification_note"] for element in app.caption)
+    assert any(element.label == catalog["claim_evidence_details"].format(index=1) for element in app.expander)
+    details = [json.loads(element.value) for element in app.json]
+    assert any(isinstance(value, list) and value and value[0].get("call_id") == "call_1"
+               and value[0].get("parameters", {}).get("column") == "sales" for value in details)
+
+
 def test_demo_analysis_tools_chart_types_and_language_switch():
     app = AppTest.from_file(APP, default_timeout=30).run()
     assert not app.exception

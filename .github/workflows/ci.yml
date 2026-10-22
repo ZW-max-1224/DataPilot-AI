@@ -63,7 +63,7 @@ jobs:
       - name: Lint with ruff (blocking)
         run: python -m ruff check .
 
-      # Advisory only: the codebase is not type-clean yet (34 pre-existing errors
+      # Advisory only: the codebase is not type-clean yet (33 pre-existing errors
       # in 16 files). Kept visible so the number can be driven down, but it must
       # not block unrelated work.
       - name: Type-check with mypy (non-blocking, advisory)
